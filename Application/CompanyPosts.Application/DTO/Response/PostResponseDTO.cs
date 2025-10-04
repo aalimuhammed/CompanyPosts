@@ -10,7 +10,6 @@ public record PostResponseDTO(
 	string post_type,
 	string created_by,
 	string delivery_method, 
-	string delivery_person, 
+	//string delivery_person, 
 	string post_original_sender,
-	string project_name,
-	string attachment_url);
+	string project_name);

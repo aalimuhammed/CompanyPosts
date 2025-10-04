@@ -1,10 +1,10 @@
 ﻿namespace CompanyPost.Application.CQRS.Handlers.Commands.Contract;
-internal sealed class CreateContractHandler
+internal sealed class CreateContractCommandHandler
 	: IRequestHandler<CreateContractCommand, Unit>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IWebHostEnvironment _environment;
-	public CreateContractHandler(
+	public CreateContractCommandHandler(
 		IUnitOfWork unitOfWork,
 		IWebHostEnvironment environment)
 	{
@@ -62,7 +62,7 @@ internal sealed class CreateContractHandler
 			CreatedById = Guid.Parse("97b46533-ed0c-46dd-87c2-2ca396ee629e"),
 			Details = request.CreatrContractDTO.details,
 			Notes = request.CreatrContractDTO.notes,
-			Attachments = fileName,
+			//Attachments = fileName,
 			Contract_Date = request.CreatrContractDTO.contract_date,
 			working = request.CreatrContractDTO.working,
 			purchase_order_ref = request.CreatrContractDTO.purchase_order_ref,

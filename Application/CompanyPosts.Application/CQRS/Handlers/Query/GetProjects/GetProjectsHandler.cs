@@ -9,8 +9,12 @@ internal sealed class GetProjectsHandler
 	}
 	public async Task<IEnumerable<ProjectsResponseDTO>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
 	{
-		var projectRepository = _unitOfWork.Repository<Projects>();
-		var projects = await projectRepository.ListAllAsync(cancellationToken);
+		var projectRepository = _unitOfWork.Repository<Publisher>();
+
+		var projects = await projectRepository.FindAllAsync(
+			x => x.IsProject,
+			cancellationToken);
+
 		var projectDTOs = projects.Select(p => new ProjectsResponseDTO(
 			p.Name,
 			p.Id

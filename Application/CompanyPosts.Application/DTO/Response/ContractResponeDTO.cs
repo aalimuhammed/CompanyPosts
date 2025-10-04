@@ -11,5 +11,4 @@ public record ContractResponeDTO(
 	string currency ,
 	string working ,
 	string purchase_order_ref,
-	string contractor,
-	string attachments);
+	string contractor);

@@ -11,9 +11,11 @@ internal class GetPersonOrgsHandler
 		GetPersonOrgQuery request, 
 		CancellationToken cancellationToken)
 	{
-		var personOrgRepository = _unitOfWork.Repository<PersonOrg>();
+		var personOrgRepository = _unitOfWork.Repository<Publisher>();
 
-		var personOrgs = await personOrgRepository.ListAllAsync(cancellationToken);
+		var personOrgs = await personOrgRepository.FindAllAsync(
+			x => x.IsSupplier, 
+			cancellationToken);
 
 		var personOrgDTOs = personOrgs.Select(po => new PersonOrgResponseDTO(
 			po.Name,

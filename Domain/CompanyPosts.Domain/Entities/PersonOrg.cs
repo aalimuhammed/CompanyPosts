@@ -7,7 +7,5 @@ public class PersonOrg : BaseEntity , IHasName
 	public string? Phone { get; set; }
 	public string? Email { get; set; }
 	public string? Contact_Person { get; set; }
-	public ICollection<Posts> PostsAsOriginalSender { get; set; } = new List<Posts>();
-	public ICollection<Posts> PostsAsDeliveryPerson { get; set; } = new List<Posts>();
 	public ICollection<Contracts> Contracts { get; set; } = new List<Contracts>();
 }

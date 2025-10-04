@@ -5,18 +5,22 @@ public class CompanyPostDbContext : DbContext
 		: base(options)
 	{
 	}
-	public DbSet<PostHeader> PostHeaders { get; set; }
-	public DbSet<PostTypes> PostTypes { get; set; }
-	public DbSet<Posts> Posts { get; set; }
-	public DbSet<DeliveryMethods> DeliveryMethods { get; set; }
+	public DbSet<PostInternal> PostInternals { get; set; }
+	public DbSet<PostInternalAttachment> PostInternalAttachments { get; set; }
+	public DbSet<PostExternal> PostExternals { get; set; }
+	public DbSet<PostExternalAttachment> PostExternalAttachments { get; set; }
+	public DbSet<PostTransformer> PostTransformers { get; set; }
+	public DbSet<PostTransformerAttachment> PostTransformerAttachments { get; set; }
 	public DbSet<PersonOrg> PersonOrgs { get; set; }
 	public DbSet<Contracts> Contracts { get; set; }
 	public DbSet<Projects> Projects { get; set; }
 	public DbSet<SysUsers> SysUsers { get; set; }
+	public DbSet<Company> Companies { get; set; }
+	public DbSet<Publisher> Publishers { get; set; }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.ApplyConfigurationsFromAssembly(typeof(CompanyPostDbContext).Assembly);
-
+		modelBuilder.Ignore<PostBaseEntity>();
 		base.OnModelCreating(modelBuilder);
 	}
 }

@@ -3,7 +3,7 @@ internal sealed class SysUsersConfiguration : IEntityTypeConfiguration<SysUsers>
 {
 	public void Configure(EntityTypeBuilder<SysUsers> builder)
 	{
-		builder.HasKey(builder => builder.Id);
+		//builder.HasKey(builder => builder.Id);
 
 		builder.Property(builder => builder.username)
 			.HasMaxLength(50)

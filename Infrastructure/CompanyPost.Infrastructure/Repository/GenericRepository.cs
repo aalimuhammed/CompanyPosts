@@ -49,6 +49,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity ,
 		Expression<Func<T, bool>> predicate = null,
 		CancellationToken cancellationToken = default)
 	{
-		return await _dbSet.Where(predicate).ToListAsync(cancellationToken);
+		IQueryable<T> query = _dbSet;
+		if (predicate != null)
+			query = query.Where(predicate);
+
+		return await query.ToListAsync(cancellationToken);
 	}
 }

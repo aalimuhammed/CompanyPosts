@@ -36,4 +36,12 @@ public class PostsController : ControllerBase
 		await _mediator.Send(command , cancellationToken);
 		return StatusCode(204);
 	}
+
+	[HttpDelete("delete-post")]
+	public async Task<IActionResult> DeletePost(Guid Id , CancellationToken cancellationToken)
+	{
+		var command = new DeletePostCommand(Id);
+		await _mediator.Send(command, cancellationToken);
+		return StatusCode(204);
+	}
 }

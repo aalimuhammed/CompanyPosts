@@ -29,8 +29,8 @@ internal sealed class GetContractsHandler
 			c.Currency.ToString(),
 			c.working,
 			c.purchase_order_ref,
-			c.PersonOrgs.Name,
-			c.Attachments != null ? $"/contracts/{c.Attachments}" : null
+			c.PersonOrgs.Name
+			//c.Attachments != null ? $"/contracts/{c.Attachments}" : null
 		));
 		return contractDTOs;
 	}

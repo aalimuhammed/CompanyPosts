@@ -38,16 +38,16 @@ internal sealed class UpdateContractCommandHandler
 
 		if (request.UpdateContractDTO.Attachments != null)
 		{
-			if (!string.IsNullOrEmpty(contractToUpdate.Attachments))
-			{
-				var oldFilePath = Path.Combine(_environment.WebRootPath, "contracts", contractToUpdate.Attachments);
-				if (File.Exists(oldFilePath))
-				{
-					File.Delete(oldFilePath);
-				}
-			}
+			//if (!string.IsNullOrEmpty(contractToUpdate.Attachments))
+			//{
+			//	var oldFilePath = Path.Combine(_environment.WebRootPath, "contracts", contractToUpdate.Attachments);
+			//	if (File.Exists(oldFilePath))
+			//	{
+			//		File.Delete(oldFilePath);
+			//	}
+			//}
 			var newFileName = await _saveAttachment.SaveAttachmentAsync(request.UpdateContractDTO.Attachments, "contracts", cancellationToken);
-			contractToUpdate.Attachments = newFileName;
+			//contractToUpdate.Attachments = newFileName;
 		}
 		contractRepository.Update(contractToUpdate);
 		await _unitOfWork.SaveChangesAsync(cancellationToken);

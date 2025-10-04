@@ -34,4 +34,12 @@ public class ContractsController : ControllerBase
 		await _mediator.Send(command, cancellationToken);
 		return StatusCode(204);
 	}
+
+	[HttpDelete("delete-contract")]
+	public async Task<IActionResult> DeleteContract([FromQuery]Guid Id, CancellationToken cancellationToken)
+	{
+		var command = new DeleteContractCommand(Id);
+		await _mediator.Send(command, cancellationToken);
+		return StatusCode(204);
+	}
 }

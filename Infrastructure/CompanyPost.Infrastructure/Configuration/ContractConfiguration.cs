@@ -3,7 +3,7 @@ internal sealed class ContractConfiguration : IEntityTypeConfiguration<Contracts
 {
 	public void Configure(EntityTypeBuilder<Contracts> builder)
 	{
-		builder.HasKey(builder => builder.Id);
+		//builder.HasKey(builder => builder.Id);
 
 		builder.Property(builder => builder.Details)
 			.HasMaxLength(100)
@@ -12,9 +12,9 @@ internal sealed class ContractConfiguration : IEntityTypeConfiguration<Contracts
 		builder.Property(builder => builder.Notes)
 			.HasMaxLength(100);
 
-		builder.Property(builder => builder.Attachments)
-			.HasMaxLength(100)
-			.IsRequired();
+		//builder.Property(builder => builder.Attachments)
+		//	.HasMaxLength(100)
+		//	.IsRequired();
 
 		builder.Property(builder => builder.purchase_order_ref)
 			.HasMaxLength(100)

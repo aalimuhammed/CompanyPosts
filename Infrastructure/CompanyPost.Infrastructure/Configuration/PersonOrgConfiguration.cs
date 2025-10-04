@@ -3,7 +3,7 @@ internal sealed class PersonOrgConfiguration : IEntityTypeConfiguration<PersonOr
 {
 	public void Configure(EntityTypeBuilder<PersonOrg> builder)
 	{
-		builder.HasKey(builder => builder.Id);
+		//builder.HasKey(builder => builder.Id);
 
 		//builder.HasAlternateKey(builder => builder.SAP_BP);
 
