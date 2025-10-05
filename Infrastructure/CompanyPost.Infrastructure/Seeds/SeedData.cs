@@ -7,6 +7,7 @@ public static class SeedData
 		//await SeedProjects(context);
 		//await SeedPersonOrg(context);
 		await SeedPublishers(context);
+		await SeedCompanies(context);
 	}
 	private static async Task SeedSysUser(CompanyPostDbContext context)
 	{
@@ -617,9 +618,35 @@ public static class SeedData
 			await context.Publishers.AddRangeAsync
 				(projects.Select(p => new Publisher { Name = p  , IsProject = true}));
 			await context.Publishers.AddRangeAsync
-				(personOrgs.Select(p => new Publisher { Name = p, IsSupplier = true }));
+				(personOrgs.Select(p => new Publisher { Name = p, IsSupplierOrSubContractor = true }));
 			await context.Publishers.AddRangeAsync
 			(departments.Select(p => new Publisher { Name = p, IsDepartment = true }));
+			await context.SaveChangesAsync();
+		}
+	}
+	private static async Task SeedCompanies(CompanyPostDbContext context)
+	{
+		if (!context.Companies.Any())
+		{
+			var companies = new[]
+				{
+					new { Code = "C100", Name = "الشركة الهندسية للصناعات والتشييد سياك" },
+					new { Code = "B300", Name = "شركة المدن الجديدة الهندسية للصناعات" },
+					new { Code = "B400", Name = "ايدج الهندسية للاعمال التخصصية" },
+					new { Code = "C200", Name = "شركة ايدج للانشاء والصناعة" },
+					new { Code = "C400", Name = "شركة المتكاملة للتنمية العقارية-انتجراتيد" },
+					new { Code = "D700", Name = "FM شركة سياك لادارة الاصول والمنشات" },
+					new { Code = "D710", Name = "FM KSA سياك لادارة المرافق" },
+					new { Code = "C104", Name = "سياك solution للاعمال المتكاملة" },
+					new { Code = "B100", Name = "وجهات للمنتجات المعمارية المتطورة" },
+					new { Code = "D800", Name = "سياك للتطوير العقارى" },
+					new { Code = "CH01", Name = "الشركة القابضة للهندسة" },
+					new { Code = "BH01", Name = "سياك القابضة للمواد ومستلزمات البناء" },
+					new { Code = "DH01", Name = "سياك القابضة للتنمية والادارة" },
+					new { Code = "SIAC", Name = "سياك القابضة للاستثمارات المالية" }
+				};
+
+			await context.Companies.AddRangeAsync(companies.Select(p => new Company { Name = p.Name , CompanyCode = p.Code }));
 			await context.SaveChangesAsync();
 		}
 	}

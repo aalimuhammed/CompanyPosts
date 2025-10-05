@@ -1,28 +1,16 @@
 ﻿namespace CompanyPost.Infrastructure.Configuration;
 internal sealed class PostTransformerAttachmentConfiguration :
-	IEntityTypeConfiguration<PostTransformer>
+	IEntityTypeConfiguration<PostTransformerAttachment>
 {
-	public void Configure(EntityTypeBuilder<PostTransformer> builder)
+	public void Configure(EntityTypeBuilder<PostTransformerAttachment> builder)
 	{
-		//builder.HasKey(x => x.Id);
+		builder.HasOne(builder => builder.PostTransformer)
+				.WithMany(t => t.Attachments)
+				.HasForeignKey(builder => builder.PostTransformerId)
+				.OnDelete(DeleteBehavior.Restrict);
 
-		builder.Property(x => x.DocumentNumber)
-			.HasMaxLength(50)
-			.IsRequired();
-
-		builder.Property(x => x.SerialNumber)
-			.IsRequired();
-
-		builder.Property(x => x.Subject)
-			.HasMaxLength(100);
-
-		builder.Property(x => x.AboutWork)
-			.HasMaxLength(50);
-
-		builder.Property(x => x.DocumentDate)
-			.IsRequired();
-
-		builder.Property(x => x.DeliveryTime)
+		builder.Property(x => x.FileName)
+			.HasMaxLength(100)
 			.IsRequired();
 	}
 }

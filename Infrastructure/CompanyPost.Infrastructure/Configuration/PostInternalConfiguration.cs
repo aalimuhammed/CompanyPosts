@@ -3,8 +3,6 @@ internal sealed class PostInternalConfiguration : IEntityTypeConfiguration<PostI
 {
 	public void Configure(EntityTypeBuilder<PostInternal> builder)
 	{
-		//builder.HasKey(x => x.Id);
-
 		builder.Property(x => x.DocumentNumber)
 			.HasMaxLength(50)
 			.IsRequired();
@@ -21,7 +19,17 @@ internal sealed class PostInternalConfiguration : IEntityTypeConfiguration<PostI
 		builder.Property(x => x.DocumentDate)
 			.IsRequired();
 
-		builder.Property(x => x.DeliveryTime)
+		builder.Property(x => x.DeliveryDate)
 			.IsRequired();
+
+		builder.HasOne(builder => builder.Publisher)
+				.WithMany(t => t.PublishedPostInternals)
+				.HasForeignKey(builder => builder.PublishedId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+		builder.HasOne(builder => builder.RecievedFrom)
+				.WithMany(t => t.RecievedPostInternals)
+				.HasForeignKey(builder => builder.RecievedFromId)
+				.OnDelete(DeleteBehavior.Restrict);
 	}
 }

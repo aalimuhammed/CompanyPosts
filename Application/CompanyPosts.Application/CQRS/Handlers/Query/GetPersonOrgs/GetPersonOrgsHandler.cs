@@ -1,6 +1,6 @@
 ﻿namespace CompanyPost.Application.CQRS.Handlers.Query.GetPersonOrgs;
 internal class GetPersonOrgsHandler
-	: IRequestHandler<GetPersonOrgQuery, IEnumerable<PersonOrgResponseDTO>>
+	: IRequestHandler<GetPersonOrgsQuery, IEnumerable<PersonOrgResponseDTO>>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	public GetPersonOrgsHandler(IUnitOfWork unitOfWork)
@@ -8,13 +8,13 @@ internal class GetPersonOrgsHandler
 		_unitOfWork = unitOfWork;
 	}
 	public async Task<IEnumerable<PersonOrgResponseDTO>> Handle(
-		GetPersonOrgQuery request, 
+		GetPersonOrgsQuery request, 
 		CancellationToken cancellationToken)
 	{
 		var personOrgRepository = _unitOfWork.Repository<Publisher>();
 
 		var personOrgs = await personOrgRepository.FindAllAsync(
-			x => x.IsSupplier, 
+			x => x.IsSupplierOrSubContractor, 
 			cancellationToken);
 
 		var personOrgDTOs = personOrgs.Select(po => new PersonOrgResponseDTO(

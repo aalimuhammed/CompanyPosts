@@ -12,7 +12,7 @@
 		[HttpGet("get-person-orgs")]
 		public async Task<IActionResult> GetPersonOrgs()
 		{
-			var query = new GetPersonOrgQuery();
+			var query = new GetPersonOrgsQuery();
 			var personOrgs = await _mediator.Send(query);
 			return Ok(personOrgs);
 		}

@@ -22,7 +22,33 @@ internal sealed class PostTransformerConfiguration :
 		builder.Property(x => x.DocumentDate)
 			.IsRequired();
 
-		builder.Property(x => x.DeliveryTime)
+		builder.Property(x => x.DeliveryDate)
 			.IsRequired();
+
+		builder.Property(x => x.IncomingNumber)
+			.HasMaxLength(50)
+			.IsRequired();
+
+		builder.Property(x => x.PostNumber)
+			.HasMaxLength(50)
+			.IsRequired();
+
+		builder.Property(x => x.RecivedByName)
+			.HasMaxLength(100)
+			.IsRequired();
+
+		builder.Property(x => x.FollowingPerson)
+			.HasMaxLength(100)
+			.IsRequired();
+
+		builder.HasOne(builder => builder.Publisher)
+			.WithMany(t => t.PublishedPostTransformers)
+			.HasForeignKey(builder => builder.PublishedId)
+			.OnDelete(DeleteBehavior.Restrict);
+
+		builder.HasOne(builder => builder.RecievedFrom)
+				.WithMany(t => t.RecievedPostTransformers)
+				.HasForeignKey(builder => builder.RecievedFromId)
+				.OnDelete(DeleteBehavior.Restrict);
 	}
 }

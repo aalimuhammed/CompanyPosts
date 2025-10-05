@@ -2,5 +2,6 @@
 public class PostTransformerAttachment : BaseEntity
 {
 	public Guid PostTransformerId { get; set; }
-	public PostExternal PostExternal { get; set; } = null!;
+	public PostTransformer PostTransformer { get; set; } = null!;
+	public string FileName { get; set; } = null!;
 }

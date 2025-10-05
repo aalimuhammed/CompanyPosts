@@ -8,5 +8,9 @@ internal sealed class PostInternalAttachmentConfiguration : IEntityTypeConfigura
 		.WithMany(t => t.Attachments)
 		.HasForeignKey(builder => builder.PostInternalId)
 		.OnDelete(DeleteBehavior.Restrict);
+
+		builder.Property(x => x.FileName)
+			.HasMaxLength(100)
+			.IsRequired();
 	}
 }

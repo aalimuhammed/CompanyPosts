@@ -21,7 +21,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity ,
 	public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate, 
 		CancellationToken cancellationToken = default)
 	{
+		if (predicate != null)
 		return await _dbSet.Where(predicate).FirstOrDefaultAsync(cancellationToken);
+		
+		return await _dbSet.FirstOrDefaultAsync(cancellationToken);
 	}
 	public async Task<IEnumerable<T>> FindWithIncludeAsync(
 	   Expression<Func<T, bool>> predicate = null,

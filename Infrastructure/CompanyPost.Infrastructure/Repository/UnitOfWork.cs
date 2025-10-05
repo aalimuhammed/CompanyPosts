@@ -1,4 +1,8 @@
-﻿namespace CompanyPost.Infrastructure.Repository;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
+using System.Threading.Tasks;
+
+namespace CompanyPost.Infrastructure.Repository;
 public class UnitOfWork : IUnitOfWork
 {
 	private bool _disposed = false;
@@ -8,6 +12,11 @@ public class UnitOfWork : IUnitOfWork
 	{
 		ServiceProvider = serviceProvider;
 		context = ServiceProvider.GetService<CompanyPostDbContext>()!;
+	}
+	public async Task<IDbTransaction> BeginTransactionAsync()
+	{
+		var transaction = await context.Database.BeginTransactionAsync();
+		return transaction.GetDbTransaction();
 	}
 	public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{

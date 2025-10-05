@@ -215,7 +215,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("AboutWork")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("about_work");
 
@@ -231,13 +230,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("created_by_id");
 
+                    b.Property<DateTime>("DeliveryDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("delivery_date");
+
                     b.Property<int>("DeliveryMethods")
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
-
-                    b.Property<DateTime>("DeliveryTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("delivery_time");
 
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
@@ -248,20 +247,29 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("document_number");
 
+                    b.Property<string>("IncomingNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("incoming_number");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext")
+                        .HasColumnName("notes");
+
                     b.Property<Guid>("PublishedId")
                         .HasColumnType("char(36)")
                         .HasColumnName("published_id");
 
-                    b.Property<Guid>("PublisherId")
+                    b.Property<Guid>("RecievedFromId")
                         .HasColumnType("char(36)")
-                        .HasColumnName("publisher_id");
+                        .HasColumnName("recieved_from_id");
 
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
 
                     b.Property<string>("Subject")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("subject");
 
@@ -278,8 +286,11 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasIndex("CreatedById")
                         .HasDatabaseName("ix_post_externals_created_by_id");
 
-                    b.HasIndex("PublisherId")
-                        .HasDatabaseName("ix_post_externals_publisher_id");
+                    b.HasIndex("PublishedId")
+                        .HasDatabaseName("ix_post_externals_published_id");
+
+                    b.HasIndex("RecievedFromId")
+                        .HasDatabaseName("ix_post_externals_recieved_from_id");
 
                     b.ToTable("post_externals", (string)null);
                 });
@@ -294,6 +305,12 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("file_name");
 
                     b.Property<Guid>("PostExternalId")
                         .HasColumnType("char(36)")
@@ -316,7 +333,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("AboutWork")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("about_work");
 
@@ -332,13 +348,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("created_by_id");
 
+                    b.Property<DateTime>("DeliveryDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("delivery_date");
+
                     b.Property<int>("DeliveryMethods")
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
-
-                    b.Property<DateTime>("DeliveryTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("delivery_time");
 
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
@@ -349,20 +365,23 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("document_number");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext")
+                        .HasColumnName("notes");
+
                     b.Property<Guid>("PublishedId")
                         .HasColumnType("char(36)")
                         .HasColumnName("published_id");
 
-                    b.Property<Guid>("PublisherId")
+                    b.Property<Guid>("RecievedFromId")
                         .HasColumnType("char(36)")
-                        .HasColumnName("publisher_id");
+                        .HasColumnName("recieved_from_id");
 
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
 
                     b.Property<string>("Subject")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("subject");
 
@@ -379,8 +398,11 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasIndex("CreatedById")
                         .HasDatabaseName("ix_post_internals_created_by_id");
 
-                    b.HasIndex("PublisherId")
-                        .HasDatabaseName("ix_post_internals_publisher_id");
+                    b.HasIndex("PublishedId")
+                        .HasDatabaseName("ix_post_internals_published_id");
+
+                    b.HasIndex("RecievedFromId")
+                        .HasDatabaseName("ix_post_internals_recieved_from_id");
 
                     b.ToTable("post_internals", (string)null);
                 });
@@ -395,6 +417,12 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("file_name");
 
                     b.Property<Guid>("PostInternalId")
                         .HasColumnType("char(36)")
@@ -417,7 +445,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     b.Property<string>("AboutWork")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("about_work");
 
@@ -433,13 +460,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("created_by_id");
 
+                    b.Property<DateTime>("DeliveryDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("delivery_date");
+
                     b.Property<int>("DeliveryMethods")
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
-
-                    b.Property<DateTime>("DeliveryTime")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("delivery_time");
 
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
@@ -450,20 +477,51 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("document_number");
 
+                    b.Property<int>("DocumentType")
+                        .HasColumnType("int")
+                        .HasColumnName("document_type");
+
+                    b.Property<string>("FollowingPerson")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("following_person");
+
+                    b.Property<string>("IncomingNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("incoming_number");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("longtext")
+                        .HasColumnName("notes");
+
+                    b.Property<string>("PostNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("post_number");
+
                     b.Property<Guid>("PublishedId")
                         .HasColumnType("char(36)")
                         .HasColumnName("published_id");
 
-                    b.Property<Guid>("PublisherId")
+                    b.Property<Guid>("RecievedFromId")
                         .HasColumnType("char(36)")
-                        .HasColumnName("publisher_id");
+                        .HasColumnName("recieved_from_id");
+
+                    b.Property<string>("RecivedByName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("recived_by_name");
 
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
 
                     b.Property<string>("Subject")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("subject");
 
@@ -480,8 +538,11 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasIndex("CreatedById")
                         .HasDatabaseName("ix_post_transformers_created_by_id");
 
-                    b.HasIndex("PublisherId")
-                        .HasDatabaseName("ix_post_transformers_publisher_id");
+                    b.HasIndex("PublishedId")
+                        .HasDatabaseName("ix_post_transformers_published_id");
+
+                    b.HasIndex("RecievedFromId")
+                        .HasDatabaseName("ix_post_transformers_recieved_from_id");
 
                     b.ToTable("post_transformers", (string)null);
                 });
@@ -497,9 +558,11 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid>("PostExternalId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("post_external_id");
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("file_name");
 
                     b.Property<Guid>("PostTransformerId")
                         .HasColumnType("char(36)")
@@ -507,9 +570,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_post_transformer_attachments");
-
-                    b.HasIndex("PostExternalId")
-                        .HasDatabaseName("ix_post_transformer_attachments_post_external_id");
 
                     b.HasIndex("PostTransformerId")
                         .HasDatabaseName("ix_post_transformer_attachments_post_transformer_id");
@@ -559,9 +619,9 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("is_project");
 
-                    b.Property<bool>("IsSupplier")
+                    b.Property<bool>("IsSupplierOrSubContractor")
                         .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_supplier");
+                        .HasColumnName("is_supplier_or_sub_contractor");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -675,17 +735,26 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasConstraintName("fk_post_externals_sys_users_created_by_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "Publisher")
-                        .WithMany()
-                        .HasForeignKey("PublisherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("PublishedPostExternals")
+                        .HasForeignKey("PublishedId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_post_externals_publishers_publisher_id");
+                        .HasConstraintName("fk_post_externals_publishers_published_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "RecievedFrom")
+                        .WithMany("RecievedPostExternals")
+                        .HasForeignKey("RecievedFromId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_externals_publishers_recieved_from_id");
 
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
 
                     b.Navigation("Publisher");
+
+                    b.Navigation("RecievedFrom");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternalAttachment", b =>
@@ -717,17 +786,26 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasConstraintName("fk_post_internals_sys_users_created_by_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "Publisher")
-                        .WithMany()
-                        .HasForeignKey("PublisherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("PublishedPostInternals")
+                        .HasForeignKey("PublishedId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_post_internals_publishers_publisher_id");
+                        .HasConstraintName("fk_post_internals_publishers_published_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "RecievedFrom")
+                        .WithMany("RecievedPostInternals")
+                        .HasForeignKey("RecievedFromId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_internals_publishers_recieved_from_id");
 
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
 
                     b.Navigation("Publisher");
+
+                    b.Navigation("RecievedFrom");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostInternalAttachment", b =>
@@ -759,36 +837,38 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasConstraintName("fk_post_transformers_sys_users_created_by_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "Publisher")
-                        .WithMany()
-                        .HasForeignKey("PublisherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("PublishedPostTransformers")
+                        .HasForeignKey("PublishedId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_post_transformers_publishers_publisher_id");
+                        .HasConstraintName("fk_post_transformers_publishers_published_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "RecievedFrom")
+                        .WithMany("RecievedPostTransformers")
+                        .HasForeignKey("RecievedFromId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_transformers_publishers_recieved_from_id");
 
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
 
                     b.Navigation("Publisher");
+
+                    b.Navigation("RecievedFrom");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostTransformerAttachment", b =>
                 {
-                    b.HasOne("CompanyPost.Domain.Entities.PostExternal", "PostExternal")
-                        .WithMany()
-                        .HasForeignKey("PostExternalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_post_transformer_attachments_post_externals_post_external_id");
-
-                    b.HasOne("CompanyPost.Domain.Entities.PostTransformer", null)
+                    b.HasOne("CompanyPost.Domain.Entities.PostTransformer", "PostTransformer")
                         .WithMany("Attachments")
                         .HasForeignKey("PostTransformerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_post_transformer_attachments_post_transformers_post_transfor");
 
-                    b.Navigation("PostExternal");
+                    b.Navigation("PostTransformer");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Contracts", b =>
@@ -819,6 +899,21 @@ namespace CompanyPost.Infrastructure.Migrations
             modelBuilder.Entity("CompanyPost.Domain.Entities.Projects", b =>
                 {
                     b.Navigation("Contracts");
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.Publisher", b =>
+                {
+                    b.Navigation("PublishedPostExternals");
+
+                    b.Navigation("PublishedPostInternals");
+
+                    b.Navigation("PublishedPostTransformers");
+
+                    b.Navigation("RecievedPostExternals");
+
+                    b.Navigation("RecievedPostInternals");
+
+                    b.Navigation("RecievedPostTransformers");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsers", b =>
