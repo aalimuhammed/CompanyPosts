@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.Abstraction;
 public interface IGenericRepository<T> where T : BaseEntity , IEntity
 {
-	Task<T> FindAsync(Expression<Func<T, bool>> predicate , CancellationToken cancellationToken = default);
+	Task<T> FindAsync(Expression<Func<T, bool>>? predicate , CancellationToken cancellationToken = default);
 	Task<IReadOnlyList<T>> FindAllAsync(
 		Expression<Func<T, bool>>? predicate = null,
 		CancellationToken cancellationToken = default);

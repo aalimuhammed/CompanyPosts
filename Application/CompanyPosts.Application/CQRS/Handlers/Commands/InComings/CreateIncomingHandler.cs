@@ -1,0 +1,73 @@
+﻿using CompanyPost.Application.CQRS.Commands.InComing;
+
+namespace CompanyPost.Application.CQRS.Handlers.Commands.InComings;
+internal sealed class CreateIncomingHandler
+	: IRequestHandler<CreateIncomingCommand, Unit>
+{
+	private readonly IUnitOfWork _unitOfWork;
+	private readonly ISaveAttachment _saveAttachment;
+	public CreateIncomingHandler(
+		IUnitOfWork unitOfWork ,
+		ISaveAttachment saveAttachment)
+	{
+		_unitOfWork = unitOfWork;
+		_saveAttachment = saveAttachment;
+	}
+	public async Task<Unit> Handle(CreateIncomingCommand request, CancellationToken cancellationToken)
+	{
+		var incomingRepository = _unitOfWork.Repository<InComing>();
+		var adminRepository = _unitOfWork.Repository<SysUsers>();
+		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
+
+		var incoming = new InComing
+		{
+			SerialNumber = request.createIncomingDTO.SerialNumber,
+			DocumentNumber = request.createIncomingDTO.DocumentNumber,
+			Subject = request.createIncomingDTO.Subject,
+			DocumentDate = request.createIncomingDTO.DocumentDate,
+			DeliveryDate = request.createIncomingDTO.DeliveryDate,
+			Summary = request.createIncomingDTO.Summary,
+			DeliveryMethods = (DeliveryMethods)request.createIncomingDTO.DeliveryMethod,
+			ProjectId = request.createIncomingDTO.ProjectId,
+			SaveDate = request.createIncomingDTO.SaveDate,
+			DocumentType = (DocumentType)request.createIncomingDTO.DocumentType,
+			OriginalPublisherId = request.createIncomingDTO.OriginalPublisherId,
+			PublishedId = request.createIncomingDTO.PublishedId,
+			CreatedById = admin.Id,
+		};
+		var postExternalID = incoming.Id;
+		using var transaction = await _unitOfWork.BeginTransactionAsync();
+		try
+		{
+			await incomingRepository.AddAsync(incoming);
+			await AddAttachments(postExternalID, request.createIncomingDTO.Attachments, cancellationToken);
+
+			await _unitOfWork.SaveChangesAsync();
+			transaction.Commit();
+			return Unit.Value;
+		}
+		catch (Exception ex)
+		{
+			transaction.Rollback();
+			throw new Exception("An error occurred while creating the internal post.", ex);
+		}
+	}
+	private async Task AddAttachments(
+		Guid incomingId,
+		List<IFormFile> attachments,
+		CancellationToken cancellationToken)
+	{
+		var attachmentRepository = _unitOfWork.Repository<IncomingAttachments>();
+
+		foreach (var item in attachments)
+		{
+			var fileName = await _saveAttachment.SaveAttachmentAsync(item, "incomings", cancellationToken);
+			var attachment = new IncomingAttachments
+			{
+				IncomingId = incomingId,
+				FileName = fileName,
+			};
+			await attachmentRepository.AddAsync(attachment, cancellationToken);
+		}
+	}
+}

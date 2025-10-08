@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251006111505_AddNewTableCalledInComing")]
+    partial class AddNewTableCalledInComing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -170,10 +173,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("created_by_id");
-
                     b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("delivery_date");
@@ -232,9 +231,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_in_coming");
 
-                    b.HasIndex("CreatedById")
-                        .HasDatabaseName("ix_in_coming_created_by_id");
-
                     b.HasIndex("OriginalPublisherId")
                         .HasDatabaseName("ix_in_coming_original_publisher_id");
 
@@ -247,34 +243,52 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.ToTable("in_coming", (string)null);
                 });
 
-            modelBuilder.Entity("CompanyPost.Domain.Entities.IncomingAttachments", b =>
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PersonOrg", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("address");
+
+                    b.Property<string>("Contact_Person")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("contact_person");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("FileName")
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
-                        .HasColumnName("file_name");
+                        .HasColumnName("name");
 
-                    b.Property<Guid>("IncomingId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("incoming_id");
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("SAP_BP")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("sap_bp");
 
                     b.HasKey("Id")
-                        .HasName("pk_incoming_attachments");
+                        .HasName("pk_person_orgs");
 
-                    b.HasIndex("IncomingId")
-                        .HasDatabaseName("ix_incoming_attachments_incoming_id");
-
-                    b.ToTable("incoming_attachments", (string)null);
+                    b.ToTable("person_orgs", (string)null);
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternal", b =>
@@ -647,6 +661,29 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.ToTable("post_transformer_attachments", (string)null);
                 });
 
+            modelBuilder.Entity("CompanyPost.Domain.Entities.Projects", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_projects");
+
+                    b.ToTable("projects", (string)null);
+                });
+
             modelBuilder.Entity("CompanyPost.Domain.Entities.Publisher", b =>
                 {
                     b.Property<Guid>("Id")
@@ -744,19 +781,19 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_contracts_sys_users_created_by_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "PersonOrgs")
-                        .WithMany("ContractsPersonOrgs")
+                    b.HasOne("CompanyPost.Domain.Entities.PersonOrg", "PersonOrgs")
+                        .WithMany("Contracts")
                         .HasForeignKey("PersonOrgId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_contracts_publishers_person_org_id");
+                        .HasConstraintName("fk_contracts_person_orgs_person_org_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "Projects")
-                        .WithMany("ContractsProjects")
+                    b.HasOne("CompanyPost.Domain.Entities.Projects", "Projects")
+                        .WithMany("Contracts")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_contracts_publishers_project_id");
+                        .HasConstraintName("fk_contracts_projects_project_id");
 
                     b.Navigation("CreatedBy");
 
@@ -767,13 +804,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.InComing", b =>
                 {
-                    b.HasOne("CompanyPost.Domain.Entities.SysUsers", "CreatedBy")
-                        .WithMany("IncomingDocuments")
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_in_coming_sys_users_created_by_id");
-
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "OriginalPublisher")
                         .WithMany("OriginalPublisherInComings")
                         .HasForeignKey("OriginalPublisherId")
@@ -781,12 +811,12 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_in_coming_publishers_original_publisher_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "Projects")
-                        .WithMany("IncomingProjects")
+                    b.HasOne("CompanyPost.Domain.Entities.Projects", "Projects")
+                        .WithMany("InComings")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_in_coming_publishers_project_id");
+                        .HasConstraintName("fk_in_coming_projects_project_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "Publisher")
                         .WithMany("PublishedInComings")
@@ -795,25 +825,11 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_in_coming_publishers_published_id");
 
-                    b.Navigation("CreatedBy");
-
                     b.Navigation("OriginalPublisher");
 
                     b.Navigation("Projects");
 
                     b.Navigation("Publisher");
-                });
-
-            modelBuilder.Entity("CompanyPost.Domain.Entities.IncomingAttachments", b =>
-                {
-                    b.HasOne("CompanyPost.Domain.Entities.InComing", "Incoming")
-                        .WithMany("IncomingAttachments")
-                        .HasForeignKey("IncomingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_incoming_attachments_in_coming_incoming_id");
-
-                    b.Navigation("Incoming");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternal", b =>
@@ -974,9 +990,9 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("ContractAttachments");
                 });
 
-            modelBuilder.Entity("CompanyPost.Domain.Entities.InComing", b =>
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PersonOrg", b =>
                 {
-                    b.Navigation("IncomingAttachments");
+                    b.Navigation("Contracts");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternal", b =>
@@ -994,14 +1010,15 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Attachments");
                 });
 
+            modelBuilder.Entity("CompanyPost.Domain.Entities.Projects", b =>
+                {
+                    b.Navigation("Contracts");
+
+                    b.Navigation("InComings");
+                });
+
             modelBuilder.Entity("CompanyPost.Domain.Entities.Publisher", b =>
                 {
-                    b.Navigation("ContractsPersonOrgs");
-
-                    b.Navigation("ContractsProjects");
-
-                    b.Navigation("IncomingProjects");
-
                     b.Navigation("OriginalPublisherInComings");
 
                     b.Navigation("PublishedInComings");
@@ -1022,8 +1039,6 @@ namespace CompanyPost.Infrastructure.Migrations
             modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsers", b =>
                 {
                     b.Navigation("Contracts");
-
-                    b.Navigation("IncomingDocuments");
                 });
 #pragma warning restore 612, 618
         }

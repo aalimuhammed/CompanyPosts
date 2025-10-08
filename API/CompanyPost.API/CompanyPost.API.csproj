@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\contracts\" />
+    <Folder Include="wwwroot\incomings\" />
     <Folder Include="wwwroot\posts\" />
   </ItemGroup>
 

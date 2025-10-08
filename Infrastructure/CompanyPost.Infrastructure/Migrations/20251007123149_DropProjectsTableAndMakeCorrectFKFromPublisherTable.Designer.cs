@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251007123149_DropProjectsTableAndMakeCorrectFKFromPublisherTable")]
+    partial class DropProjectsTableAndMakeCorrectFKFromPublisherTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,6 +278,54 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasDatabaseName("ix_incoming_attachments_incoming_id");
 
                     b.ToTable("incoming_attachments", (string)null);
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PersonOrg", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("address");
+
+                    b.Property<string>("Contact_Person")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("contact_person");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("SAP_BP")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("sap_bp");
+
+                    b.HasKey("Id")
+                        .HasName("pk_person_orgs");
+
+                    b.ToTable("person_orgs", (string)null);
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternal", b =>
@@ -744,12 +795,12 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_contracts_sys_users_created_by_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "PersonOrgs")
-                        .WithMany("ContractsPersonOrgs")
+                    b.HasOne("CompanyPost.Domain.Entities.PersonOrg", "PersonOrgs")
+                        .WithMany("Contracts")
                         .HasForeignKey("PersonOrgId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_contracts_publishers_person_org_id");
+                        .HasConstraintName("fk_contracts_person_orgs_person_org_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "Projects")
                         .WithMany("ContractsProjects")
@@ -979,6 +1030,11 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("IncomingAttachments");
                 });
 
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PersonOrg", b =>
+                {
+                    b.Navigation("Contracts");
+                });
+
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternal", b =>
                 {
                     b.Navigation("Attachments");
@@ -996,8 +1052,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Publisher", b =>
                 {
-                    b.Navigation("ContractsPersonOrgs");
-
                     b.Navigation("ContractsProjects");
 
                     b.Navigation("IncomingProjects");

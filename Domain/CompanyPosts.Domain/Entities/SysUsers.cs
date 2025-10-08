@@ -7,4 +7,5 @@ public class SysUsers : BaseEntity , IHasName
 	public string email { get; set; } = string.Empty;
 	public ICollection<PostBaseEntity> Posts { get; set; } = new List<PostBaseEntity>();
 	public ICollection<Contracts> Contracts { get; set; } = new List<Contracts>();
+	public ICollection<InComing> IncomingDocuments { get; set; } = new List<InComing>();
 }

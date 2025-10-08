@@ -1,7 +1,6 @@
 ﻿global using CompanyPost.Application.Abstraction;
 global using CompanyPost.Application.CQRS.Commands;
 global using CompanyPost.Application.CQRS.Commands.Contract;
-global using CompanyPost.Application.CQRS.Commands.Post;
 global using CompanyPost.Application.CQRS.Commands.Posts;
 global using CompanyPost.Application.CQRS.Query;
 global using CompanyPost.Application.DTO.Request;

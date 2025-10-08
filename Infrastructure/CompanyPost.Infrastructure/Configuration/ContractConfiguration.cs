@@ -36,7 +36,7 @@ internal sealed class ContractConfiguration : IEntityTypeConfiguration<Contracts
 			.IsRequired();
 
 		builder.HasOne(builder => builder.Projects)
-			.WithMany(t => t.Contracts)
+			.WithMany(t => t.ContractsProjects)
 			.HasForeignKey(builder => builder.ProjectId)
 			.OnDelete(DeleteBehavior.Restrict);
 
@@ -46,7 +46,7 @@ internal sealed class ContractConfiguration : IEntityTypeConfiguration<Contracts
 			.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasOne(builder => builder.PersonOrgs)
-			.WithMany(t => t.Contracts)
+			.WithMany(t => t.ContractsPersonOrgs)
 			.HasForeignKey(builder => builder.PersonOrgId)
 			.OnDelete(DeleteBehavior.Restrict);
 

@@ -1,0 +1,20 @@
+﻿namespace CompanyPost.Application.DTO.Request;
+public record CreatePostTransofrmerDTO(
+	int SerialNumber,
+	string DocumentNumber,
+	Guid CompanyId,
+	Guid PublishedId,
+	Guid RecivedFromId,
+	string Subject,
+	string Working,
+	DateTime DocumentDate,
+	DateTime DeliveryDate,
+	string Summary,
+	string Notes,
+	int DeliveryMethod,
+	string IncomingNumber,
+	int DocumentType,
+	string RecivedName,
+	string FollowingPerson,
+	string PostNumber,
+	List<IFormFile> Attachments);

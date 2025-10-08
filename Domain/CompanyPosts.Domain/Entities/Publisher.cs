@@ -11,4 +11,9 @@ public class Publisher : BaseEntity , IHasName
 	public ICollection<PostExternal> RecievedPostExternals { get; set; } = new List<PostExternal>();
 	public ICollection<PostTransformer> PublishedPostTransformers { get; set; } = new List<PostTransformer>();
 	public ICollection<PostTransformer> RecievedPostTransformers { get; set; } = new List<PostTransformer>();
+	public ICollection<InComing> PublishedInComings { get; set; } = new List<InComing>();
+	public ICollection<InComing> OriginalPublisherInComings { get; set; } = new List<InComing>();
+	public ICollection<InComing> IncomingProjects {  get; set; } = new List<InComing>();
+	public ICollection<Contracts> ContractsProjects { get; set; } = new List<Contracts>();
+	public ICollection<Contracts> ContractsPersonOrgs { get; set; } = new List<Contracts>();
 }

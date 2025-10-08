@@ -11,9 +11,7 @@ public class CompanyPostDbContext : DbContext
 	public DbSet<PostExternalAttachment> PostExternalAttachments { get; set; }
 	public DbSet<PostTransformer> PostTransformers { get; set; }
 	public DbSet<PostTransformerAttachment> PostTransformerAttachments { get; set; }
-	public DbSet<PersonOrg> PersonOrgs { get; set; }
 	public DbSet<Contracts> Contracts { get; set; }
-	public DbSet<Projects> Projects { get; set; }
 	public DbSet<SysUsers> SysUsers { get; set; }
 	public DbSet<Company> Companies { get; set; }
 	public DbSet<Publisher> Publishers { get; set; }
