@@ -1,5 +1,5 @@
 ﻿namespace CompanyPost.Infrastructure.Repository;
-public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity , IEntity
+internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity , IEntity
 {
 	private readonly CompanyPostDbContext _context;
 	private readonly DbSet<T> _dbSet;

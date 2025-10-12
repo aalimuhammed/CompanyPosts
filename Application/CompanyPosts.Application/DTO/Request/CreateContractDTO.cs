@@ -1,12 +1,14 @@
 ﻿namespace CompanyPost.Application.DTO.Request;
-public record CreateContractDTO(string value ,
-	string details,
-	string contract_num,
-	DateTime contract_date,
-	Guid person_org_id, 
-	string working,	
-	string? notes,
-	Guid project_id,
-	string currency,
-	string purchase_order_ref , 
-	IFormFile attachments);
+public record CreateContractDTO(
+	string Value ,
+	string Details,
+	string ContractNum,
+	DateTime ContractDate,
+	int SerialNumber,
+	Guid PersonOrgId, 
+	string Working,	
+	string? Notes,
+	Guid ProjectId,
+	int Currency,
+	string PurchaseOrdNumRef , 
+	List<IFormFile> Attachments);

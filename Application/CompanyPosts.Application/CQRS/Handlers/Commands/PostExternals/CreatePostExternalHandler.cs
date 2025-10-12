@@ -3,10 +3,10 @@ internal sealed class CreatePostExternalHandler :
 	IRequestHandler<CreatePostExternalCommand, Unit>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ISaveAttachment _saveAttachment;
+	private readonly IFileService _saveAttachment;
 	public CreatePostExternalHandler(
 		IUnitOfWork unitOfWork,
-		ISaveAttachment saveAttachment)
+		IFileService saveAttachment)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
@@ -23,7 +23,7 @@ internal sealed class CreatePostExternalHandler :
 			DocumentNumber = request.CreatePostExternalDTO.DocumentNumber,
 			CompanyId = request.CreatePostExternalDTO.CompanyId,
 			PublishedId = request.CreatePostExternalDTO.PublishedId,
-			RecievedFromId = request.CreatePostExternalDTO.RecivedFromId,
+			ReceivedFromSupplierId = request.CreatePostExternalDTO.RecivedFromId,
 			Subject = request.CreatePostExternalDTO.Subject,
 			AboutWork = request.CreatePostExternalDTO.Working,
 			DocumentDate = request.CreatePostExternalDTO.DocumentDate,
@@ -48,7 +48,7 @@ internal sealed class CreatePostExternalHandler :
 		catch (Exception ex)
 		{
 			transaction.Rollback();
-			throw new Exception("An error occurred while creating the internal post.", ex);
+			throw new Exception("An error occurred while creating the external post.", ex);
 		}
 	}
 	private async Task AddAttachments(

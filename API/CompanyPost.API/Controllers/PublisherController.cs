@@ -24,4 +24,11 @@ public class PublisherController : ControllerBase
 		var projectAndDepartments = await _mediator.Send(query, cancellationToken);
 		return Ok(projectAndDepartments);
 	}
+	[HttpGet("get-suppliers")]
+	public async Task<IActionResult> GetSuppliers(CancellationToken cancellationToken)
+	{
+		var query = new GetSuppliersQuery();
+		var suppliers = await _mediator.Send(query,cancellationToken);
+		return Ok(suppliers);
+	}
 }

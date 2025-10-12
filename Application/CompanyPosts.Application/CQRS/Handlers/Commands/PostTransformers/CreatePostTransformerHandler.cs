@@ -3,10 +3,10 @@ internal sealed class CreatePostTransformerHandler
 	: IRequestHandler<CreatePostTransformerCommand, Unit>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ISaveAttachment _saveAttachment;
+	private readonly IFileService _saveAttachment;
 	public CreatePostTransformerHandler(
 		IUnitOfWork unitOfWork, 
-		ISaveAttachment saveAttachment)
+		IFileService saveAttachment)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
@@ -52,7 +52,7 @@ internal sealed class CreatePostTransformerHandler
 		catch (Exception ex)
 		{
 			transaction.Rollback();
-			throw new Exception("An error occurred while creating the internal post.", ex);
+			throw new Exception("An error occurred while creating the transformer post.", ex);
 		}
 	}
 	private async Task AddAttachments(

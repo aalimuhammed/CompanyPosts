@@ -3,82 +3,74 @@ internal sealed class CreateContractCommandHandler
 	: IRequestHandler<CreateContractCommand, Unit>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly IWebHostEnvironment _environment;
+	private readonly IFileService _saveAttachment;
 	public CreateContractCommandHandler(
 		IUnitOfWork unitOfWork,
-		IWebHostEnvironment environment)
+		IFileService saveAttachment)
 	{
 		_unitOfWork = unitOfWork;
-		_environment=environment;
+		_saveAttachment = saveAttachment;
 	}
 	public async Task<Unit> Handle(CreateContractCommand request, CancellationToken cancellationToken)
 	{
 		var contractRepository = _unitOfWork.Repository<Contracts>();
-		
-		var fileName = await SaveAttachmentAsync(request.CreatrContractDTO.attachments, cancellationToken);
-
-		var newContract = CreateContract(request, fileName);
-
-		await contractRepository.AddAsync(newContract);
-		await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-		return Unit.Value;
-	}
-	private async Task<string> SaveAttachmentAsync(IFormFile attachment, CancellationToken cancellationToken)
-	{
-		if (attachment == null || attachment.Length == 0)
-			throw new Exception("Attachment is required and must not be empty.");
-
-		var uploadsPath = Path.Combine(_environment.WebRootPath, "contracts");
-		if (!Directory.Exists(uploadsPath))
-			Directory.CreateDirectory(uploadsPath);
-
-		var fileName = Guid.NewGuid().ToString() + Path.GetExtension(attachment.FileName);
-		var filePath = Path.Combine(uploadsPath, fileName);
-
+		var adminRepository = _unitOfWork.Repository<SysUsers>();
+		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
+		using var transaction = await _unitOfWork.BeginTransactionAsync();
 		try
 		{
-			using (var stream = new FileStream(filePath, FileMode.Create))
-			{
-				await attachment.CopyToAsync(stream, cancellationToken);
-			}
+			var newContract = CreateContract(request);
+			newContract.CreatedById = admin.Id;
+			await contractRepository.AddAsync(newContract);
 
-			if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
-				throw new Exception("File upload failed. Attachment was not saved properly.");
+			await AddAttachments(newContract.Id, 
+				request.CreatrContractDTO.Attachments, cancellationToken);
 
-			return fileName;
+			await _unitOfWork.SaveChangesAsync();
+			transaction.Commit();
+			return Unit.Value;
 		}
 		catch (Exception ex)
 		{
-			throw new Exception("An error occurred while uploading the attachment.", ex);
+			transaction.Rollback();
+			throw new Exception("An error occurred while creating the contract post.", ex);
 		}
 	}
-	private Contracts CreateContract(CreateContractCommand request, string fileName)
+	private Contracts CreateContract(CreateContractCommand request)
 	{
 		return new Contracts
 		{
-			Value = request.CreatrContractDTO.value,
-			ContractNumber = request.CreatrContractDTO.contract_num,
-			CreatedById = Guid.Parse("97b46533-ed0c-46dd-87c2-2ca396ee629e"),
-			Details = request.CreatrContractDTO.details,
-			Notes = request.CreatrContractDTO.notes,
-			//Attachments = fileName,
-			Contract_Date = request.CreatrContractDTO.contract_date,
-			working = request.CreatrContractDTO.working,
-			purchase_order_ref = request.CreatrContractDTO.purchase_order_ref,
-			ProjectId = request.CreatrContractDTO.project_id,
-			PersonOrgId = request.CreatrContractDTO.person_org_id,
-			Currency = ParseCurrency(request.CreatrContractDTO.currency)
+			Value = request.CreatrContractDTO.Value,
+			ContractNumber = request.CreatrContractDTO.ContractNum,
+			Details = request.CreatrContractDTO.Details,
+			Notes = request.CreatrContractDTO.Notes,
+			Contract_Date = request.CreatrContractDTO.ContractDate,
+			working = request.CreatrContractDTO.Working,
+			purchase_order_ref = request.CreatrContractDTO.PurchaseOrdNumRef,
+			ProjectId = request.CreatrContractDTO.ProjectId,
+			PersonOrgId = request.CreatrContractDTO.PersonOrgId,
+			Currency = (Currency)request.CreatrContractDTO.Currency
 		};
 	}
-	private static Currency ParseCurrency(string currencyId)
+	private async Task AddAttachments(
+		Guid contractId,
+		List<IFormFile> attachments,
+		CancellationToken cancellationToken)
 	{
-		var cleanedCurrency = Regex.Replace(currencyId, @"\s+", "");
+		var attachmentRepository = _unitOfWork.Repository<ContractAttachments>();
 
-		if (Enum.TryParse(cleanedCurrency, true, out Currency status))
+		foreach (var item in attachments)
 		{
-			return status;
+			var fileName = await _saveAttachment.SaveAttachmentAsync(
+				item, 
+				"contracts", 
+				cancellationToken);
+			var attachment = new ContractAttachments
+			{
+				ContractID = contractId,
+				FileName = fileName,
+			};
+			await attachmentRepository.AddAsync(attachment, cancellationToken);
 		}
-		throw new Exception($"Invalid currency: {currencyId}");
 	}
 }

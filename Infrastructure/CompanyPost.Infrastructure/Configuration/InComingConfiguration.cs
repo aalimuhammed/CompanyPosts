@@ -33,5 +33,8 @@ internal sealed class InComingConfiguration : IEntityTypeConfiguration<InComing>
 			.WithMany(t => t.PublishedInComings)
 			.HasForeignKey(builder => builder.PublishedId)
 			.OnDelete(DeleteBehavior.Restrict);
+
+		builder.HasIndex(x => x.DocumentNumber)
+			   .IsUnique();
 	}
 }

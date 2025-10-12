@@ -1,6 +1,7 @@
 ﻿global using CompanyPost.Application.Abstraction;
 global using CompanyPost.Domain.Base;
 global using CompanyPost.Domain.Entities;
+global using CompanyPost.Domain.Interface;
 global using CompanyPost.Infrastructure.Authentication;
 global using CompanyPost.Infrastructure.Data;
 global using CompanyPost.Infrastructure.Repository;

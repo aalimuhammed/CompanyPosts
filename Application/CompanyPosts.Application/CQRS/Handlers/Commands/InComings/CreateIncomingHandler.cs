@@ -5,10 +5,10 @@ internal sealed class CreateIncomingHandler
 	: IRequestHandler<CreateIncomingCommand, Unit>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ISaveAttachment _saveAttachment;
+	private readonly IFileService _saveAttachment;
 	public CreateIncomingHandler(
 		IUnitOfWork unitOfWork ,
-		ISaveAttachment saveAttachment)
+		IFileService saveAttachment)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
@@ -40,16 +40,17 @@ internal sealed class CreateIncomingHandler
 		try
 		{
 			await incomingRepository.AddAsync(incoming);
-			await AddAttachments(postExternalID, request.createIncomingDTO.Attachments, cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync();
 			transaction.Commit();
+			await AddAttachments(postExternalID, 
+				request.createIncomingDTO.Attachments, cancellationToken);
 			return Unit.Value;
 		}
 		catch (Exception ex)
 		{
 			transaction.Rollback();
-			throw new Exception("An error occurred while creating the internal post.", ex);
+			throw new Exception("An error occurred while creating the incoming post.", ex);
 		}
 	}
 	private async Task AddAttachments(

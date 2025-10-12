@@ -2,5 +2,6 @@
 public class ContractAttachments : BaseEntity
 {
 	public Guid ContractID { get; set; }
-	public Contracts Contracts { get; set; }
+	public string FileName { get; set; } = null!;
+	public Contracts Contracts { get; set; } = null!;
 }

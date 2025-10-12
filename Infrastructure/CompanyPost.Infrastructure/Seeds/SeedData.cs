@@ -6,6 +6,7 @@ public static class SeedData
 		await SeedSysUser(context);
 		await SeedPublishers(context);
 		await SeedCompanies(context);
+		await SeedWorkTypes(context);
 	}
 	private static async Task SeedSysUser(CompanyPostDbContext context)
 	{
@@ -356,6 +357,104 @@ public static class SeedData
 				};
 
 			await context.Companies.AddRangeAsync(companies.Select(p => new Company { Name = p.Name , CompanyCode = p.Code }));
+			await context.SaveChangesAsync();
+		}
+	}
+	private static async Task SeedWorkTypes(CompanyPostDbContext context)
+	{
+		if(!context.WorkTypes.Any())
+		{
+			var workTypes = new[]
+				{
+					new { Code = "M001", Name = "حديد تسليح" },
+					new { Code = "M002", Name = "سلك معدني" },
+					new { Code = "M003", Name = "عناصر انشائيه معدنيه" },
+					new { Code = "M004", Name = "ابواب و شبابيك معدنيه" },
+					new { Code = "M005", Name = "اكسسوارات مبانى و محاره" },
+					new { Code = "M006", Name = "مصنعات معدنيه" },
+					new { Code = "M007", Name = "اخشاب خام" },
+					new { Code = "M008", Name = "اخشاب مصنعه" },
+					new { Code = "M009", Name = "اسمنت" },
+					new { Code = "M010", Name = "مواد محجريه" },
+					new { Code = "M011", Name = "مياه" },
+					new { Code = "M012", Name = "خرسانه جاهزه" },
+					new { Code = "M013", Name = "توريد منتجات اسمنتيه" },
+					new { Code = "M014", Name = "توريد سيراميك وبورسلين" },
+					new { Code = "M015", Name = "توريد حجر طبيعى رخام و جرانيت" },
+					new { Code = "M016", Name = "توريد اسقف مستعاره" },
+					new { Code = "M017", Name = "مواد كيميائيه و اضافات" },
+					new { Code = "M018", Name = "دهانات" },
+					new { Code = "M019", Name = "زجاج و مرايات" },
+					new { Code = "M020", Name = "خامات بلاستيك متنوعه" },
+					new { Code = "M022", Name = "اكسسوارات ابواب و شبابيك" },
+					new { Code = "M023", Name = "زيوت و شحوم و محروقات" },
+					new { Code = "M024", Name = "كاوتش و بطاريات" },
+					new { Code = "M025", Name = "قطع غيار" },
+					new { Code = "M026", Name = "قطع غيار معدات ثقيله" },
+					new { Code = "M027", Name = "اكسسوارات تثبيت وربط" },
+					new { Code = "M028", Name = "عدد يدويه" },
+					new { Code = "M029", Name = "الات - معدات - اكسسوارات" },
+					new { Code = "M030", Name = "مستلزمات معامل الخرسانات - مساحه - قياس" },
+					new { Code = "M031", Name = "مستلزمات العياده" },
+					new { Code = "M032", Name = "مستلزمات امن صناعي" },
+					new { Code = "M033", Name = "مستلزمات رياضيه" },
+					new { Code = "M034", Name = "مهمات زراعيه ومستلزماتها" },
+					new { Code = "M035", Name = "كرفان - كونتينر" },
+					new { Code = "M036", Name = "شده معدنيه ومستلزماتها" },
+					new { Code = "M037", Name = "ادوات مكتبيه" },
+					new { Code = "M038", Name = "دعايه واعلان" },
+					new { Code = "M039", Name = "اجهزه IT و طابعات و برامج و مستلزماتها" },
+					new { Code = "M040", Name = "مهمات اسكان" },
+					new { Code = "M041", Name = "اثاث مكتبى و اثاث عميل" },
+					new { Code = "M042", Name = "اجهزه كهربائيه - اسكان" },
+					new { Code = "M043", Name = "فواصل تمدد و هبوط و اكسسواراتها" },
+					new { Code = "M044", Name = "توريد عداد مياة" },
+					new { Code = "M045", Name = "توريد سخانات و غلايات و مستلزماتها" },
+					new { Code = "M046", Name = "توريد مستلزمات اعمال حريق و اطفاء" },
+					new { Code = "M047", Name = "توريد كابلات و اسلاك و مستلزماتها" },
+					new { Code = "M051", Name = "اجهزه تنظيم - تغذيه - قياس تيار UPS & STABLIZER" },
+					new { Code = "M052", Name = "مهمات و اجهزه قياس كهرباء MEASUREMENTS" },
+					new { Code = "M053", Name = "لقم و وشوش و شاسيهات كهرباء  WIRING DEVICES" },
+					new { Code = "M054", Name = "وحدات الاضاءه LIGHTING FIXTURES" },
+					new { Code = "M055", Name = "لوحات كهرباء" },
+					new { Code = "M056", Name = "محولات كهرباء LV & MV TRANSFORMERS" },
+					new { Code = "M057", Name = "مهمات كهرباء خدميه و اكسسوراتها" },
+					new { Code = "M058", Name = "مناهيل كهرباء  MANHOL" },
+					new { Code = "M059", Name = "لوحات و راكات و سيرفرات للانظمه المتخصصه" },
+					new { Code = "M060", Name = "نظام شبكه الاتصالات  SCS" },
+					new { Code = "M061", Name = "نظام الصوتيات PA SYSTEM" },
+					new { Code = "M062", Name = "نظام المرئيات AV" },
+					new { Code = "M063", Name = "نظام كاميرات المراقبه IPVSS" },
+					new { Code = "M064", Name = "انظمه الدش المركزى MTV" },
+					new { Code = "M065", Name = "توريد مولدات - مواتير - محولات" },
+					new { Code = "M066", Name = "توريد ساندوتش بانل و كرفانات" },
+					new { Code = "M067", Name = "توريد قطع غيار مضخة خرسانة" },
+					new { Code = "M068", Name = "توريد قطع غيار ومستلزمات تغذية صناعات كهربائية و ميكانيكية" },
+					new { Code = "S001", Name = "جسات تربة" },
+					new { Code = "S002", Name = "توريد رمل و سن و زلط" },
+					new { Code = "S003", Name = "حفر و ردم" },
+					new { Code = "S004", Name = "توريد وتنفيذ خوازيق" },
+					new { Code = "S005", Name = "تنفيذ بلاطات خرسانة مسلحة" },
+					new { Code = "S006", Name = "نجارة مسلحة" },
+					new { Code = "S007", Name = "حدادة مسلحة" },
+					new { Code = "S008", Name = "فرمجة" },
+					new { Code = "S009", Name = "توريد وتنفيذ اعمال عزل و ايبوكسيات" },
+					new { Code = "S010", Name = "توريد وتركيب فواصل تمدد" },
+					new { Code = "S011", Name = "ايجار شدة معدنية" },
+					new { Code = "S012", Name = "توريد و تركيب شدة منزلقة" },
+					new { Code = "S013", Name = "مصنعيات  مبانى" },
+					new { Code = "S014", Name = "مصنعيات  بياض" },
+					new { Code = "S015", Name = "مصنعيات سيراميك" },
+					new { Code = "S016", Name = "مصنعيات بلاط" },
+					new { Code = "S017", Name = "توريد وتنفيذ اعمال دهانات" },
+					new { Code = "S018", Name = "توريد وتركيب ابواب خشبية" },
+					new { Code = "S019", Name = "توريد وتركيب برجولات خشبية" },
+					new { Code = "S020", Name = "توريد وتركيب اعمال الومنيوم" },
+					new { Code = "Z01", Name = "مورد حديد" },
+					new { Code = "Z02", Name = "مورد اسمنت" },
+					new { Code = "Z03", Name = "مورد سيراميك" }
+				};
+			await context.WorkTypes.AddRangeAsync(workTypes.Select(p => new WorkType { Name = p.Name, Code = p.Code }));
 			await context.SaveChangesAsync();
 		}
 	}

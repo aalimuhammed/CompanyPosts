@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Domain.Entities;
+﻿
+
+namespace CompanyPost.Domain.Entities;
 public class SysUsers : BaseEntity , IHasName
 {
 	public string Name { get; set; } = string.Empty;

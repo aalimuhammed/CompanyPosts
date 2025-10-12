@@ -9,6 +9,13 @@ public class ContractsController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+	[HttpGet("GetContractMaxSerialNumber")]
+	public async Task<IActionResult> GetMaxSerialNumberAsync(CancellationToken cancellationToken)
+	{
+		var query = new GetContractMaxSerialNumberQuery();
+		var result = await _mediator.Send(query, cancellationToken);
+		return Ok(result);
+	}
 	[HttpPost("create-contract")]
 	public async Task<IActionResult> CreateContract(
 		[FromForm] CreateContractDTO creatrContractDTO,

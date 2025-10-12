@@ -31,9 +31,12 @@ internal sealed class PostExternalConfiguration : IEntityTypeConfiguration<PostE
 			.HasForeignKey(builder => builder.PublishedId)
 			.OnDelete(DeleteBehavior.Restrict);
 
-		builder.HasOne(builder => builder.RecievedFrom)
+		builder.HasOne(builder => builder.ReceivedFromSupplier)
 				.WithMany(t => t.RecievedPostExternals)
-				.HasForeignKey(builder => builder.RecievedFromId)
+				.HasForeignKey(builder => builder.ReceivedFromSupplierId)
 				.OnDelete(DeleteBehavior.Restrict);
+
+		builder.HasIndex(x => x.DocumentNumber)
+			   .IsUnique();
 	}
 }

@@ -3,10 +3,10 @@ internal sealed class CreatePostInternalHandler
 	: IRequestHandler<CreatePostInternalCommand, Unit>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ISaveAttachment _saveAttachment;
+	private readonly IFileService _saveAttachment;
 	public CreatePostInternalHandler(
 		IUnitOfWork unitOfWork,
-		ISaveAttachment saveAttachment)
+		IFileService saveAttachment)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment =saveAttachment;

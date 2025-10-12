@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
-using System.Threading.Tasks;
 
 namespace CompanyPost.Infrastructure.Repository;
 public class UnitOfWork : IUnitOfWork

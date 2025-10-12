@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using CompanyPost.Domain.Interface;
+using System.Data;
 namespace CompanyPost.Application.Abstraction;
 public interface IUnitOfWork : IDisposable
 {

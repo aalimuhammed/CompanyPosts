@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Domain.Entities;
+﻿using CompanyPost.Domain.Interface;
+
+namespace CompanyPost.Domain.Entities;
 public class Company : BaseEntity, IHasName
 {
 	public string CompanyCode { get; set; } = null!;

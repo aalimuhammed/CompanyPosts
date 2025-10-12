@@ -1,5 +1,5 @@
 ﻿namespace CompanyPost.Infrastructure.Configuration;
-internal sealed class IncomingAttachmentConfiguration
+internal sealed class InComingAttachmentConfiguration
 	: IEntityTypeConfiguration<IncomingAttachments>
 {
 	public void Configure(EntityTypeBuilder<IncomingAttachments> builder)

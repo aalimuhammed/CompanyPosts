@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Application.Abstraction;
+﻿using CompanyPost.Domain.Interface;
+
+namespace CompanyPost.Application.Abstraction;
 public interface IGenericRepository<T> where T : BaseEntity , IEntity
 {
 	Task<T> FindAsync(Expression<Func<T, bool>>? predicate , CancellationToken cancellationToken = default);

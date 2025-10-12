@@ -50,5 +50,8 @@ internal sealed class PostTransformerConfiguration :
 				.WithMany(t => t.RecievedPostTransformers)
 				.HasForeignKey(builder => builder.RecievedFromId)
 				.OnDelete(DeleteBehavior.Restrict);
+
+		builder.HasIndex(x => x.DocumentNumber)
+			   .IsUnique();
 	}
 }

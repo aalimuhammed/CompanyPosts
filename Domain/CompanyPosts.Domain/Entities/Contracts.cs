@@ -1,6 +1,7 @@
 ﻿namespace CompanyPost.Domain.Entities;
-public class Contracts : BaseEntity
+public class Contracts : BaseEntity , IHasSharedProperty
 {
+	public int SerialNumber { get; set; }
 	public string Value { get; set; } = string.Empty;
 	public string Details { get; set; } = string.Empty;
 	public string ContractNumber { get; set; } = string.Empty;
@@ -16,5 +17,8 @@ public class Contracts : BaseEntity
 	public Currency Currency { get; set; }
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; } = null!;
+	public Departments Department { get; set; }
+	public Guid WorkTypeId { get; set; }
+	public WorkType WorkType { get; set; } = null!;
 	public ICollection<ContractAttachments> ContractAttachments { get; set; } = new List<ContractAttachments>();
 }

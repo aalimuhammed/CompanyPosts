@@ -1,12 +1,33 @@
 ﻿namespace CompanyPost.Infrastructure.Services;
-public class SaveAttachment : ISaveAttachment
+public class FileService : IFileService
 {
 	private readonly IWebHostEnvironment _environment;
-	public SaveAttachment(IWebHostEnvironment environment)
+	public FileService(IWebHostEnvironment environment)
 	{
 		_environment = environment;
 	}
-	public async Task<string> SaveAttachmentAsync(IFormFile attachment, string folderName, CancellationToken cancellationToken)
+	public void DeleteFile(string folderName, string fileName)
+	{
+		if (string.IsNullOrWhiteSpace(folderName) || string.IsNullOrWhiteSpace(fileName))
+			return;
+		try
+		{
+			var filePath = Path.Combine(_environment.WebRootPath, folderName, fileName);
+
+			if (File.Exists(filePath))
+			{
+				File.Delete(filePath);
+			}
+		}
+		catch (Exception ex)
+		{
+			throw new Exception("An Error Occurred when deleting a file", ex.InnerException);
+		}
+	}
+	public async Task<string> SaveAttachmentAsync(
+		IFormFile attachment, 
+		string folderName, 
+		CancellationToken cancellationToken)
 	{
 		if (attachment == null || attachment.Length == 0)
 			throw new Exception("Attachment is required and must not be empty.");

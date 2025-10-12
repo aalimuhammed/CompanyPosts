@@ -3,11 +3,11 @@ internal sealed class UpdateContractCommandHandler
 	: IRequestHandler<UpdateContractCommand, Unit>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ISaveAttachment _saveAttachment;
+	private readonly IFileService _saveAttachment;
 	private readonly IWebHostEnvironment _environment;
 	public UpdateContractCommandHandler(
 		IUnitOfWork unitOfWork,
-		ISaveAttachment saveAttachment,
+		IFileService saveAttachment,
 		IWebHostEnvironment environment)
 	{
 		_unitOfWork = unitOfWork;

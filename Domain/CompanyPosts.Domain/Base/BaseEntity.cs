@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CompanyPost.Domain.Base;
+﻿namespace CompanyPost.Domain.Base;
 public abstract class BaseEntity : IEntity
 {
 	[Key]

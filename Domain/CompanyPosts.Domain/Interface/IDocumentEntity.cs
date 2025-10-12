@@ -1,7 +1,6 @@
-﻿namespace CompanyPost.Domain.Base;
+﻿namespace CompanyPost.Domain.Interface;
 public interface IDocumentEntity
 {
-	public int SerialNumber { get; set; }
 	public string DocumentNumber { get; set; }
 	public string? Subject { get; set; }
 	public DateTime DocumentDate { get; set; }

@@ -50,8 +50,19 @@ internal sealed class ContractConfiguration : IEntityTypeConfiguration<Contracts
 			.HasForeignKey(builder => builder.PersonOrgId)
 			.OnDelete(DeleteBehavior.Restrict);
 
+		builder.HasOne(builder => builder.WorkType)
+				.WithMany(t => t.Contracts)
+				.HasForeignKey(builder => builder.WorkTypeId)
+				.OnDelete(DeleteBehavior.Restrict);
+
 		builder.Property(builder => builder.Currency)
 			.HasConversion<int>()
 			.IsRequired();
+
+		builder.HasIndex(builder => builder.ContractNumber)
+			.IsUnique();
+
+		builder.HasIndex(builder => builder.purchase_order_ref)
+			.IsUnique();
 	}
 }
