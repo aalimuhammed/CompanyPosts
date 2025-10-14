@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 
 namespace CompanyPost.Application.Exceptions;
 public sealed class GlobalExceptionHandling(
@@ -18,7 +19,7 @@ public sealed class GlobalExceptionHandling(
 
 			httpContext.Response.StatusCode = ex switch
 			{
-				ApplicationException => StatusCodes.Status400BadRequest,
+				ApplicationException or ValidationException => StatusCodes.Status400BadRequest,
 				_ => StatusCodes.Status500InternalServerError
 			};
 

@@ -35,12 +35,12 @@ public class Program
 										.AllowAnyMethod()
 										.SetIsOriginAllowed(origin => true)
 										.AllowCredentials());
-		app.MapControllers();
-		app.UseMiddleware<GlobalExceptionHandling>();
+		
 		app.UseAuthentication();
 		app.UseAuthorization();
+		app.MapControllers();
+		app.UseMiddleware<GlobalExceptionHandling>();
 		app.UseStaticFiles();
-
 		app.Run();
 	}
 }
