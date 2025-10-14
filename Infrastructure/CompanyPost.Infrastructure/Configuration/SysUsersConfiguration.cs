@@ -3,22 +3,23 @@ internal sealed class SysUsersConfiguration : IEntityTypeConfiguration<SysUsers>
 {
 	public void Configure(EntityTypeBuilder<SysUsers> builder)
 	{
-		//builder.HasKey(builder => builder.Id);
-
-		builder.Property(builder => builder.username)
+		builder.Property(builder => builder.UserName)
 			.HasMaxLength(50)
 			.IsRequired();
 
-		builder.Property(builder => builder.password)
+		builder.Property(builder => builder.Password)
 			.HasMaxLength(255)
 			.IsRequired();
 
-		builder.Property(builder => builder.email)
+		builder.Property(builder => builder.Email)
 			.HasMaxLength(100)
 			.IsRequired();
 
 		builder.Property(builder => builder.Name)
 			.HasMaxLength(50)
 			.IsRequired();
+
+		builder.Property(builder => builder.IsPasswordDefault)
+			.HasDefaultValue(true);
 	}
 }

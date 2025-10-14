@@ -32,7 +32,7 @@ internal sealed class UpdateContractCommandHandler
 		contractToUpdate.Currency = Enum.TryParse(request.UpdateContractDTO.Currency, true, out Currency currency)
 				 ? currency : throw new ArgumentException($"Invalid currency: {request.UpdateContractDTO.Currency}");
 
-		contractToUpdate.working = request.UpdateContractDTO.Working;
+		//contractToUpdate.working = request.UpdateContractDTO.Working;
 		contractToUpdate.purchase_order_ref = request.UpdateContractDTO.PurchaseOrdeRef;
 		contractToUpdate.PersonOrgId = request.UpdateContractDTO.PersonOrgId;
 

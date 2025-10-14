@@ -7,7 +7,6 @@ public class Contracts : BaseEntity , IHasSharedProperty
 	public string ContractNumber { get; set; } = string.Empty;
 	public string? Notes { get; set; }
 	public DateTime Contract_Date { get; set; }
-	public string working { get; set; } = string.Empty;
 	public string purchase_order_ref { get; set; } = string.Empty;
 	public Guid ProjectId { get; set; }
 	public Publisher Projects { get; set; } = null!;

@@ -9,6 +9,5 @@ public record ContractResponeDTO(
 	string project_name,
 	string created_by,
 	string currency ,
-	string working ,
 	string purchase_order_ref,
 	string contractor);

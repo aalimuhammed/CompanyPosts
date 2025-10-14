@@ -15,8 +15,8 @@ public static class SeedData
 			await context.SysUsers.AddRangeAsync(
 				  new SysUsers
 				  {
-					  username = "admin",
-					  password = BCrypt.Net.BCrypt.HashPassword("123456789"),
+					  UserName = "admin",
+					  Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
 				  }
 			  );
 			await context.SaveChangesAsync();

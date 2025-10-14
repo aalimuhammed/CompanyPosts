@@ -1,8 +1,8 @@
 ﻿namespace CompanyPost.Infrastructure.Configuration;
 internal sealed class InComingAttachmentConfiguration
-	: IEntityTypeConfiguration<IncomingAttachments>
+	: IEntityTypeConfiguration<InComingAttachments>
 {
-	public void Configure(EntityTypeBuilder<IncomingAttachments> builder)
+	public void Configure(EntityTypeBuilder<InComingAttachments> builder)
 	{
 		builder.HasOne(builder => builder.Incoming)
 				.WithMany(t => t.IncomingAttachments)

@@ -7,6 +7,7 @@ public class UnitOfWork : IUnitOfWork
 	private bool _disposed = false;
 	protected IServiceProvider ServiceProvider { get; }
 	protected CompanyPostDbContext context { get; }
+	private IDbContextTransaction? _currentTransaction;
 	public UnitOfWork(IServiceProvider serviceProvider)
 	{
 		ServiceProvider = serviceProvider;
@@ -14,8 +15,31 @@ public class UnitOfWork : IUnitOfWork
 	}
 	public async Task<IDbTransaction> BeginTransactionAsync()
 	{
-		var transaction = await context.Database.BeginTransactionAsync();
-		return transaction.GetDbTransaction();
+		if (_currentTransaction != null)
+		{
+			throw new InvalidOperationException("A transaction is already in progress.");
+		}
+
+		_currentTransaction = await context.Database.BeginTransactionAsync();
+		return _currentTransaction.GetDbTransaction();
+	}
+	public async Task CommitTransactionAsync()
+	{
+		if (_currentTransaction == null)
+			throw new InvalidOperationException("No transaction started.");
+
+		await _currentTransaction.CommitAsync();
+		await _currentTransaction.DisposeAsync();
+		_currentTransaction = null;
+	}
+	public async Task RollbackTransactionAsync()
+	{
+		if (_currentTransaction == null)
+			throw new InvalidOperationException("No transaction started.");
+
+		await _currentTransaction.RollbackAsync();
+		await _currentTransaction.DisposeAsync();
+		_currentTransaction = null;
 	}
 	public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{

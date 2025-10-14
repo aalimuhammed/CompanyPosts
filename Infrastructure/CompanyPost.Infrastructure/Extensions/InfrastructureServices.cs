@@ -3,9 +3,9 @@ public static class InfrastructureServices
 {
 	public static IServiceCollection AddInfrastructure(
 		this IServiceCollection services, 
-		IConfiguration conguration)
+		IConfiguration configuration)
 	{
-		var defaultConnectionString = conguration.GetConnectionString("DefaultConnection");
+		var defaultConnectionString = configuration.GetConnectionString("DefaultConnection");
 
 		services.AddDbContext<CompanyPostDbContext>(
 			options => options.UseMySql(defaultConnectionString,
@@ -16,10 +16,12 @@ public static class InfrastructureServices
 		services.AddScoped<IUnitOfWork , UnitOfWork>();
 		services.AddScoped<IFileService, FileService>();
 
-		services.Configure<JwtSettings>(conguration.GetSection("JwtSettings"));
-		services.AddSingleton<IJWTGenerator, JwtGenerator>();
+		services.AddSingleton<IJwTGenerator, JwtGenerator>();
+		services.AddSingleton<IPasswordService, PasswordServices>();
 
-		var JwtSettings = conguration.GetSection("JwtSettings").Get<JwtSettings>();
+		var jwtSection = configuration.GetSection("JwtSettings");
+		services.Configure<JwtSettings>(jwtSection);
+		var jwtSettings = jwtSection.Get<JwtSettings>();
 
 		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		.AddJwtBearer(options =>
@@ -27,19 +29,16 @@ public static class InfrastructureServices
 			options.TokenValidationParameters = new TokenValidationParameters
 			{
 				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings!.Secret)),
+				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings!.Secret)),
 				ValidateIssuer = true,
-				ValidIssuer = JwtSettings.Issuer,
+				ValidIssuer = jwtSettings.Issuer,
 				ValidateAudience = true,
-				ValidAudience = JwtSettings.Audience,
+				ValidAudience = jwtSettings.Audience,
 				ValidateLifetime = true,
 				ClockSkew = TimeSpan.Zero
 			};
 		});
 		services.AddAuthorization();
-
-		services.AddSingleton<IPasswordService, PasswordServices>();
-
 		return services;
 	}
 }

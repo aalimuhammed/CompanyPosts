@@ -45,11 +45,12 @@ internal sealed class CreateContractCommandHandler
 			Details = request.CreatrContractDTO.Details,
 			Notes = request.CreatrContractDTO.Notes,
 			Contract_Date = request.CreatrContractDTO.ContractDate,
-			working = request.CreatrContractDTO.Working,
+			WorkTypeId = request.CreatrContractDTO.WorkTypeId,
 			purchase_order_ref = request.CreatrContractDTO.PurchaseOrdNumRef,
 			ProjectId = request.CreatrContractDTO.ProjectId,
 			PersonOrgId = request.CreatrContractDTO.PersonOrgId,
-			Currency = (Currency)request.CreatrContractDTO.Currency
+			Currency = (Currency)request.CreatrContractDTO.Currency,
+			Department = (Departments)request.CreatrContractDTO.Department
 		};
 	}
 	private async Task AddAttachments(
