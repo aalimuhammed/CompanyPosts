@@ -4,7 +4,7 @@ internal sealed class WorkTypeConfiguration : IEntityTypeConfiguration<WorkType>
 	public void Configure(EntityTypeBuilder<WorkType> builder)
 	{
 		builder.Property(x => x.Name)
-			.HasMaxLength(50)
+			.HasMaxLength(100)
 			.IsRequired();
 	}
 }

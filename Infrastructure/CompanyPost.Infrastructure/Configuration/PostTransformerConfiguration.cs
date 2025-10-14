@@ -4,7 +4,6 @@ internal sealed class PostTransformerConfiguration :
 {
 	public void Configure(EntityTypeBuilder<PostTransformer> builder)
 	{
-		//builder.HasKey(x => x.Id);
 
 		builder.Property(x => x.DocumentNumber)
 			.HasMaxLength(50)

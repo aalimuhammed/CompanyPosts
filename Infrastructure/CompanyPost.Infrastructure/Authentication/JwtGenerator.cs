@@ -1,5 +1,5 @@
 ﻿namespace CompanyPost.Infrastructure.Authentication;
-internal class JwtGenerator : IJWTGenerator
+internal class JwtGenerator : IJwTGenerator
 {
 	private readonly JwtSettings _jwtSettings;
 	public JwtGenerator(IOptions<JwtSettings> jwtSettings)

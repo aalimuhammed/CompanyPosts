@@ -25,9 +25,9 @@ internal sealed class GetContractsHandler
 			c.Notes,
 			c.Contract_Date ,
 			c.Projects.Name,
-			c.CreatedBy.username,
+			c.CreatedBy.UserName,
 			c.Currency.ToString(),
-			c.working,
+			//c.working,
 			c.purchase_order_ref,
 			c.PersonOrgs.Name
 			//c.Attachments != null ? $"/contracts/{c.Attachments}" : null

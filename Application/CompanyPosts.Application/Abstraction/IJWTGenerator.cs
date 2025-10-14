@@ -1,5 +1,5 @@
 ﻿namespace CompanyPost.Application.Abstraction;
-public interface IJWTGenerator
+public interface IJwTGenerator
 {
 	string CreateToken(Guid userId);
 }

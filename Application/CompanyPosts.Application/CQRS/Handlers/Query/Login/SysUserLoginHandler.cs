@@ -3,11 +3,11 @@ internal class SysUserLoginHandler : IRequestHandler<SysUserLoginQuery, AuthResu
 {
 	private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordService _passwordService;
-	private readonly IJWTGenerator _jwtGenerator;
+	private readonly IJwTGenerator _jwtGenerator;
 	public SysUserLoginHandler(
 		IUnitOfWork unitOfWork,
 		IPasswordService passwordService,
-		IJWTGenerator jWTGenerator)
+		IJwTGenerator jWTGenerator)
 	{
 		_unitOfWork = unitOfWork;
 		_passwordService = passwordService;
@@ -18,10 +18,10 @@ internal class SysUserLoginHandler : IRequestHandler<SysUserLoginQuery, AuthResu
 		var userRepo = _unitOfWork.Repository<SysUsers>();
 
 		var user = await userRepo.FindAsync(
-			u => u.username == request.usernameOrEmail.ToLowerInvariant() || 
-			u.email == request.usernameOrEmail.ToLowerInvariant());
+			u => u.UserName == request.usernameOrEmail.ToLowerInvariant() || 
+			u.Email == request.usernameOrEmail.ToLowerInvariant());
 
-		if (user is null || !_passwordService.VerifyPassword(request.password, user.password))
+		if (user is null || !_passwordService.VerifyPassword(request.password, user.Password))
 		{
 			return new AuthResultDTO(false, "Invalid password or email");
 		}

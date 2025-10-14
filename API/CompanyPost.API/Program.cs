@@ -1,3 +1,5 @@
+using static System.Formats.Asn1.AsnWriter;
+
 namespace CompanyPost.API;
 public class Program
 {
@@ -6,20 +8,25 @@ public class Program
 		var builder = WebApplication.CreateBuilder(args);
 
 		// Add services to the container.
-		builder.Services.AddAuthorization();
 		builder.Services.AddControllers();
 		builder.Services
 			  .AddApplication()
 			  .AddInfrastructure(builder.Configuration);
 
 		var app = builder.Build();
-
-
-		using (var scope = app.Services.CreateScope())
+		try
 		{
-			var context = scope.ServiceProvider.GetRequiredService<CompanyPostDbContext>();
-			context.Database.Migrate();
-			await SeedData.Initialize(context);
+			using (var scope = app.Services.CreateScope())
+			{
+				var context = scope.ServiceProvider.GetRequiredService<CompanyPostDbContext>();
+				context.Database.Migrate();
+				await SeedData.Initialize(context);
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"An error occurred during migration: {ex.Message}");
+			throw;
 		}
 
 		app.UseHttpsRedirection();

@@ -24,10 +24,6 @@ internal sealed class ContractConfiguration : IEntityTypeConfiguration<Contracts
 			.HasMaxLength(100)
 			.IsRequired();
 
-		builder.Property(builder => builder.working)
-			.HasMaxLength(100)
-			.IsRequired();
-
 		builder.Property(builder => builder.Value)
 			.HasMaxLength(100)
 			.IsRequired();

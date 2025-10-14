@@ -58,12 +58,12 @@ internal sealed class CreateIncomingHandler
 		List<IFormFile> attachments,
 		CancellationToken cancellationToken)
 	{
-		var attachmentRepository = _unitOfWork.Repository<IncomingAttachments>();
+		var attachmentRepository = _unitOfWork.Repository<InComingAttachments>();
 
 		foreach (var item in attachments)
 		{
 			var fileName = await _saveAttachment.SaveAttachmentAsync(item, "incomings", cancellationToken);
-			var attachment = new IncomingAttachments
+			var attachment = new InComingAttachments
 			{
 				IncomingId = incomingId,
 				FileName = fileName,

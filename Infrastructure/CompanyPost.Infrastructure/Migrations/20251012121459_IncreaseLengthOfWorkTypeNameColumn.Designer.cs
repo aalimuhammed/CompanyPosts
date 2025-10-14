@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251012121459_IncreaseLengthOfWorkTypeNameColumn")]
+    partial class IncreaseLengthOfWorkTypeNameColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,6 +157,12 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("purchase_order_ref");
+
+                    b.Property<string>("working")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("working");
 
                     b.HasKey("Id")
                         .HasName("pk_contracts");
@@ -348,12 +357,12 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("created_at");
 
                     b.HasKey("EmployeeId", "InComingId", "Id")
-                        .HasName("pk_in_coming_responsible_employees");
+                        .HasName("pk_in_coming_responsible_employee");
 
                     b.HasIndex("InComingId")
-                        .HasDatabaseName("ix_in_coming_responsible_employees_in_coming_id");
+                        .HasDatabaseName("ix_in_coming_responsible_employee_in_coming_id");
 
-                    b.ToTable("in_coming_responsible_employees", (string)null);
+                    b.ToTable("in_coming_responsible_employee", (string)null);
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternal", b =>
@@ -799,67 +808,34 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("email");
-
-                    b.Property<bool>("IsPasswordDefault")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_password_default");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("name");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("password")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("password");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("username")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
-                        .HasColumnName("user_name");
+                        .HasColumnName("username");
 
                     b.HasKey("Id")
                         .HasName("pk_sys_users");
 
                     b.ToTable("sys_users", (string)null);
-                });
-
-            modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsersCompany", b =>
-                {
-                    b.Property<Guid>("SysUserId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("sys_user_id");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("company_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.HasKey("SysUserId", "CompanyId")
-                        .HasName("pk_sys_users_companies");
-
-                    b.HasIndex("CompanyId")
-                        .HasDatabaseName("ix_sys_users_companies_company_id");
-
-                    b.ToTable("sys_users_companies", (string)null);
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.WorkType", b =>
@@ -999,14 +975,14 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_in_coming_responsible_employees_employees_employee_id");
+                        .HasConstraintName("fk_in_coming_responsible_employee_employees_employee_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.InComing", "InComing")
                         .WithMany("inComingResponsibleEmployees")
                         .HasForeignKey("InComingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_in_coming_responsible_employees_in_coming_in_coming_id");
+                        .HasConstraintName("fk_in_coming_responsible_employee_in_coming_in_coming_id");
 
                     b.Navigation("Employees");
 
@@ -1166,32 +1142,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("PostTransformer");
                 });
 
-            modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsersCompany", b =>
-                {
-                    b.HasOne("CompanyPost.Domain.Entities.Company", "Company")
-                        .WithMany("SysUsersCompanies")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_sys_users_companies_companies_company_id");
-
-                    b.HasOne("CompanyPost.Domain.Entities.SysUsers", "SysUser")
-                        .WithMany("SysUsersCompanies")
-                        .HasForeignKey("SysUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_sys_users_companies_sys_users_sys_user_id");
-
-                    b.Navigation("Company");
-
-                    b.Navigation("SysUser");
-                });
-
-            modelBuilder.Entity("CompanyPost.Domain.Entities.Company", b =>
-                {
-                    b.Navigation("SysUsersCompanies");
-                });
-
             modelBuilder.Entity("CompanyPost.Domain.Entities.Contracts", b =>
                 {
                     b.Navigation("ContractAttachments");
@@ -1254,8 +1204,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Contracts");
 
                     b.Navigation("IncomingDocuments");
-
-                    b.Navigation("SysUsersCompanies");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.WorkType", b =>

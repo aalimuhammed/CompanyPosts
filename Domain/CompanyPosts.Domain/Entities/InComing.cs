@@ -20,6 +20,6 @@ public class InComing : BaseEntity , IDocumentEntity , IHasSharedProperty
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; } = null!;
 	public Departments Department { get; set; }
-	public ICollection<IncomingAttachments> IncomingAttachments { get; set; } = new List<IncomingAttachments>();
+	public ICollection<InComingAttachments> IncomingAttachments { get; set; } = new List<InComingAttachments>();
 	public ICollection<InComingResponsibleEmployee> inComingResponsibleEmployees = new List<InComingResponsibleEmployee>();
 }

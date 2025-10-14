@@ -5,10 +5,11 @@ public record CreateContractDTO(
 	string ContractNum,
 	DateTime ContractDate,
 	int SerialNumber,
-	Guid PersonOrgId, 
-	string Working,	
+	Guid PersonOrgId,
+	Guid WorkTypeId,
 	string? Notes,
 	Guid ProjectId,
 	int Currency,
+	int Department,
 	string PurchaseOrdNumRef , 
 	List<IFormFile> Attachments);
