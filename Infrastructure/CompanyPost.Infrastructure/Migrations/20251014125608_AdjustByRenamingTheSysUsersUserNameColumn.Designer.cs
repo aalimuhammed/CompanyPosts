@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    [Migration("20251014121256_RemoveIdFromBridgeTableSysUsersCompanyAndMakeFKsOnlyPK")]
-    partial class RemoveIdFromBridgeTableSysUsersCompanyAndMakeFKsOnlyPK
+    [Migration("20251014125608_AdjustByRenamingTheSysUsersUserNameColumn")]
+    partial class AdjustByRenamingTheSysUsersUserNameColumn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -848,15 +848,15 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("company_id");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
-
                     b.Property<Guid>("Id")
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.HasKey("SysUserId", "CompanyId")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.HasKey("SysUserId", "CompanyId", "Id")
                         .HasName("pk_sys_users_companies");
 
                     b.HasIndex("CompanyId")

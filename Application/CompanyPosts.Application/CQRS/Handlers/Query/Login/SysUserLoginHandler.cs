@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Application.CQRS.Handlers.Query.Login;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CompanyPost.Application.CQRS.Handlers.Query.Login;
 internal class SysUserLoginHandler : IRequestHandler<SysUserLoginQuery, AuthResultDTO>
 {
 	private readonly IUnitOfWork _unitOfWork;
@@ -15,6 +17,12 @@ internal class SysUserLoginHandler : IRequestHandler<SysUserLoginQuery, AuthResu
 	}
 	public async Task<AuthResultDTO> Handle(SysUserLoginQuery request, CancellationToken cancellationToken)
 	{
+		if (string.IsNullOrWhiteSpace(request.usernameOrEmail)
+			|| string.IsNullOrEmpty(request.password))
+		{
+			throw new ValidationException("Username or Password cannot be empty");
+		}
+
 		var userRepo = _unitOfWork.Repository<SysUsers>();
 
 		var user = await userRepo.FindAsync(

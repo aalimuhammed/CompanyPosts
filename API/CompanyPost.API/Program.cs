@@ -1,3 +1,4 @@
+using CompanyPost.Application.Exceptions;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace CompanyPost.API;
@@ -34,10 +35,10 @@ public class Program
 										.AllowAnyMethod()
 										.SetIsOriginAllowed(origin => true)
 										.AllowCredentials());
-
+		app.MapControllers();
+		app.UseMiddleware<GlobalExceptionHandling>();
 		app.UseAuthentication();
 		app.UseAuthorization();
-		app.MapControllers();
 		app.UseStaticFiles();
 
 		app.Run();

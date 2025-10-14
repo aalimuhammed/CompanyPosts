@@ -845,15 +845,15 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("company_id");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
-
                     b.Property<Guid>("Id")
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.HasKey("SysUserId", "CompanyId")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.HasKey("SysUserId", "CompanyId", "Id")
                         .HasName("pk_sys_users_companies");
 
                     b.HasIndex("CompanyId")
