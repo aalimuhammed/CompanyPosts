@@ -19,7 +19,7 @@ namespace CompanyPost.API.Controllers
 		{
 			var command = new CreateSysUserCompanyCommand(createSysUserCompanyDTO);
 			await _mediator.Send(command);
-			return Ok(command);
+			return NoContent();
 		}
 	}
 }

@@ -20,13 +20,14 @@ internal sealed class CreateSysUserCompanyHandler
 		try
 		{
 			await _unitOfWork.BeginTransactionAsync();
+			var plainPassword = _passwordService.GenerateRandomPassword();
 
 			var sysUser = new SysUsers
 			{
 				Email = request.CreateSysUserCompanyDTO.Email,
 				UserName = request.CreateSysUserCompanyDTO.UserName,
 				Name = request.CreateSysUserCompanyDTO.Name,
-				Password = _passwordService.GenerateRandomPassword()
+				Password = _passwordService.HashPassword(plainPassword)
 			};
 
 			await sysUserRepository.AddAsync(sysUser);
