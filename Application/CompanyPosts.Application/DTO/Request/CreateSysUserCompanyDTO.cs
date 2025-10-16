@@ -3,4 +3,4 @@ public record CreateSysUserCompanyDTO(
 	string UserName ,
 	string Name,
 	string Email ,
-	List<Guid> Companies);
+	List<string> Companies);
