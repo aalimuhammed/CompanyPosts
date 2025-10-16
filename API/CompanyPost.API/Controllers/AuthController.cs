@@ -14,7 +14,6 @@ public class AuthController : ControllerBase
 	public async Task<ActionResult<AuthResultDTO>> Login([FromBody] SysUserLoginQuery command)
 	{
 		var result = await _mediator.Send(command);
-
 		return Ok(result);
 	}
 }

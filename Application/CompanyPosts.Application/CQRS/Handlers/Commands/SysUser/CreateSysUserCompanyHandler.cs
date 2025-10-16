@@ -36,7 +36,7 @@ internal sealed class CreateSysUserCompanyHandler
 				var sysUserCompany = new SysUsersCompany
 				{
 					SysUserId = sysUser.Id,
-					CompanyId = item
+					CompanyId = Guid.Parse(item)
 				};
 				await sysUserComapnyRepository.AddAsync(sysUserCompany);
 			}

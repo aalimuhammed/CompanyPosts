@@ -5,7 +5,7 @@ internal sealed class SysUsersCompanyConfiguration
 	public void Configure(EntityTypeBuilder<SysUsersCompany> builder)
 	{
 		builder
-			.HasKey(inr => new { inr.SysUserId, inr.CompanyId });
+			.HasKey(inr => new { inr.SysUserId, inr.CompanyId , inr.Id });
 
 		builder
 			.HasOne(bc => bc.SysUser)
