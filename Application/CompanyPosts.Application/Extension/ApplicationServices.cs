@@ -8,7 +8,7 @@ public static class ApplicationServices
 		services.AddMediatR(configuration =>
 		  configuration.RegisterServicesFromAssembly(assembly));
 
-		//services.AddValidatorsFromAssembly(assembly);
+		services.AddHttpContextAccessor();
 
 		return services;
 	}

@@ -16,4 +16,16 @@ public class AuthController : ControllerBase
 		var result = await _mediator.Send(command);
 		return Ok(result);
 	}
+
+	[HttpGet("verify-token")]
+	[Authorize]
+	public async Task<IActionResult> VerifyToken()
+	{
+		var query = new VerifyTokenQuery();
+		var result = await _mediator.Send(query);
+		if (!result.IsValid)
+			return Unauthorized(result);
+
+		return Ok(result);
+	}
 }
