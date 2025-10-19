@@ -18,6 +18,7 @@ public class CompanyPostDbContext : DbContext
 	public DbSet<WorkType> WorkTypes { get; set; }
 	public DbSet<InComingResponsibleEmployee> inComingResponsibleEmployees { get; set; }
 	public DbSet<SysUsersCompany> SysUsersCompanies { get; set; }
+	public DbSet<BridgeUsers> BridgeUsers { get; set; }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.ApplyConfigurationsFromAssembly(typeof(CompanyPostDbContext).Assembly);

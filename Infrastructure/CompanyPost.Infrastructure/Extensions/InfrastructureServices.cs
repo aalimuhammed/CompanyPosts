@@ -17,7 +17,7 @@ public static class InfrastructureServices
 		services.AddScoped<IFileService, FileService>();
 
 		services.AddSingleton<IJwTGenerator, JwtGenerator>();
-		services.AddSingleton<IPasswordService, PasswordServices>();
+		services.AddTransient<IPasswordService, PasswordServices>();
 
 		var jwtSection = configuration.GetSection("JwtSettings");
 		services.Configure<JwtSettings>(jwtSection);
