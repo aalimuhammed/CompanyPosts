@@ -5,6 +5,7 @@ public record CreateIncomingDTO(
 	Guid PublishedId,
 	Guid OriginalPublisherId,
 	Guid ProjectId,
+	Guid WorkTypeId,
 	string Subject,
 	DateTime DocumentDate,
 	DateTime DeliveryDate,
@@ -12,4 +13,5 @@ public record CreateIncomingDTO(
 	string Summary,
 	int DeliveryMethod,
 	int DocumentType,
+	int Department,
 	List<IFormFile> Attachments);

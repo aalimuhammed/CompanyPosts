@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
 	}
 
 	[HttpGet("verify-token")]
-	[Authorize]
+	//[Authorize]
 	public async Task<IActionResult> VerifyToken()
 	{
 		var query = new VerifyTokenQuery();

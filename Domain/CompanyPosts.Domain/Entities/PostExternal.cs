@@ -5,5 +5,7 @@ public class PostExternal : PostBaseEntity , IHasSharedProperty
 	public Departments Department { get; set; }
 	public Guid ReceivedFromSupplierId { get; set; }
 	public Publisher ReceivedFromSupplier { get; set; } = null!;
+	public Guid WorkTypeId { get; set; }
+	public WorkType WorkType { get; set; } = null!;
 	public ICollection<PostExternalAttachment> Attachments = new List<PostExternalAttachment>();
 }

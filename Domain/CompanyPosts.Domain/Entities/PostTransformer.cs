@@ -9,5 +9,7 @@ public class PostTransformer : PostBaseEntity , IHasSharedProperty , IReceivedIn
 	public Departments Department { get; set; }
 	public Guid RecievedFromId { get; set; }
 	public Publisher RecievedFrom { get; set; } = null!;
+	public Guid WorkTypeId { get; set; }
+	public WorkType WorkType { get; set; } = null!;
 	public ICollection<PostTransformerAttachment> Attachments { get; set; } = new List<PostTransformerAttachment>();
 }

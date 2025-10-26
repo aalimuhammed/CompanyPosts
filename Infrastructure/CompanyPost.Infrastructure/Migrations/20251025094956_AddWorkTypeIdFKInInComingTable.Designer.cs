@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251025094956_AddWorkTypeIdFKInInComingTable")]
+    partial class AddWorkTypeIdFKInInComingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -475,10 +478,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid>("WorkTypeId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("work_type_id");
-
                     b.HasKey("Id")
                         .HasName("pk_post_externals");
 
@@ -497,9 +496,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("ReceivedFromSupplierId")
                         .HasDatabaseName("ix_post_externals_received_from_supplier_id");
-
-                    b.HasIndex("WorkTypeId")
-                        .HasDatabaseName("ix_post_externals_work_type_id");
 
                     b.ToTable("post_externals", (string)null);
                 });
@@ -603,10 +599,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid>("WorkTypeId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("work_type_id");
-
                     b.HasKey("Id")
                         .HasName("pk_post_internals");
 
@@ -625,9 +617,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("RecievedFromId")
                         .HasDatabaseName("ix_post_internals_recieved_from_id");
-
-                    b.HasIndex("WorkTypeId")
-                        .HasDatabaseName("ix_post_internals_work_type_id");
 
                     b.ToTable("post_internals", (string)null);
                 });
@@ -759,10 +748,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid>("WorkTypeId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("work_type_id");
-
                     b.HasKey("Id")
                         .HasName("pk_post_transformers");
 
@@ -781,9 +766,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("RecievedFromId")
                         .HasDatabaseName("ix_post_transformers_recieved_from_id");
-
-                    b.HasIndex("WorkTypeId")
-                        .HasDatabaseName("ix_post_transformers_work_type_id");
 
                     b.ToTable("post_transformers", (string)null);
                 });
@@ -869,10 +851,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("email");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_admin");
 
                     b.Property<bool>("IsPasswordDefault")
                         .ValueGeneratedOnAdd()
@@ -1121,13 +1099,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_post_externals_publishers_received_from_supplier_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
-                        .WithMany("PostExternals")
-                        .HasForeignKey("WorkTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_post_externals_work_types_work_type_id");
-
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
@@ -1135,8 +1106,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Publisher");
 
                     b.Navigation("ReceivedFromSupplier");
-
-                    b.Navigation("WorkType");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternalAttachment", b =>
@@ -1181,13 +1150,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_post_internals_publishers_recieved_from_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
-                        .WithMany("PostInternals")
-                        .HasForeignKey("WorkTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_post_internals_work_types_work_type_id");
-
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
@@ -1195,8 +1157,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Publisher");
 
                     b.Navigation("RecievedFrom");
-
-                    b.Navigation("WorkType");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostInternalAttachment", b =>
@@ -1241,13 +1201,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_post_transformers_publishers_recieved_from_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
-                        .WithMany("PostTransformers")
-                        .HasForeignKey("WorkTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_post_transformers_work_types_work_type_id");
-
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
@@ -1255,8 +1208,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Publisher");
 
                     b.Navigation("RecievedFrom");
-
-                    b.Navigation("WorkType");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostTransformerAttachment", b =>
@@ -1368,12 +1319,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Contracts");
 
                     b.Navigation("InComings");
-
-                    b.Navigation("PostExternals");
-
-                    b.Navigation("PostInternals");
-
-                    b.Navigation("PostTransformers");
                 });
 #pragma warning restore 612, 618
         }

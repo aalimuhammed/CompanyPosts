@@ -17,6 +17,7 @@ public static class SeedData
 				  {
 					  UserName = "admin",
 					  Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
+					  IsAdmin = true,
 				  }
 			  );
 			await context.SaveChangesAsync();

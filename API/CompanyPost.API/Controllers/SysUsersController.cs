@@ -21,5 +21,13 @@ namespace CompanyPost.API.Controllers
 			await _mediator.Send(command);
 			return NoContent();
 		}
+
+		[HttpGet("getfollowingpersons")]
+		public async Task<IActionResult> GetFollowingPersons()
+		{
+			var query = new GetFollowingPersonsQuery();
+			var results = await _mediator.Send(query);
+			return Ok(results);
+		}
 	}
 }

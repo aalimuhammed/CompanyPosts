@@ -1,4 +1,5 @@
-﻿using CompanyPost.Application.CQRS.Commands.InComing;
+﻿using CompanyPost.API.Model;
+using CompanyPost.Application.CQRS.Commands.InComing;
 
 namespace CompanyPost.API.Controllers;
 
@@ -27,11 +28,12 @@ public class IncomingController : ControllerBase
 		{
 			var command = new CreateIncomingCommand(createIncomingDTO);
 			await _mediator.Send(command, cancellationToken);
-			return Ok(new { Message = "تم الحفظ بنجاح ✅" });
+			return Ok(new ApiResponse { Success = true, Message = "Data has been saved successfully ✅" });
 		}
 		catch (Exception ex)
 		{
-			return BadRequest(new { Message = $"حدث خطأ: {ex.Message}" });
+			return BadRequest(new ApiResponse { Success = false, Message = $"An error occurred while saving the data: {ex.Message}" });
 		}
 	}
+
 }

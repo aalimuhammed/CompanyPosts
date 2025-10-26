@@ -5,8 +5,8 @@ public record CreatePostTransofrmerDTO(
 	Guid CompanyId,
 	Guid PublishedId,
 	Guid RecivedFromId,
+	Guid WorkTypeId,
 	string Subject,
-	string Working,
 	DateTime DocumentDate,
 	DateTime DeliveryDate,
 	string Summary,
@@ -17,4 +17,8 @@ public record CreatePostTransofrmerDTO(
 	string RecivedName,
 	string FollowingPerson,
 	string PostNumber,
+	int Department,
+	IEnumerable<Guid> SentEmailsTo,
+	string EmailContent,
+	PostTransformerOptions Options,
 	List<IFormFile> Attachments);
