@@ -22,6 +22,43 @@ namespace CompanyPost.Infrastructure.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("CompanyPost.Domain.Entities.BridgeUsers", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("password");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("username");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bridge_users");
+
+                    b.ToTable("bridge_users", (string)null);
+                });
+
             modelBuilder.Entity("CompanyPost.Domain.Entities.Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -277,6 +314,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
+                    b.Property<Guid>("WorkTypeId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("work_type_id");
+
                     b.HasKey("Id")
                         .HasName("pk_in_coming");
 
@@ -295,6 +336,9 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("PublishedId")
                         .HasDatabaseName("ix_in_coming_published_id");
+
+                    b.HasIndex("WorkTypeId")
+                        .HasDatabaseName("ix_in_coming_work_type_id");
 
                     b.ToTable("in_coming", (string)null);
                 });
@@ -431,6 +475,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
+                    b.Property<Guid>("WorkTypeId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("work_type_id");
+
                     b.HasKey("Id")
                         .HasName("pk_post_externals");
 
@@ -449,6 +497,9 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("ReceivedFromSupplierId")
                         .HasDatabaseName("ix_post_externals_received_from_supplier_id");
+
+                    b.HasIndex("WorkTypeId")
+                        .HasDatabaseName("ix_post_externals_work_type_id");
 
                     b.ToTable("post_externals", (string)null);
                 });
@@ -552,6 +603,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
+                    b.Property<Guid>("WorkTypeId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("work_type_id");
+
                     b.HasKey("Id")
                         .HasName("pk_post_internals");
 
@@ -570,6 +625,9 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("RecievedFromId")
                         .HasDatabaseName("ix_post_internals_recieved_from_id");
+
+                    b.HasIndex("WorkTypeId")
+                        .HasDatabaseName("ix_post_internals_work_type_id");
 
                     b.ToTable("post_internals", (string)null);
                 });
@@ -701,6 +759,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
+                    b.Property<Guid>("WorkTypeId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("work_type_id");
+
                     b.HasKey("Id")
                         .HasName("pk_post_transformers");
 
@@ -719,6 +781,9 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("RecievedFromId")
                         .HasDatabaseName("ix_post_transformers_recieved_from_id");
+
+                    b.HasIndex("WorkTypeId")
+                        .HasDatabaseName("ix_post_transformers_work_type_id");
 
                     b.ToTable("post_transformers", (string)null);
                 });
@@ -805,11 +870,15 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("email");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_admin");
+
                     b.Property<bool>("IsPasswordDefault")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(true)
-                        .HasColumnName("is_password_default");
+                        .HasColumnName("is_password_default")
+                        .HasDefaultValueSql("1");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -971,6 +1040,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_in_coming_publishers_published_id");
 
+                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
+                        .WithMany("InComings")
+                        .HasForeignKey("WorkTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_in_coming_work_types_work_type_id");
+
                     b.Navigation("CreatedBy");
 
                     b.Navigation("OriginalPublisher");
@@ -978,6 +1054,8 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Projects");
 
                     b.Navigation("Publisher");
+
+                    b.Navigation("WorkType");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.InComingAttachments", b =>
@@ -1043,6 +1121,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_post_externals_publishers_received_from_supplier_id");
 
+                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
+                        .WithMany("PostExternals")
+                        .HasForeignKey("WorkTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_externals_work_types_work_type_id");
+
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
@@ -1050,6 +1135,8 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Publisher");
 
                     b.Navigation("ReceivedFromSupplier");
+
+                    b.Navigation("WorkType");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostExternalAttachment", b =>
@@ -1094,6 +1181,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_post_internals_publishers_recieved_from_id");
 
+                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
+                        .WithMany("PostInternals")
+                        .HasForeignKey("WorkTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_internals_work_types_work_type_id");
+
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
@@ -1101,6 +1195,8 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Publisher");
 
                     b.Navigation("RecievedFrom");
+
+                    b.Navigation("WorkType");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostInternalAttachment", b =>
@@ -1145,6 +1241,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_post_transformers_publishers_recieved_from_id");
 
+                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
+                        .WithMany("PostTransformers")
+                        .HasForeignKey("WorkTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_transformers_work_types_work_type_id");
+
                     b.Navigation("Company");
 
                     b.Navigation("CreatedBy");
@@ -1152,6 +1255,8 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("Publisher");
 
                     b.Navigation("RecievedFrom");
+
+                    b.Navigation("WorkType");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PostTransformerAttachment", b =>
@@ -1261,6 +1366,14 @@ namespace CompanyPost.Infrastructure.Migrations
             modelBuilder.Entity("CompanyPost.Domain.Entities.WorkType", b =>
                 {
                     b.Navigation("Contracts");
+
+                    b.Navigation("InComings");
+
+                    b.Navigation("PostExternals");
+
+                    b.Navigation("PostInternals");
+
+                    b.Navigation("PostTransformers");
                 });
 #pragma warning restore 612, 618
         }

@@ -31,8 +31,10 @@ internal sealed class CreateIncomingHandler
 			ProjectId = request.createIncomingDTO.ProjectId,
 			SaveDate = request.createIncomingDTO.SaveDate,
 			DocumentType = (DocumentType)request.createIncomingDTO.DocumentType,
+			Department = (Departments)request.createIncomingDTO.Department,
 			OriginalPublisherId = request.createIncomingDTO.OriginalPublisherId,
 			PublishedId = request.createIncomingDTO.PublishedId,
+			WorkTypeId = request.createIncomingDTO.WorkTypeId,
 			CreatedById = admin.Id,
 		};
 		var postExternalID = incoming.Id;
@@ -40,11 +42,12 @@ internal sealed class CreateIncomingHandler
 		try
 		{
 			await incomingRepository.AddAsync(incoming);
+			
+			await AddAttachments(postExternalID, 
+				request.createIncomingDTO.Attachments, cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync();
 			transaction.Commit();
-			await AddAttachments(postExternalID, 
-				request.createIncomingDTO.Attachments, cancellationToken);
 			return Unit.Value;
 		}
 		catch (Exception ex)

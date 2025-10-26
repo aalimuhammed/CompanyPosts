@@ -13,31 +13,31 @@ public class UnitOfWork : IUnitOfWork
 		ServiceProvider = serviceProvider;
 		context = ServiceProvider.GetService<CompanyPostDbContext>()!;
 	}
-	public async Task<IDbTransaction> BeginTransactionAsync()
+	public async Task<IDbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
 	{
 		if (_currentTransaction != null)
 		{
 			throw new InvalidOperationException("A transaction is already in progress.");
 		}
 
-		_currentTransaction = await context.Database.BeginTransactionAsync();
+		_currentTransaction = await context.Database.BeginTransactionAsync(cancellationToken);
 		return _currentTransaction.GetDbTransaction();
 	}
-	public async Task CommitTransactionAsync()
+	public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
 	{
 		if (_currentTransaction == null)
 			throw new InvalidOperationException("No transaction started.");
 
-		await _currentTransaction.CommitAsync();
+		await _currentTransaction.CommitAsync(cancellationToken);
 		await _currentTransaction.DisposeAsync();
 		_currentTransaction = null;
 	}
-	public async Task RollbackTransactionAsync()
+	public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
 	{
 		if (_currentTransaction == null)
 			throw new InvalidOperationException("No transaction started.");
 
-		await _currentTransaction.RollbackAsync();
+		await _currentTransaction.RollbackAsync(cancellationToken);
 		await _currentTransaction.DisposeAsync();
 		_currentTransaction = null;
 	}

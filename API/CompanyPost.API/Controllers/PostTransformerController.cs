@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.API.Controllers;
+﻿using CompanyPost.API.Model;
+
+namespace CompanyPost.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -21,8 +23,15 @@ public class PostTransformerController : ControllerBase
 		[FromForm] CreatePostTransofrmerDTO createPostTransofrmerDTO,
 		CancellationToken cancellationToken)
 	{
-		var command = new CreatePostTransformerCommand(createPostTransofrmerDTO);
-		await _mediator.Send(command, cancellationToken);
-		return Ok();
+		try
+		{
+			var command = new CreatePostTransformerCommand(createPostTransofrmerDTO);
+			await _mediator.Send(command, cancellationToken);
+			return Ok(new ApiResponse { Success = true, Message = "Data has been saved successfully ✅" });
+		}
+		catch (Exception ex)
+		{
+			return BadRequest(new ApiResponse { Success = false, Message = $"An error occurred while saving the data: {ex.Message}" });
+		}
 	}
 }

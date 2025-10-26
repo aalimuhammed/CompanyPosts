@@ -25,12 +25,13 @@ internal sealed class CreatePostInternalHandler
 			PublishedId = request.CreatePostInternalDTO.PublishedId,
 			RecievedFromId = request.CreatePostInternalDTO.RecivedFromId,
 			Subject = request.CreatePostInternalDTO.Subject,
-			AboutWork = request.CreatePostInternalDTO.Working,
+			WorkTypeId = request.CreatePostInternalDTO.WorkTypeId,
 			DocumentDate = request.CreatePostInternalDTO.DocumentDate,
 			DeliveryDate = request.CreatePostInternalDTO.DeliveryDate,
 			Summary = request.CreatePostInternalDTO.Summary,
 			Notes = request.CreatePostInternalDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostInternalDTO.DeliveryMethod,
+			Department = (Departments)request.CreatePostInternalDTO.Department,
 			CreatedById = admin.Id,
 		};
 		var postInternalID = postInternal.Id;

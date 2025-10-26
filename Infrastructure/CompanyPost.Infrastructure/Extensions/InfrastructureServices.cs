@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Infrastructure.Extensions;
+﻿using CompanyPost.Infrastructure.Settings;
+
+namespace CompanyPost.Infrastructure.Extensions;
 public static class InfrastructureServices
 {
 	public static IServiceCollection AddInfrastructure(
@@ -12,12 +14,15 @@ public static class InfrastructureServices
 			ServerVersion.AutoDetect(defaultConnectionString))
 			.UseSnakeCaseNamingConvention());
 
+		services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+
 		services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 		services.AddScoped<IUnitOfWork , UnitOfWork>();
 		services.AddScoped<IFileService, FileService>();
+		services.AddScoped<IEmailServices, EmailServices>();
 
 		services.AddSingleton<IJwTGenerator, JwtGenerator>();
-		services.AddSingleton<IPasswordService, PasswordServices>();
+		services.AddTransient<IPasswordService, PasswordServices>();
 
 		var jwtSection = configuration.GetSection("JwtSettings");
 		services.Configure<JwtSettings>(jwtSection);

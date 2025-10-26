@@ -25,7 +25,7 @@ internal sealed class CreatePostExternalHandler :
 			PublishedId = request.CreatePostExternalDTO.PublishedId,
 			ReceivedFromSupplierId = request.CreatePostExternalDTO.RecivedFromId,
 			Subject = request.CreatePostExternalDTO.Subject,
-			AboutWork = request.CreatePostExternalDTO.Working,
+			WorkTypeId = request.CreatePostExternalDTO.WorkTypeId,
 			DocumentDate = request.CreatePostExternalDTO.DocumentDate,
 			DeliveryDate = request.CreatePostExternalDTO.DeliveryDate,
 			Summary = request.CreatePostExternalDTO.Summary,

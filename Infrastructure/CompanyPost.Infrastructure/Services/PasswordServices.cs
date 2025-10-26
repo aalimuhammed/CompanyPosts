@@ -4,17 +4,19 @@ public class PasswordServices : IPasswordService
 	private readonly Random random = new Random();
 	public string GenerateRandomPassword()
 	{
-		string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		//string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-		int passwordLength = 10;
-		string password = "";
+		//int passwordLength = 10;
+		//string password = "";
 
-		for (int i = 0; i < passwordLength; i++)
-		{
-			int index = random.Next(characters.Length);
-			password += characters[index];
-		}
-		return password;
+		//for (int i = 0; i < passwordLength; i++)
+		//{
+		//	int index = random.Next(characters.Length);
+		//	password += characters[index];
+		//}
+		//return password;
+
+		return "123456789";
 	}
 	public string HashPassword(string password)
 	{

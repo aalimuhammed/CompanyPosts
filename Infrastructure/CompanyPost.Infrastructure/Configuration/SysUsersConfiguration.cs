@@ -20,6 +20,6 @@ internal sealed class SysUsersConfiguration : IEntityTypeConfiguration<SysUsers>
 			.IsRequired();
 
 		builder.Property(builder => builder.IsPasswordDefault)
-			.HasDefaultValue(true);
+			.HasDefaultValueSql("1");
 	}
 }
