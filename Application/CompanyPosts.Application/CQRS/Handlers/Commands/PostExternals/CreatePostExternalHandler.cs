@@ -31,23 +31,24 @@ internal sealed class CreatePostExternalHandler :
 			Summary = request.CreatePostExternalDTO.Summary,
 			Notes = request.CreatePostExternalDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostExternalDTO.DeliveryMethod,
+			Department = (Departments)request.CreatePostExternalDTO.Department,
 			IncomingNumber = request.CreatePostExternalDTO.IncomingNumber,
 			CreatedById = admin.Id,
 		};
 		var postExternalID = postExternal.Id;
-		using var transaction = await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.BeginTransactionAsync();
 		try
 		{
 			await postExternalRepository.AddAsync(postExternal);
 			await AddAttachments(postExternalID, request.CreatePostExternalDTO.Attachments, cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync();
-			transaction.Commit();
+			await _unitOfWork.CommitTransactionAsync();
 			return Unit.Value;
 		}
 		catch (Exception ex)
 		{
-			transaction.Rollback();
+			await _unitOfWork.RollbackTransactionAsync();
 			throw new Exception("An error occurred while creating the external post.", ex);
 		}
 	}

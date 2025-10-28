@@ -31,6 +31,7 @@ public class Program
 		}
 
 		app.UseHttpsRedirection();
+		app.UseStaticFiles();
 		app.UseCors(policy => policy.AllowAnyHeader()
 										.AllowAnyMethod()
 										.SetIsOriginAllowed(origin => true)
@@ -40,7 +41,6 @@ public class Program
 		app.UseAuthorization();
 		app.MapControllers();
 		app.UseMiddleware<GlobalExceptionHandling>();
-		app.UseStaticFiles();
 		app.Run();
 	}
 }
