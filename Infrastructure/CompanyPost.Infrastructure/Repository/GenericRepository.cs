@@ -1,4 +1,7 @@
-﻿namespace CompanyPost.Infrastructure.Repository;
+﻿using CompanyPost.Domain.Result;
+using Microsoft.EntityFrameworkCore;
+
+namespace CompanyPost.Infrastructure.Repository;
 internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity , IEntity
 {
 	private readonly CompanyPostDbContext _context;
@@ -57,5 +60,44 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 			query = query.Where(predicate);
 
 		return await query.ToListAsync(cancellationToken);
+	}
+	public async Task<PaginatedResult<T>> GetPagedAsync(
+		int pageNumber, 
+		int pageSize, 
+		Expression<Func<T, bool>>? filter = null,
+		List<Expression<Func<T, object>>> includes = null,
+		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, 
+		CancellationToken cancellationToken = default)
+	{
+		if (pageNumber <= 0) pageNumber = 1;
+		if (pageSize <= 0) pageSize = 50;
+
+		const int maxPageSize = 500;
+		if (pageSize > maxPageSize) pageSize = maxPageSize;
+
+		var query = _context.Set<T>().AsQueryable();
+
+		if (includes != null)
+		{
+			foreach (var include in includes)
+			{
+				query = query.Include(include);
+			}
+		}
+
+		if (filter != null)
+			query = query.Where(filter);
+
+		var totalCount = await query.CountAsync(cancellationToken);
+
+		if (orderBy != null)
+			query = orderBy(query);
+
+		var items = await query
+			.Skip((pageNumber - 1) * pageSize)
+			.Take(pageSize)
+			.ToListAsync(cancellationToken);
+
+		return new PaginatedResult<T>(items, totalCount, pageNumber, pageSize);
 	}
 }

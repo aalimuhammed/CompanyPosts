@@ -1,0 +1,51 @@
+﻿using CompanyPost.Application.Extension;
+
+namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
+{
+	internal sealed class GetPostExternalDocumentsHandler
+		: IRequestHandler<GetPostExternalDocumentsQuery, IEnumerable<PostDocumentsDTO>>
+	{
+		private readonly IUnitOfWork _unitOfWork;
+		public GetPostExternalDocumentsHandler(IUnitOfWork unitOfWork)
+		{
+			_unitOfWork = unitOfWork;
+		}
+		public async Task<IEnumerable<PostDocumentsDTO>> Handle(GetPostExternalDocumentsQuery request, CancellationToken cancellationToken)
+		{
+			var postRepository = _unitOfWork.Repository<PostExternal>();
+
+			var includes = new List<Expression<Func<PostExternal, object>>>
+				 {
+					 post => post.CreatedBy,
+					 post => post.Publisher,
+					 post => post.ReceivedFromSupplier,
+					 post => post.WorkType,
+					 post => post.Company,
+					 post => post.Attachments,
+				 };
+
+			var posts = await postRepository.FindWithIncludeAsync(null, includes, cancellationToken);
+			var postDTOs = posts.Select(p => new PostDocumentsDTO(
+				p.Id,
+				p.SerialNumber,
+				p.DocumentNumber,
+				p.DocumentDate.ToString("dd-MM-yyyy"),
+				p.DeliveryDate.ToString("dd-MM-yyyy"),
+				p.Attachments != null && p.Attachments.Any()
+				? p.Attachments.Select(a => $"/posts/{a.FileName}").ToList()
+				: new List<string>(),
+				p.Subject,
+				p.Summary,
+				p.Notes,
+				p.CreatedBy.UserName,
+				p.Publisher.Name,
+				p.DeliveryMethods.GetDisplayName(),
+				p.Company.Name,
+				p.WorkType.Name,
+				p.ReceivedFromSupplier.Name,
+				p.Department.GetDisplayName()
+			));
+			return postDTOs;
+		}
+	}
+}

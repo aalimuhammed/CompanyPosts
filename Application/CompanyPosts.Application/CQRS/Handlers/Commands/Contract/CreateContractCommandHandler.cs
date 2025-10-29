@@ -16,7 +16,7 @@ internal sealed class CreateContractCommandHandler
 		var contractRepository = _unitOfWork.Repository<Contracts>();
 		var adminRepository = _unitOfWork.Repository<SysUsers>();
 		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
-		using var transaction = await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.BeginTransactionAsync();
 		try
 		{
 			var newContract = CreateContract(request);
@@ -27,12 +27,12 @@ internal sealed class CreateContractCommandHandler
 				request.CreatrContractDTO.Attachments, cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync();
-			transaction.Commit();
+			await _unitOfWork.CommitTransactionAsync();
 			return Unit.Value;
 		}
 		catch (Exception ex)
 		{
-			transaction.Rollback();
+			await _unitOfWork.RollbackTransactionAsync();
 			throw new Exception("An error occurred while creating the contract post.", ex);
 		}
 	}

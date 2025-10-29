@@ -43,7 +43,7 @@ internal sealed class CreatePostTransformerHandler
 			CreatedById = admin.Id,
 		};
 		var postExternalID = postTransformer.Id;
-		using var transaction = await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.BeginTransactionAsync();
 		try
 		{
 			await postTransofrmerRepository.AddAsync(postTransformer);
@@ -60,12 +60,12 @@ internal sealed class CreatePostTransformerHandler
 				cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			transaction.Commit();
+			await _unitOfWork.CommitTransactionAsync();
 			return Unit.Value;
 		}
 		catch (Exception ex)
 		{
-			transaction.Rollback();
+			await _unitOfWork.RollbackTransactionAsync();
 			throw new Exception("An error occurred while creating the transformer post.", ex);
 		}
 	}

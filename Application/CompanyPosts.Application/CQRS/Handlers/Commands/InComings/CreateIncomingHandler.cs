@@ -38,7 +38,7 @@ internal sealed class CreateIncomingHandler
 			CreatedById = admin.Id,
 		};
 		var postExternalID = incoming.Id;
-		using var transaction = await _unitOfWork.BeginTransactionAsync();
+		 await _unitOfWork.BeginTransactionAsync();
 		try
 		{
 			await incomingRepository.AddAsync(incoming);
@@ -47,12 +47,12 @@ internal sealed class CreateIncomingHandler
 				request.createIncomingDTO.Attachments, cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync();
-			transaction.Commit();
+			await _unitOfWork.CommitTransactionAsync();
 			return Unit.Value;
 		}
 		catch (Exception ex)
 		{
-			transaction.Rollback();
+			await _unitOfWork.RollbackTransactionAsync();
 			throw new Exception("An error occurred while creating the incoming post.", ex);
 		}
 	}

@@ -35,19 +35,19 @@ internal sealed class CreatePostInternalHandler
 			CreatedById = admin.Id,
 		};
 		var postInternalID = postInternal.Id;
-		using var transaction = await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.BeginTransactionAsync();
 		try
 		{
 			await postInternalRepository.AddAsync(postInternal);
 			await AddAttachments(postInternalID, request.CreatePostInternalDTO.Attachments, cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync();
-			transaction.Commit();
+			await _unitOfWork.CommitTransactionAsync();
 			return Unit.Value;
 		}
 		catch (Exception ex)
 		{
-			transaction.Rollback();
+			await _unitOfWork.RollbackTransactionAsync();
 			throw new Exception("An error occurred while creating the internal post.", ex);
 		}
 	}
