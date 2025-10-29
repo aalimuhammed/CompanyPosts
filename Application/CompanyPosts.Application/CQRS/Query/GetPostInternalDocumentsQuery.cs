@@ -2,5 +2,5 @@
 
 namespace CompanyPost.Application.CQRS.Query
 {
-	public record GetPostInternalDocumentsQuery : IRequest<PaginatedResult<PostDocumentsDTO>>;
+	public record GetPostInternalDocumentsQuery : IRequest<IEnumerable<PostDocumentsDTO>>;
 }

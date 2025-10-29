@@ -1,17 +1,16 @@
 ﻿using CompanyPost.Application.Extension;
-using CompanyPost.Domain.Result;
 
 namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 {
 	internal class GetPostInternalDocumentsHandler :
-		IRequestHandler<GetPostInternalDocumentsQuery, PaginatedResult<PostDocumentsDTO>>
+		IRequestHandler<GetPostInternalDocumentsQuery, IEnumerable<PostDocumentsDTO>>
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		public GetPostInternalDocumentsHandler(IUnitOfWork unitOfWork)
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public async Task<PaginatedResult<PostDocumentsDTO>> Handle(GetPostInternalDocumentsQuery request, CancellationToken cancellationToken)
+		public async Task<IEnumerable<PostDocumentsDTO>> Handle(GetPostInternalDocumentsQuery request, CancellationToken cancellationToken)
 		{
 			var postRepository = _unitOfWork.Repository<PostInternal>();
 
@@ -25,16 +24,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 					 post => post.Attachments,
 				 };
 
-			var pagedPosts = await postRepository.GetPagedAsync(
-				  pageNumber: 1,
-				  pageSize: 50,
-				  filter: null,
-				  includes: includes,
-				  orderBy: q => q.OrderByDescending(p => p.DocumentDate),
-				  cancellationToken: cancellationToken
-			  );
+			var posts = await postRepository.FindWithIncludeAsync(predicate: null, includes, cancellationToken);
 
-			var postDTOs = pagedPosts.Items.Select(p => new PostDocumentsDTO(
+			var postDTOs = posts.Select(p => new PostDocumentsDTO(
 				p.Id,
 				p.SerialNumber,
 				p.DocumentNumber,
@@ -53,14 +45,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 				p.WorkType.Name,
 				p.RecievedFrom.Name,
 				p.Department.GetDisplayName()
-			)).ToList();
+			));
 
-			return new PaginatedResult<PostDocumentsDTO>(
-				items: postDTOs,
-				totalCount: pagedPosts.TotalCount,
-				pageNumber: 1,
-				pageSize: 50
-			);
+			return postDTOs;
 		}
 	}
 }
