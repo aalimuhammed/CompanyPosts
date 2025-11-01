@@ -11,5 +11,6 @@ public record CreateContractDTO(
 	Guid ProjectId,
 	int Currency,
 	int Department,
-	string PurchaseOrdNumRef , 
+	string PurchaseOrdNumRef ,
+	ContractTypes HasReference,
 	List<IFormFile> Attachments);

@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029123754_AddNewFieldsForContractRefTable")]
+    partial class AddNewFieldsForContractRefTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,13 +101,9 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("ContractID")
+                    b.Property<Guid>("ContractID")
                         .HasColumnType("char(36)")
                         .HasColumnName("contract_id");
-
-                    b.Property<Guid?>("ContractRefId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("contract_ref_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
@@ -120,9 +119,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("ContractID")
                         .HasDatabaseName("ix_contract_attachments_contract_id");
-
-                    b.HasIndex("ContractRefId")
-                        .HasDatabaseName("ix_contract_attachments_contract_ref_id");
 
                     b.ToTable("contract_attachments", (string)null);
                 });
@@ -143,11 +139,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("contract_number");
-
-                    b.Property<string>("ContractNumberRef")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("contract_number_ref");
 
                     b.Property<DateTime>("Contract_Date")
                         .HasColumnType("datetime(6)")
@@ -1086,15 +1077,8 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("ContractAttachments")
                         .HasForeignKey("ContractID")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_contract_attachments_contracts_contract_id");
-
-                    b.HasOne("CompanyPost.Domain.Entities.ContractRef", "ContractRef")
-                        .WithMany("ContractAttachments")
-                        .HasForeignKey("ContractRefId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_contract_attachments_contract_refs_contract_ref_id");
-
-                    b.Navigation("ContractRef");
 
                     b.Navigation("Contracts");
                 });
@@ -1471,11 +1455,6 @@ namespace CompanyPost.Infrastructure.Migrations
             modelBuilder.Entity("CompanyPost.Domain.Entities.Company", b =>
                 {
                     b.Navigation("SysUsersCompanies");
-                });
-
-            modelBuilder.Entity("CompanyPost.Domain.Entities.ContractRef", b =>
-                {
-                    b.Navigation("ContractAttachments");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Contracts", b =>

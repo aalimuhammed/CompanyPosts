@@ -16,4 +16,6 @@ public class Publisher : BaseEntity , IHasName
 	public ICollection<InComing> IncomingProjects {  get; set; } = new List<InComing>();
 	public ICollection<Contracts> ContractsProjects { get; set; } = new List<Contracts>();
 	public ICollection<Contracts> ContractsPersonOrgs { get; set; } = new List<Contracts>();
+	public ICollection<ContractRef> ContractRefProjects = new List<ContractRef>();
+	public ICollection<ContractRef> ContractRefPersonOrgs = new List<ContractRef>();
 }

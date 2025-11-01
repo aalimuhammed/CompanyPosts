@@ -9,6 +9,7 @@ public class SysUsers : BaseEntity , IHasName
 	public bool IsAdmin { get; set; } = false;
 	public ICollection<PostBaseEntity> Posts { get; set; } = new List<PostBaseEntity>();
 	public ICollection<Contracts> Contracts { get; set; } = new List<Contracts>();
+	public ICollection<ContractRef> ContractRefs { get; set; } = new List<ContractRef>();
 	public ICollection<InComing> IncomingDocuments { get; set; } = new List<InComing>();
 	public ICollection<SysUsersCompany> SysUsersCompanies { get; set; } = new List<SysUsersCompany>();
 }

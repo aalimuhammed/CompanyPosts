@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029133946_AddNewFKForContractRefIdInTableContractAttachmentAndMakeFKNullable")]
+    partial class AddNewFKForContractRefIdInTableContractAttachmentAndMakeFKNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,11 +146,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("contract_number");
-
-                    b.Property<string>("ContractNumberRef")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("contract_number_ref");
 
                     b.Property<DateTime>("Contract_Date")
                         .HasColumnType("datetime(6)")

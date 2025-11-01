@@ -13,32 +13,80 @@ internal sealed class CreateContractCommandHandler
 	}
 	public async Task<Unit> Handle(CreateContractCommand request, CancellationToken cancellationToken)
 	{
-		var contractRepository = _unitOfWork.Repository<Contracts>();
-		var adminRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
-		await _unitOfWork.BeginTransactionAsync();
-		try
+		if (request.CreatrContractDTO.HasReference == ContractTypes.Original)
 		{
-			var newContract = CreateContract(request);
-			newContract.CreatedById = admin.Id;
-			await contractRepository.AddAsync(newContract);
 
-			await AddAttachments(newContract.Id, 
-				request.CreatrContractDTO.Attachments, cancellationToken);
+			var contractRepository = _unitOfWork.Repository<Contracts>();
+			var adminRepository = _unitOfWork.Repository<SysUsers>();
+			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+			await _unitOfWork.BeginTransactionAsync();
+			try
+			{
+				var newContract = CreateContract(request);
+				newContract.CreatedById = admin.Id;
+				await contractRepository.AddAsync(newContract);
 
-			await _unitOfWork.SaveChangesAsync();
-			await _unitOfWork.CommitTransactionAsync();
-			return Unit.Value;
+				await AddAttachments(newContract.Id,
+					request.CreatrContractDTO.Attachments, cancellationToken);
+
+				await _unitOfWork.SaveChangesAsync();
+				await _unitOfWork.CommitTransactionAsync();
+			
+			}
+			catch (Exception ex)
+			{
+				await _unitOfWork.RollbackTransactionAsync();
+				throw new Exception("An error occurred while creating the contract post.", ex);
+			}
 		}
-		catch (Exception ex)
+		else
 		{
-			await _unitOfWork.RollbackTransactionAsync();
-			throw new Exception("An error occurred while creating the contract post.", ex);
+			var contractRepository = _unitOfWork.Repository<ContractRef>();
+			var adminRepository = _unitOfWork.Repository<SysUsers>();
+			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+			await _unitOfWork.BeginTransactionAsync();
+			try
+			{
+				var newContract = CreateContractRef(request);
+				newContract.CreatedById = admin.Id;
+				await contractRepository.AddAsync(newContract);
+
+				await AddContractRefAttachments(newContract.Id,
+					request.CreatrContractDTO.Attachments, cancellationToken);
+
+				await _unitOfWork.SaveChangesAsync();
+				await _unitOfWork.CommitTransactionAsync();
+			}
+			catch (Exception ex)
+			{
+				await _unitOfWork.RollbackTransactionAsync();
+				throw new Exception("An error occurred while creating the contract post.", ex);
+			}
 		}
+
+		return Unit.Value;
 	}
 	private Contracts CreateContract(CreateContractCommand request)
 	{
 		return new Contracts
+		{
+			Value = request.CreatrContractDTO.Value,
+			ContractNumber = request.CreatrContractDTO.ContractNum,
+			Details = request.CreatrContractDTO.Details,
+			Notes = request.CreatrContractDTO.Notes,
+			Contract_Date = request.CreatrContractDTO.ContractDate,
+			WorkTypeId = request.CreatrContractDTO.WorkTypeId,
+			purchase_order_ref = request.CreatrContractDTO.PurchaseOrdNumRef,
+			ProjectId = request.CreatrContractDTO.ProjectId,
+			PersonOrgId = request.CreatrContractDTO.PersonOrgId,
+			Currency = (Currency)request.CreatrContractDTO.Currency,
+			Department = (Departments)request.CreatrContractDTO.Department
+		};
+	}
+
+	private ContractRef CreateContractRef(CreateContractCommand request)
+	{
+		return new ContractRef
 		{
 			Value = request.CreatrContractDTO.Value,
 			ContractNumber = request.CreatrContractDTO.ContractNum,
@@ -69,6 +117,27 @@ internal sealed class CreateContractCommandHandler
 			var attachment = new ContractAttachments
 			{
 				ContractID = contractId,
+				FileName = fileName,
+			};
+			await attachmentRepository.AddAsync(attachment, cancellationToken);
+		}
+	}
+	private async Task AddContractRefAttachments(
+		Guid contractId,
+		List<IFormFile> attachments,
+		CancellationToken cancellationToken)
+	{
+		var attachmentRepository = _unitOfWork.Repository<ContractAttachments>();
+
+		foreach (var item in attachments)
+		{
+			var fileName = await _saveAttachment.SaveAttachmentAsync(
+				item,
+				"contracts",
+				cancellationToken);
+			var attachment = new ContractAttachments
+			{
+				ContractRefId = contractId,
 				FileName = fileName,
 			};
 			await attachmentRepository.AddAsync(attachment, cancellationToken);

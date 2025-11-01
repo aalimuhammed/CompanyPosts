@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029105004_CreateNewTableCalledContractRefForContractsWhichHaveRefAndAddFlagToDetermineThisContractHasRefOrNot")]
+    partial class CreateNewTableCalledContractRefForContractsWhichHaveRefAndAddFlagToDetermineThisContractHasRefOrNot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,13 +101,9 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("ContractID")
+                    b.Property<Guid>("ContractID")
                         .HasColumnType("char(36)")
                         .HasColumnName("contract_id");
-
-                    b.Property<Guid?>("ContractRefId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("contract_ref_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
@@ -121,9 +120,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasIndex("ContractID")
                         .HasDatabaseName("ix_contract_attachments_contract_id");
 
-                    b.HasIndex("ContractRefId")
-                        .HasDatabaseName("ix_contract_attachments_contract_ref_id");
-
                     b.ToTable("contract_attachments", (string)null);
                 });
 
@@ -138,101 +134,19 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("contract_id");
 
-                    b.Property<string>("ContractNumber")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("contract_number");
-
-                    b.Property<string>("ContractNumberRef")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("contract_number_ref");
-
-                    b.Property<DateTime>("Contract_Date")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("contract_date");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("created_by_id");
-
-                    b.Property<int>("Currency")
-                        .HasColumnType("int")
-                        .HasColumnName("currency");
-
-                    b.Property<int>("Department")
-                        .HasColumnType("int")
-                        .HasColumnName("department");
-
-                    b.Property<string>("Details")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("details");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("notes");
-
-                    b.Property<Guid>("PersonOrgId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("person_org_id");
-
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("project_id");
-
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("value");
-
-                    b.Property<Guid>("WorkTypeId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("work_type_id");
-
-                    b.Property<string>("purchase_order_ref")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("purchase_order_ref");
 
                     b.HasKey("Id")
                         .HasName("pk_contract_refs");
 
                     b.HasIndex("ContractId")
                         .HasDatabaseName("ix_contract_refs_contract_id");
-
-                    b.HasIndex("ContractNumber")
-                        .IsUnique()
-                        .HasDatabaseName("ix_contract_refs_contract_number");
-
-                    b.HasIndex("CreatedById")
-                        .HasDatabaseName("ix_contract_refs_created_by_id");
-
-                    b.HasIndex("PersonOrgId")
-                        .HasDatabaseName("ix_contract_refs_person_org_id");
-
-                    b.HasIndex("ProjectId")
-                        .HasDatabaseName("ix_contract_refs_project_id");
-
-                    b.HasIndex("WorkTypeId")
-                        .HasDatabaseName("ix_contract_refs_work_type_id");
-
-                    b.HasIndex("purchase_order_ref")
-                        .IsUnique()
-                        .HasDatabaseName("ix_contract_refs_purchase_order_ref");
 
                     b.ToTable("contract_refs", (string)null);
                 });
@@ -1086,15 +1000,8 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("ContractAttachments")
                         .HasForeignKey("ContractID")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_contract_attachments_contracts_contract_id");
-
-                    b.HasOne("CompanyPost.Domain.Entities.ContractRef", "ContractRef")
-                        .WithMany("ContractAttachments")
-                        .HasForeignKey("ContractRefId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_contract_attachments_contract_refs_contract_ref_id");
-
-                    b.Navigation("ContractRef");
 
                     b.Navigation("Contracts");
                 });
@@ -1108,43 +1015,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_contract_refs_contracts_contract_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.SysUsers", "CreatedBy")
-                        .WithMany("ContractRefs")
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_contract_refs_sys_users_created_by_id");
-
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "PersonOrgs")
-                        .WithMany("ContractRefPersonOrgs")
-                        .HasForeignKey("PersonOrgId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_contract_refs_publishers_person_org_id");
-
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "Projects")
-                        .WithMany("ContractRefProjects")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_contract_refs_publishers_project_id");
-
-                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
-                        .WithMany("ContractRefs")
-                        .HasForeignKey("WorkTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_contract_refs_work_types_work_type_id");
-
                     b.Navigation("Contract");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("PersonOrgs");
-
-                    b.Navigation("Projects");
-
-                    b.Navigation("WorkType");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Contracts", b =>
@@ -1473,11 +1344,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("SysUsersCompanies");
                 });
 
-            modelBuilder.Entity("CompanyPost.Domain.Entities.ContractRef", b =>
-                {
-                    b.Navigation("ContractAttachments");
-                });
-
             modelBuilder.Entity("CompanyPost.Domain.Entities.Contracts", b =>
                 {
                     b.Navigation("ContractAttachments");
@@ -1514,10 +1380,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Publisher", b =>
                 {
-                    b.Navigation("ContractRefPersonOrgs");
-
-                    b.Navigation("ContractRefProjects");
-
                     b.Navigation("ContractsPersonOrgs");
 
                     b.Navigation("ContractsProjects");
@@ -1543,8 +1405,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsers", b =>
                 {
-                    b.Navigation("ContractRefs");
-
                     b.Navigation("Contracts");
 
                     b.Navigation("IncomingDocuments");
@@ -1554,8 +1414,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.WorkType", b =>
                 {
-                    b.Navigation("ContractRefs");
-
                     b.Navigation("Contracts");
 
                     b.Navigation("InComings");

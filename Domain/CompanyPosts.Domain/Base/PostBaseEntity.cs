@@ -1,6 +1,4 @@
-﻿using CompanyPost.Domain.Interface;
-
-namespace CompanyPost.Domain.Base;
+﻿namespace CompanyPost.Domain.Base;
 public abstract class PostBaseEntity : BaseEntity , IDocumentEntity
 {
 	public int SerialNumber { get; set; }

@@ -18,6 +18,14 @@ public class ContractsController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
+
+	[HttpGet("GetContractRefMaxSerialNumber")]
+	public async Task<IActionResult> GetContractRefMaxSerialNumberAsync(CancellationToken cancellationToken)
+	{
+		var query = new GetContractRefMaxSerialNumberQuery();
+		var result = await _mediator.Send(query, cancellationToken);
+		return Ok(result);
+	}
 	[HttpPost("create-contract")]
 	public async Task<IActionResult> CreateContract(
 		[FromForm] CreateContractDTO creatrContractDTO,
@@ -42,6 +50,15 @@ public class ContractsController : ControllerBase
 		var contracts = await _mediator.Send(query, cancellationToken);
 		return Ok(contracts);
 	}
+
+	[HttpGet("get-contracts-numbers")]
+	public async Task<IActionResult> GetContractsNumbers(CancellationToken cancellationToken)
+	{
+		var query = new GetContractsNumbersQuery();
+		var contracts = await _mediator.Send(query, cancellationToken);
+		return Ok(contracts);
+	}
+
 	[HttpPut("update-contract")]
 	public async Task<IActionResult> UpdateContract(
 		[FromForm] UpdateContractDTO updateContractDTO,

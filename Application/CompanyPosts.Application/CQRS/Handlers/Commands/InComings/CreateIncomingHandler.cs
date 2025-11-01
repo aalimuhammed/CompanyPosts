@@ -38,7 +38,7 @@ internal sealed class CreateIncomingHandler
 			CreatedById = admin.Id,
 		};
 		var postExternalID = incoming.Id;
-		 await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.BeginTransactionAsync();
 		try
 		{
 			await incomingRepository.AddAsync(incoming);

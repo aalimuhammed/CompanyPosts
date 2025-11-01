@@ -53,14 +53,16 @@ internal sealed class CreatePostTransformerHandler
 				x => request.CreatePostTransofrmerDTO.SentEmailsTo.Contains(x.Id),
 				cancellationToken);
 
+
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			await _unitOfWork.CommitTransactionAsync();
+
 			await SendBulkEmailAsync(
 					$"متابعة المستند رقم {request.CreatePostTransofrmerDTO.DocumentNumber} في الصادر المحول",
 				request.CreatePostTransofrmerDTO.EmailContent,
 				sysUsers.Select(u => u.Email!),
 				cancellationToken);
 
-			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			await _unitOfWork.CommitTransactionAsync();
 			return Unit.Value;
 		}
 		catch (Exception ex)
