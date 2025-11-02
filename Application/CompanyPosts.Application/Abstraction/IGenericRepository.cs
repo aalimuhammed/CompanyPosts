@@ -25,13 +25,15 @@ public interface IGenericRepository<T> where T : BaseEntity , IEntity
 
 	void Delete(T entity);
 
-	Task<PaginatedResult<T>> GetPagedAsync(
+	Task<bool> FindAnyAsync(
+		Expression<Func<T, bool>> predicate, 
+		CancellationToken cancellationToken = default);
+
+    Task<PaginatedResult<T>> GetPagedAsync(
 			int pageNumber,
 			int pageSize,
 			Expression<Func<T, bool>>? filter = null,
 			List<Expression<Func<T, object>>> includes = null,
 			Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 			CancellationToken cancellationToken = default);
-
-
 }

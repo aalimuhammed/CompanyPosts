@@ -13,7 +13,6 @@ public class Contracts : BaseEntity, ISharedContractProperty
 	public Publisher Projects { get; set; } = null!;
 	public Guid PersonOrgId { get; set; }
 	public Publisher PersonOrgs { get; set; } = null!;
-	//public ContractStatus Status { get; set; }
 	public Currency Currency { get; set; }
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; } = null!;

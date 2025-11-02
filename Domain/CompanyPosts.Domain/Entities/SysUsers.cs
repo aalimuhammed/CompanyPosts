@@ -12,4 +12,5 @@ public class SysUsers : BaseEntity , IHasName
 	public ICollection<ContractRef> ContractRefs { get; set; } = new List<ContractRef>();
 	public ICollection<InComing> IncomingDocuments { get; set; } = new List<InComing>();
 	public ICollection<SysUsersCompany> SysUsersCompanies { get; set; } = new List<SysUsersCompany>();
+	public ICollection<PurchaseOrder> PurchaseOrdersCreatedBy { get; set; } = new List<PurchaseOrder>();
 }

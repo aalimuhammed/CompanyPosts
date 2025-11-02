@@ -1,5 +1,4 @@
 ﻿using CompanyPost.Domain.Result;
-using Microsoft.EntityFrameworkCore;
 
 namespace CompanyPost.Infrastructure.Repository;
 internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity , IEntity
@@ -19,9 +18,14 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 	{
 		return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
 	}
+	public async Task<bool> FindAnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+		return await _dbSet.Where(predicate).AnyAsync(cancellationToken);
+	}
 	public void Update(T entity) => _dbSet.Update(entity);
 	public void Delete(T entity) => _dbSet.Remove(entity);
-	public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate, 
+	public async Task<T?> FindAsync(
+		Expression<Func<T, bool>> predicate, 
 		CancellationToken cancellationToken = default)
 	{
 		if (predicate != null)

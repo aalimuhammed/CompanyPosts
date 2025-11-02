@@ -20,6 +20,8 @@ public class CompanyPostDbContext : DbContext
 	public DbSet<SysUsersCompany> SysUsersCompanies { get; set; }
 	public DbSet<BridgeUsers> BridgeUsers { get; set; }
 	public DbSet<ContractRef> ContractRefs { get; set; }
+	public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+	public DbSet<PurchaseOrderAttachment> PurchaseOrderAttachments { get; set; }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.ApplyConfigurationsFromAssembly(typeof(CompanyPostDbContext).Assembly);
