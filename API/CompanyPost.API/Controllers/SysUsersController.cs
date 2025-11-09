@@ -4,7 +4,7 @@ namespace CompanyPost.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class SysUsersController : ControllerBase
+    public class SysUsersController : ControllerBase
 	{
 		private readonly IMediator _mediator;
 		public SysUsersController(IMediator mediator)
@@ -14,13 +14,37 @@ namespace CompanyPost.API.Controllers
 
 		[HttpPost("createCompanyUser")]
 		public async Task<IActionResult> CreateSysUserCompany
-			(CreateSysUserCompanyDTO createSysUserCompanyDTO ,
+			([FromBody]CreateSysUserCompanyDTO createSysUserCompanyDTO ,
 			CancellationToken cancellationToken)
 		{
-			var command = new CreateSysUserCompanyCommand(createSysUserCompanyDTO);
-			await _mediator.Send(command);
-			return NoContent();
-		}
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new CreateSysUserCompanyCommand(createSysUserCompanyDTO);
+
+            try
+            {
+                await _mediator.Send(command, cancellationToken);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new
+                {
+                    message = ex.Message,
+                    errorType = "BusinessRuleViolation"
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    message = "An unexpected error occurred.",
+                    errorType = "UnhandledException",
+                    details = ex.Message
+                });
+            }
+        }
 
 		[HttpGet("getfollowingpersons")]
 		public async Task<IActionResult> GetFollowingPersons()

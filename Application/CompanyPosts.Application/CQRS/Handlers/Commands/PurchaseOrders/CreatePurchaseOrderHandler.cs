@@ -28,19 +28,20 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
 
             var systUserRepository = _unitOfWork.Repository<SysUsers>();
             var admin = await systUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
-
-            await _unitOfWork.BeginTransactionAsync();
+           
             try
             {
                 var newPurchaseOrder = CreatePurchaseOrder(request);
                 newPurchaseOrder.CreatedById = admin.Id;
+
+                await _unitOfWork.BeginTransactionAsync();
                 await purchaseOrderRepo.AddAsync(newPurchaseOrder,cancellationToken);
 
                 await AddAttachments(newPurchaseOrder.Id,
                     request.CreatePurchaseOrderDTO.Attachments, cancellationToken);
 
                 await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.CommitTransactionAsync();
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -65,6 +66,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
                 PersonOrgId = request.CreatePurchaseOrderDTO.PersonOrgId,
                 Currency = (Currency)request.CreatePurchaseOrderDTO.Currency,
                 Department = (Departments)request.CreatePurchaseOrderDTO.Department,
+                PurchaseOrderTypes = (PurchaseOrderTypes)request.CreatePurchaseOrderDTO.PurchaseOrderType
             };
         }
         private async Task AddAttachments(
@@ -80,11 +82,13 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
                     item,
                     "purchaseorders",
                     cancellationToken);
+
                 var attachment = new PurchaseOrderAttachment
                 {
                     PurchaseOrderId = purchaseOrderId,
                     FileName = fileName,
                 };
+
                 await attachmentRepository.AddAsync(attachment, cancellationToken);
             }
         }

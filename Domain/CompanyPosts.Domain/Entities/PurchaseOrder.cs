@@ -18,6 +18,7 @@
         public SysUsers CreatedBy { get; set; } = null!;
         public Guid WorkTypeId { get; set; }
         public WorkType WorkType { get; set; } = null!;
+        public PurchaseOrderTypes PurchaseOrderTypes { get; set; }
         public ICollection<PurchaseOrderAttachment> PurchaseOrderAttachments { get; set; } = new List<PurchaseOrderAttachment>();
     }
 }

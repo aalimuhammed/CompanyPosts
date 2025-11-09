@@ -1,0 +1,16 @@
+﻿namespace CompanyPost.Application.DTO.Response
+{
+    public record ContractReportResponseDTO(
+        Guid Id,
+        string Project , 
+        string ContractNum ,
+        string SerialNum , 
+        string WorkType , 
+        string ContractValue ,
+        string ContractDate ,
+        string Department,
+        string PurchaseOrderRef,
+        string Currency,
+        string PersonOrg,
+        List<string> AttachmentPaths);
+}

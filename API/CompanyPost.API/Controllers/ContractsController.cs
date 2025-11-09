@@ -43,15 +43,15 @@ public class ContractsController : ControllerBase
 		}
 	}
 
-	[HttpGet("get-contracts")]
-	public async Task<IActionResult> GetContracts(CancellationToken cancellationToken)
-	{
-		var query = new GetContractsQuery();
-		var contracts = await _mediator.Send(query, cancellationToken);
-		return Ok(contracts);
-	}
+	//[HttpGet("get-contracts")]
+	//public async Task<IActionResult> GetContracts(CancellationToken cancellationToken)
+	//{
+	//	var query = new GetContractsQuery();
+	//	var contracts = await _mediator.Send(query, cancellationToken);
+	//	return Ok(contracts);
+	//}
 
-	[HttpGet("get-contracts-numbers")]
+    [HttpGet("get-contracts-numbers")]
 	public async Task<IActionResult> GetContractsNumbers(CancellationToken cancellationToken)
 	{
 		var query = new GetContractsNumbersQuery();

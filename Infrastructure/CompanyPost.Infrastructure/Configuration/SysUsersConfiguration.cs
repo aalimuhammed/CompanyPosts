@@ -15,7 +15,11 @@ internal sealed class SysUsersConfiguration : IEntityTypeConfiguration<SysUsers>
 			.HasMaxLength(100)
 			.IsRequired();
 
-		builder.Property(builder => builder.Name)
+        builder.Property(builder => builder.HrCode)
+            .HasMaxLength(20)
+            .IsRequired();
+
+        builder.Property(builder => builder.Name)
 			.HasMaxLength(50)
 			.IsRequired();
 

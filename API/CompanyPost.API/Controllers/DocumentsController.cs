@@ -40,5 +40,21 @@
 			var documents = await _mediator.Send(query);
 			return Ok(documents);
 		}
-	}
+
+        [HttpGet("get-contracts")]
+        public async Task<IActionResult> GetContractsByFilters([FromQuery] ContractsFilterRequestDTO filterDTO, CancellationToken cancellationToken)
+        {
+            var query = new GetContractsByFiltersQuery(filterDTO);
+            var contracts = await _mediator.Send(query, cancellationToken);
+            return Ok(contracts);
+        }
+
+		[HttpGet("get-purchase-orders")]
+		public async Task<IActionResult> GetPurchaseOrdersByFilters([FromQuery] PurchaseOrderFilterRequestDTO filterDTO, CancellationToken cancellationToken)
+		{
+			var query = new GetPurchaseOrderByFiltersQuery(filterDTO);
+			var purchaseOrders = await _mediator.Send(query, cancellationToken);
+			return Ok(purchaseOrders);
+        }
+    }
 }

@@ -18,11 +18,13 @@ public class AuthController : ControllerBase
 	}
 
 	[HttpGet("verify-token")]
-	//[Authorize]
-	public async Task<IActionResult> VerifyToken()
+	[Authorize]
+	public async Task<IActionResult> VerifyToken(CancellationToken cancellationToken)
 	{
 		var query = new VerifyTokenQuery();
-		var result = await _mediator.Send(query);
+
+		var result = await _mediator.Send(query , cancellationToken);
+
 		if (!result.IsValid)
 			return Unauthorized(result);
 

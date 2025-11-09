@@ -12,5 +12,6 @@
     Guid ProjectId,
     int Currency,
     int Department,
+    int PurchaseOrderType,
     List<IFormFile> Attachments);
 }

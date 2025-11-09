@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251104091916_AddNewColumnForSysUserTableCalledIsVerified")]
+    partial class AddNewColumnForSysUserTableCalledIsVerified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1022,10 +1025,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("purchase_order_number");
 
-                    b.Property<int>("PurchaseOrderTypes")
-                        .HasColumnType("int")
-                        .HasColumnName("purchase_order_types");
-
                     b.Property<DateTime>("PurchaseOrder_Date")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("purchase_order_date");
@@ -1112,12 +1111,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("email");
-
-                    b.Property<string>("HrCode")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("hr_code");
 
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)")

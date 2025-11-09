@@ -22,6 +22,6 @@ public class InComing : BaseEntity , IDocumentEntity , IHasSharedProperty
 	public Departments Department { get; set; }
 	public Guid WorkTypeId { get; set; }
 	public WorkType WorkType { get; set; } = null!;
-	public ICollection<InComingAttachments> IncomingAttachments { get; set; } = new List<InComingAttachments>();
+    public ICollection<InComingAttachments> IncomingAttachments { get; set; } = new List<InComingAttachments>();
 	public ICollection<InComingResponsibleEmployee> inComingResponsibleEmployees = new List<InComingResponsibleEmployee>();
 }

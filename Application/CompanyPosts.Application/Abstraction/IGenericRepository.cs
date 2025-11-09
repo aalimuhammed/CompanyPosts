@@ -16,7 +16,7 @@ public interface IGenericRepository<T> where T : BaseEntity , IEntity
 
 	Task<IEnumerable<T>> FindWithIncludeAsync(
 	   Expression<Func<T, bool>>? predicate = null,
-	   List<Expression<Func<T, object>>>? includes = null,
+	   IEnumerable<Expression<Func<T, object>>>? includes = null,
 	   CancellationToken cancellationToken = default);
 	   
 	Task AddAsync(T entity , CancellationToken cancellationToken = default);

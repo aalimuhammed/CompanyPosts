@@ -35,7 +35,7 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 	}
 	public async Task<IEnumerable<T>> FindWithIncludeAsync(
 	   Expression<Func<T, bool>> predicate = null,
-	   List<Expression<Func<T, object>>> includes = null,
+	   IEnumerable<Expression<Func<T, object>>> includes = null,
 	   CancellationToken cancellationToken = default)
 	{
 		IQueryable<T> query = _context.Set<T>();
@@ -53,7 +53,7 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 			}
 		}
 
-		return await query.ToListAsync(cancellationToken);
+		return await query.AsNoTracking().ToListAsync(cancellationToken);
 	}
 	public async Task<IReadOnlyList<T>> FindAllAsync(
 		Expression<Func<T, bool>> predicate = null,

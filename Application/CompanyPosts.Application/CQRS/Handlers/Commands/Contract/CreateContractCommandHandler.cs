@@ -19,19 +19,20 @@ internal sealed class CreateContractCommandHandler
 			var contractRepository = _unitOfWork.Repository<Contracts>();
 			var adminRepository = _unitOfWork.Repository<SysUsers>();
 			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
-			await _unitOfWork.BeginTransactionAsync();
+
 			try
 			{
 				var newContract = CreateContract(request);
 				newContract.CreatedById = admin.Id;
-				await contractRepository.AddAsync(newContract);
+
+                await _unitOfWork.BeginTransactionAsync(cancellationToken);
+                await contractRepository.AddAsync(newContract);
 
 				await AddAttachments(newContract.Id,
 					request.CreatrContractDTO.Attachments, cancellationToken);
 
 				await _unitOfWork.SaveChangesAsync();
-				await _unitOfWork.CommitTransactionAsync();
-			
+				await _unitOfWork.CommitTransactionAsync(cancellationToken);
 			}
 			catch (Exception ex)
 			{
@@ -44,18 +45,20 @@ internal sealed class CreateContractCommandHandler
 			var contractRepository = _unitOfWork.Repository<ContractRef>();
 			var adminRepository = _unitOfWork.Repository<SysUsers>();
 			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
-			await _unitOfWork.BeginTransactionAsync();
+			
 			try
 			{
 				var newContract = CreateContractRef(request);
 				newContract.CreatedById = admin.Id;
-				await contractRepository.AddAsync(newContract);
+
+                await _unitOfWork.BeginTransactionAsync(cancellationToken);
+                await contractRepository.AddAsync(newContract);
 
 				await AddContractRefAttachments(newContract.Id,
 					request.CreatrContractDTO.Attachments, cancellationToken);
 
 				await _unitOfWork.SaveChangesAsync();
-				await _unitOfWork.CommitTransactionAsync();
+				await _unitOfWork.CommitTransactionAsync(cancellationToken);
 			}
 			catch (Exception ex)
 			{
@@ -98,8 +101,9 @@ internal sealed class CreateContractCommandHandler
 			ProjectId = request.CreatrContractDTO.ProjectId,
 			PersonOrgId = request.CreatrContractDTO.PersonOrgId,
 			Currency = (Currency)request.CreatrContractDTO.Currency,
-			Department = (Departments)request.CreatrContractDTO.Department
-		};
+			Department = (Departments)request.CreatrContractDTO.Department,
+			ContractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!)
+        };
 	}
 	private async Task AddAttachments(
 		Guid contractId,
@@ -114,6 +118,7 @@ internal sealed class CreateContractCommandHandler
 				item, 
 				"contracts", 
 				cancellationToken);
+
 			var attachment = new ContractAttachments
 			{
 				ContractID = contractId,
