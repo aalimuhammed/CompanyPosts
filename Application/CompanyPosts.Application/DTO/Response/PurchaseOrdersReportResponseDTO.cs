@@ -13,5 +13,6 @@
         string Currency,
         string CreatedBy,
         string PurchaseOrderDate,
+        string CreatedAt,
         List<string> Attachments);
 }

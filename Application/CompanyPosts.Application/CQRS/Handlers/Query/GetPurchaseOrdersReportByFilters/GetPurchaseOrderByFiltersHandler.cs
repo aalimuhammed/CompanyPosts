@@ -63,8 +63,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPurchaseOrdersReportByF
                     c.Value,
                     c.Department.GetDisplayName(),
                     c.Currency.GetDisplayName(),
-                    c.CreatedBy.Name,
+                    c.CreatedBy.UserName,
                     c.PurchaseOrder_Date.ToString("dd-MM-yyyy"),
+                    c.CreatedAt.ToString("yyyy-MM-dd"),
                     c.PurchaseOrderAttachments?.Select(a => $"/purchaseorders/{a.FileName}").ToList() ?? new List<string>()
                 ));
             return purchaseOrderResponse;

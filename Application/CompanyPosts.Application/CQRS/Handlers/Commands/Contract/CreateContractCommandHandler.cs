@@ -74,7 +74,8 @@ internal sealed class CreateContractCommandHandler
 		return new Contracts
 		{
 			Value = request.CreatrContractDTO.Value,
-			ContractNumber = request.CreatrContractDTO.ContractNum,
+			SerialNumber = request.CreatrContractDTO.SerialNumber,
+            ContractNumber = request.CreatrContractDTO.ContractNum,
 			Details = request.CreatrContractDTO.Details,
 			Notes = request.CreatrContractDTO.Notes,
 			Contract_Date = request.CreatrContractDTO.ContractDate,
@@ -92,7 +93,8 @@ internal sealed class CreateContractCommandHandler
 		return new ContractRef
 		{
 			Value = request.CreatrContractDTO.Value,
-			ContractNumber = request.CreatrContractDTO.ContractNum,
+            SerialNumber = request.CreatrContractDTO.SerialNumber,
+            ContractNumber = request.CreatrContractDTO.ContractNum,
 			Details = request.CreatrContractDTO.Details,
 			Notes = request.CreatrContractDTO.Notes,
 			Contract_Date = request.CreatrContractDTO.ContractDate,

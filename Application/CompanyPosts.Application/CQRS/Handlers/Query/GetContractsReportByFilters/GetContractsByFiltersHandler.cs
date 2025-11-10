@@ -35,6 +35,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
             if (!string.IsNullOrEmpty(request.DTO.ContractRef))
                 predicate = predicate.And(c => c.ContractNumber == request.DTO.ContractRef);
 
+            if (!string.IsNullOrEmpty(request.DTO.PurchaseOrderRef))
+                predicate = predicate.And(c => c.purchase_order_ref == request.DTO.PurchaseOrderRef);
+
             if (request.DTO.StartDate.HasValue)
                 predicate = predicate.And(c => c.Contract_Date >= request.DTO.StartDate.Value);
 
@@ -59,6 +62,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                     c.Currency.GetDisplayName(),
                     c.PersonOrgs.Name,
                     c.HasReference ? "Original" : "Attached",
+                    c.CreatedBy.UserName,
+                    c.CreatedAt.ToString("yyyy-MM-dd"),
                     c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList() ?? new List<string>()
                 ));
 

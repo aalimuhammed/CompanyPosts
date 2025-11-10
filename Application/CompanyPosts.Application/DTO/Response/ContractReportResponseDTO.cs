@@ -13,5 +13,7 @@
         string Currency,
         string PersonOrg,
         string Type,
+        string CreatedBy,
+        string CreatedAt,
         List<string> AttachmentPaths);
 }
