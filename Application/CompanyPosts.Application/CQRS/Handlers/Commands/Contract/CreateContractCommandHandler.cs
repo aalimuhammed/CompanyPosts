@@ -20,7 +20,25 @@ internal sealed class CreateContractCommandHandler
 			var adminRepository = _unitOfWork.Repository<SysUsers>();
 			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
-			try
+			var contractNumberExists = await contractRepository.FindAnyAsync(
+				x => x.ContractNumber == request.CreatrContractDTO.ContractNum,
+				cancellationToken);
+
+			if (contractNumberExists)
+			{
+				throw new Exception("Contract Number already exists.");
+            }
+
+			var purchaseOrderRefExists = await contractRepository.FindAnyAsync(
+				x => x.purchase_order_ref == request.CreatrContractDTO.PurchaseOrdNumRef, 
+				cancellationToken);
+
+			if (purchaseOrderRefExists)
+			{
+				throw new Exception("Purchase Order Reference already exists.");
+            }
+
+            try
 			{
 				var newContract = CreateContract(request);
 				newContract.CreatedById = admin.Id;
@@ -42,17 +60,36 @@ internal sealed class CreateContractCommandHandler
 		}
 		else
 		{
-			var contractRepository = _unitOfWork.Repository<ContractRef>();
+			var contractRefRepository = _unitOfWork.Repository<ContractRef>();
 			var adminRepository = _unitOfWork.Repository<SysUsers>();
 			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
-			
-			try
+
+
+            var contractNumberExists = await contractRefRepository.FindAnyAsync(
+                x => x.ContractNumber == request.CreatrContractDTO.ContractNum,
+                cancellationToken);
+
+            if (contractNumberExists)
+            {
+                throw new Exception("Contract Number already exists.");
+            }
+
+            var purchaseOrderRefExists = await contractRefRepository.FindAnyAsync(
+                x => x.purchase_order_ref == request.CreatrContractDTO.PurchaseOrdNumRef,
+                cancellationToken);
+
+            if (purchaseOrderRefExists)
+            {
+                throw new Exception("Purchase Order Reference already exists.");
+            }
+
+            try
 			{
 				var newContract = CreateContractRef(request);
 				newContract.CreatedById = admin.Id;
 
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);
-                await contractRepository.AddAsync(newContract);
+                await contractRefRepository.AddAsync(newContract);
 
 				await AddContractRefAttachments(newContract.Id,
 					request.CreatrContractDTO.Attachments, cancellationToken);
