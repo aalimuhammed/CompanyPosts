@@ -32,8 +32,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
             if (Enum.TryParse<Departments>(request.DTO.DepartmentId, out var department))
                 predicate = predicate.And(c => c.Department == department);
 
-            if (!string.IsNullOrEmpty(request.DTO.PurchaseOrderRef))
-                predicate = predicate.And(c => c.purchase_order_ref == request.DTO.PurchaseOrderRef);
+            if (!string.IsNullOrEmpty(request.DTO.ContractRef))
+                predicate = predicate.And(c => c.ContractNumber == request.DTO.ContractRef);
 
             if (request.DTO.StartDate.HasValue)
                 predicate = predicate.And(c => c.Contract_Date >= request.DTO.StartDate.Value);
@@ -58,6 +58,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                     c.purchase_order_ref,
                     c.Currency.GetDisplayName(),
                     c.PersonOrgs.Name,
+                    c.HasReference ? "Original" : "Attached",
                     c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList() ?? new List<string>()
                 ));
 

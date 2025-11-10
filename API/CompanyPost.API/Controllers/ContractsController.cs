@@ -43,14 +43,6 @@ public class ContractsController : ControllerBase
 		}
 	}
 
-	//[HttpGet("get-contracts")]
-	//public async Task<IActionResult> GetContracts(CancellationToken cancellationToken)
-	//{
-	//	var query = new GetContractsQuery();
-	//	var contracts = await _mediator.Send(query, cancellationToken);
-	//	return Ok(contracts);
-	//}
-
     [HttpGet("get-contracts-numbers")]
 	public async Task<IActionResult> GetContractsNumbers(CancellationToken cancellationToken)
 	{
@@ -69,7 +61,7 @@ public class ContractsController : ControllerBase
 		return StatusCode(204);
 	}
 
-	[HttpDelete("delete-contract")]
+	[HttpDelete("deletecontract")]
 	public async Task<IActionResult> DeleteContract([FromQuery]Guid Id, CancellationToken cancellationToken)
 	{
 		var command = new DeleteContractCommand(Id);

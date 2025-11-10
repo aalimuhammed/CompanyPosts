@@ -12,5 +12,6 @@
         string PurchaseOrderRef,
         string Currency,
         string PersonOrg,
+        string Type,
         List<string> AttachmentPaths);
 }

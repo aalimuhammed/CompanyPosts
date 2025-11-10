@@ -11,7 +11,7 @@
 			builder.HasOne(builder => builder.Contract)
 					.WithMany(t => t.ContractRefs)
 					.HasForeignKey(builder => builder.ContractId)
-					.OnDelete(DeleteBehavior.Restrict);
+					.OnDelete(DeleteBehavior.Cascade);
 
 			builder.Property(builder => builder.Details)
 				.HasMaxLength(100)

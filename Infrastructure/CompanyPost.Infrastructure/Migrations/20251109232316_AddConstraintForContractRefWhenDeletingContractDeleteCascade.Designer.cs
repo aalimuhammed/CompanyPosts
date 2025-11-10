@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251109232316_AddConstraintForContractRefWhenDeletingContractDeleteCascade")]
+    partial class AddConstraintForContractRefWhenDeletingContractDeleteCascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1217,13 +1220,13 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasOne("CompanyPost.Domain.Entities.Contracts", "Contracts")
                         .WithMany("ContractAttachments")
                         .HasForeignKey("ContractID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_contract_attachments_contracts_contract_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.ContractRef", "ContractRef")
                         .WithMany("ContractAttachments")
                         .HasForeignKey("ContractRefId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_contract_attachments_contract_refs_contract_ref_id");
 
                     b.Navigation("ContractRef");
