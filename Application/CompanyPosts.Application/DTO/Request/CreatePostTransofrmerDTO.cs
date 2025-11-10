@@ -10,7 +10,7 @@ public record CreatePostTransofrmerDTO(
 	DateTime DocumentDate,
 	DateTime DeliveryDate,
 	string Summary,
-	string Notes,
+	string? Notes,
 	int DeliveryMethod,
 	string IncomingNumber,
 	int DocumentType,

@@ -33,9 +33,9 @@ internal sealed class PostInternalConfiguration : IEntityTypeConfiguration<PostI
 				.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasOne(builder => builder.WorkType)
-		.WithMany(t => t.PostInternals)
-		.HasForeignKey(builder => builder.WorkTypeId)
-		.OnDelete(DeleteBehavior.Restrict);
+				.WithMany(t => t.PostInternals)
+				.HasForeignKey(builder => builder.WorkTypeId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasIndex(x => x.DocumentNumber)
 			   .IsUnique();

@@ -10,7 +10,7 @@ public record CreatePostInternalDTO(
 	DateTime DocumentDate,
 	DateTime DeliveryDate ,
 	string Summary,
-	string Notes,
+	string? Notes,
 	int DeliveryMethod,
 	int Department,
 	List<IFormFile> Attachments);

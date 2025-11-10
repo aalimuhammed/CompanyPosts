@@ -20,7 +20,12 @@ internal sealed class CreatePostTransformerHandler
 		var systUserRepository = _unitOfWork.Repository<SysUsers>();
 		var admin = await systUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
-		var postTransformer = new PostTransformer
+		if (await postTransofrmerRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostTransofrmerDTO.DocumentNumber, cancellationToken))
+		{
+			throw new Exception("Cannot have duplicated Document Number");
+        }
+
+        var postTransformer = new PostTransformer
 		{
 			SerialNumber = request.CreatePostTransofrmerDTO.SerialNumber,
 			PostNumber = request.CreatePostTransofrmerDTO.PostNumber,

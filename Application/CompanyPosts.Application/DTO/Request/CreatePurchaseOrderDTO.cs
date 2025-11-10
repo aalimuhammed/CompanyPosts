@@ -1,17 +1,16 @@
 ﻿namespace CompanyPost.Application.DTO.Request
 {
     public record CreatePurchaseOrderDTO(
-    string Value,
-    string Details,
+    string? Value,
+    string? Details,
     string PurchaseOrderNumber,
-    DateTime PurchaseOrderDate,
+    DateTime? PurchaseOrderDate,
     int SerialNumber,
     Guid PersonOrgId,
-    Guid WorkTypeId,
+    Guid? WorkTypeId,
     string? Notes,
     Guid ProjectId,
-    int Currency,
+    int? Currency,
     int Department,
-    int PurchaseOrderType,
     List<IFormFile> Attachments);
 }

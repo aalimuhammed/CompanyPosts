@@ -4,21 +4,20 @@
     {
         public int SerialNumber { get; set; }
         public Departments Department { get ; set; }
-        public string Value { get; set; } = string.Empty;
-        public string Details { get; set; } = string.Empty;
+        public string? Value { get; set; } = string.Empty;
+        public string? Details { get; set; } = string.Empty;
         public string PurchaseOrderNumber { get; set; } = string.Empty;
         public string? Notes { get; set; }
-        public DateTime PurchaseOrder_Date { get; set; }
+        public DateTime? PurchaseOrder_Date { get; set; }
         public Guid ProjectId { get; set; }
         public Publisher Projects { get; set; } = null!;
         public Guid PersonOrgId { get; set; }
         public Publisher PersonOrgs { get; set; } = null!;
-        public Currency Currency { get; set; }
+        public Currency? Currency { get; set; }
         public Guid CreatedById { get; set; }
         public SysUsers CreatedBy { get; set; } = null!;
-        public Guid WorkTypeId { get; set; }
-        public WorkType WorkType { get; set; } = null!;
-        public PurchaseOrderTypes PurchaseOrderTypes { get; set; }
+        public Guid? WorkTypeId { get; set; }
+        public WorkType? WorkType { get; set; } = null!;
         public ICollection<PurchaseOrderAttachment> PurchaseOrderAttachments { get; set; } = new List<PurchaseOrderAttachment>();
     }
 }

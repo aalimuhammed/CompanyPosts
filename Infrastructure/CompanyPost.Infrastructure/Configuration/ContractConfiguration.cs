@@ -13,7 +13,7 @@ internal sealed class ContractConfiguration : IEntityTypeConfiguration<Contracts
 
 		builder.Property(builder => builder.purchase_order_ref)
 			.HasMaxLength(100)
-			.IsRequired();
+			.IsRequired(false);
 
 		builder.Property(builder => builder.ContractNumber)
 			.HasMaxLength(100)

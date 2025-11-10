@@ -17,7 +17,13 @@ internal sealed class CreatePostInternalHandler
 		var adminRepository = _unitOfWork.Repository<SysUsers>();
 		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
 
-		var postInternal = new PostInternal
+
+        if (await postInternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostInternalDTO.DocumentNumber))
+        {
+            throw new Exception("Cannot have duplicated Document Number");
+        }
+
+        var postInternal = new PostInternal
 		{
 			SerialNumber = request.CreatePostInternalDTO.SerialNumber,
 			DocumentNumber = request.CreatePostInternalDTO.DocumentNumber,

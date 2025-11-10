@@ -65,8 +65,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
                 ProjectId = request.CreatePurchaseOrderDTO.ProjectId,
                 PersonOrgId = request.CreatePurchaseOrderDTO.PersonOrgId,
                 Currency = (Currency)request.CreatePurchaseOrderDTO.Currency,
-                Department = (Departments)request.CreatePurchaseOrderDTO.Department,
-                PurchaseOrderTypes = (PurchaseOrderTypes)request.CreatePurchaseOrderDTO.PurchaseOrderType
+                Department = (Departments)request.CreatePurchaseOrderDTO.Department
             };
         }
         private async Task AddAttachments(

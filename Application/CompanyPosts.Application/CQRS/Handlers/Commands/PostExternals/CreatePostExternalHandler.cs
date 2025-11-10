@@ -17,6 +17,11 @@ internal sealed class CreatePostExternalHandler :
 		var adminRepository = _unitOfWork.Repository<SysUsers>();
 		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
 
+		if (await postExternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostExternalDTO.DocumentNumber))
+		{
+			throw new Exception("Cannot have duplicated Document Number");
+		}
+
 		var postExternal = new PostExternal
 		{
 			SerialNumber = request.CreatePostExternalDTO.SerialNumber,

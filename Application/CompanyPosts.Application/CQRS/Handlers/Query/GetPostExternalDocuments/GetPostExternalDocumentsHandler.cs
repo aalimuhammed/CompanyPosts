@@ -24,7 +24,24 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 					 post => post.Attachments,
 				 };
 
-			var posts = await postRepository.FindWithIncludeAsync(null, includes, cancellationToken);
+            var predicate = PredicateBuilder.New<PostExternal>(true);
+
+			if(request.BaseDocumentFilterRequestDTO.StartDate.HasValue)
+			{
+				predicate = predicate.And(p => p.DocumentDate >= request.BaseDocumentFilterRequestDTO.StartDate.Value);
+            }
+            if (request.BaseDocumentFilterRequestDTO.EndDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate <= request.BaseDocumentFilterRequestDTO.EndDate.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.DocumentNumber))
+            {
+                predicate = predicate.And(p => p.DocumentNumber  == request.BaseDocumentFilterRequestDTO.DocumentNumber);
+            }
+
+            var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
+
 			var postDTOs = posts.Select(p => new PostDocumentsDTO(
 				p.Id,
 				p.SerialNumber,
@@ -45,6 +62,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 				p.ReceivedFromSupplier.Name,
 				p.Department.GetDisplayName()
 			));
+
 			return postDTOs;
 		}
 	}

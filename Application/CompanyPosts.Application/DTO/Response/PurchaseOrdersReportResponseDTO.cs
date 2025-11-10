@@ -4,7 +4,6 @@
         Guid Id , 
         int SerialNumber,
         string PurchaseOrderNumber,
-        string PurchaseOrderType,
         string ProjectName,
         string WorkType,
         string SubContractor,

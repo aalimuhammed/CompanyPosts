@@ -19,7 +19,13 @@ internal sealed class CreateIncomingHandler
 		var adminRepository = _unitOfWork.Repository<SysUsers>();
 		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
 
-		var incoming = new InComing
+
+        if (await incomingRepository.FindAnyAsync(x => x.DocumentNumber == request.createIncomingDTO.DocumentNumber))
+        {
+            throw new Exception("Cannot have duplicated Document Number");
+        }
+
+        var incoming = new InComing
 		{
 			SerialNumber = request.createIncomingDTO.SerialNumber,
 			DocumentNumber = request.createIncomingDTO.DocumentNumber,

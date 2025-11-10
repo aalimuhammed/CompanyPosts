@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.API.Controllers
+﻿using CompanyPost.Application.DTO.Request.Base;
+
+namespace CompanyPost.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
@@ -10,33 +12,33 @@
 			_mediator = mediator;
 		}
 		[HttpGet("post-external")]
-		public async Task<IActionResult> GetPostExternalDocuments()
+		public async Task<IActionResult> GetPostExternalDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
 		{
-			var query = new GetPostExternalDocumentsQuery();
+			var query = new GetPostExternalDocumentsQuery(baseDocumentFilterRequestDTO);
 			var documents = await _mediator.Send(query);
 			return Ok(documents);
 		}
 
 		[HttpGet("post-internal")]
-		public async Task<IActionResult> GetPostInternalDocuments()
+		public async Task<IActionResult> GetPostInternalDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
 		{
-			var query = new GetPostInternalDocumentsQuery();
+			var query = new GetPostInternalDocumentsQuery(baseDocumentFilterRequestDTO);
 			var documents = await _mediator.Send(query);
 			return Ok(documents);
 		}
 
 		[HttpGet("post-transformer")]
-		public async Task<IActionResult> GetPostTransformerDocuments()
+		public async Task<IActionResult> GetPostTransformerDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
 		{
-			var query = new GetPostTransformerDocumentsQuery();
+			var query = new GetPostTransformerDocumentsQuery(baseDocumentFilterRequestDTO);
 			var documents = await _mediator.Send(query);
 			return Ok(documents);
 		}
 
 		[HttpGet("incoming")]
-		public async Task<IActionResult> GetInComingDocuments()
+		public async Task<IActionResult> GetInComingDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
 		{
-			var query = new GetInComingDocumentsQuery();
+			var query = new GetInComingDocumentsQuery(baseDocumentFilterRequestDTO);
 			var documents = await _mediator.Send(query);
 			return Ok(documents);
 		}

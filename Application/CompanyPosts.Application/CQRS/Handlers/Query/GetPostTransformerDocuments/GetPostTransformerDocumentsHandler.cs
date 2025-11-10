@@ -24,7 +24,24 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
 					 post => post.Attachments,
 				 };
 
-			var posts = await postRepository.FindWithIncludeAsync(predicate: null, includes, cancellationToken);
+            var predicate = PredicateBuilder.New<PostTransformer>(true);
+
+            if (request.BaseDocumentFilterRequestDTO.StartDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate >= request.BaseDocumentFilterRequestDTO.StartDate.Value);
+            }
+            if (request.BaseDocumentFilterRequestDTO.EndDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate <= request.BaseDocumentFilterRequestDTO.EndDate.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.DocumentNumber))
+            {
+                predicate = predicate.And(p => p.DocumentNumber == request.BaseDocumentFilterRequestDTO.DocumentNumber);
+            }
+
+            var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
+
 			var postDTOs = posts.Select(p => new PostDocumentsDTO(
 				p.Id,
 				p.SerialNumber,

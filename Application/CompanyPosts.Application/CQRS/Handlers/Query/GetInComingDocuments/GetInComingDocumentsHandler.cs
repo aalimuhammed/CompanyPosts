@@ -23,8 +23,24 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 						 post => post.OriginalPublisher,
 						 post => post.IncomingAttachments,
 					 };
+            var predicate = PredicateBuilder.New<InComing>(true);
 
-			var inComing = await inComingRepository.FindWithIncludeAsync(predicate: null, includes, cancellationToken);
+            if (request.BaseDocumentFilterRequestDTO.StartDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate >= request.BaseDocumentFilterRequestDTO.StartDate.Value);
+            }
+            if (request.BaseDocumentFilterRequestDTO.EndDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate <= request.BaseDocumentFilterRequestDTO.EndDate.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.DocumentNumber))
+            {
+                predicate = predicate.And(p => p.DocumentNumber == request.BaseDocumentFilterRequestDTO.DocumentNumber);
+            }
+
+            var inComing = await inComingRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
+
 			var inComingDto = inComing.Select(p => new PostDocumentsDTO(
 				p.Id,
 				p.SerialNumber,

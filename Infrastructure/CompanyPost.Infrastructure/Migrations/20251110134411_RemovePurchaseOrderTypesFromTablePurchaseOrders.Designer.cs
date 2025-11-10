@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110134411_RemovePurchaseOrderTypesFromTablePurchaseOrders")]
+    partial class RemovePurchaseOrderTypesFromTablePurchaseOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -988,7 +991,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("created_by_id");
 
-                    b.Property<int?>("Currency")
+                    b.Property<int>("Currency")
                         .HasColumnType("int")
                         .HasColumnName("currency");
 
@@ -997,6 +1000,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("department");
 
                     b.Property<string>("Details")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("details");
@@ -1020,7 +1024,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("purchase_order_number");
 
-                    b.Property<DateTime?>("PurchaseOrder_Date")
+                    b.Property<DateTime>("PurchaseOrder_Date")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("purchase_order_date");
 
@@ -1029,11 +1033,12 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("serial_number");
 
                     b.Property<string>("Value")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("value");
 
-                    b.Property<Guid?>("WorkTypeId")
+                    b.Property<Guid>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -1599,6 +1604,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("PurchaseOrdersWorkTypes")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_purchase_orders_work_types_work_type_id");
 
                     b.Navigation("CreatedBy");

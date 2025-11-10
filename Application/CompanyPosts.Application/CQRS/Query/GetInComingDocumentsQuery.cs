@@ -1,4 +1,7 @@
-﻿namespace CompanyPost.Application.CQRS.Query
+﻿using CompanyPost.Application.DTO.Request.Base;
+
+namespace CompanyPost.Application.CQRS.Query
 {
-	public record GetInComingDocumentsQuery : IRequest<IEnumerable<PostDocumentsDTO>>;
+	public record GetInComingDocumentsQuery(BaseDocumentFilterRequestDTO BaseDocumentFilterRequestDTO) 
+		: IRequest<IEnumerable<PostDocumentsDTO>>;
 }

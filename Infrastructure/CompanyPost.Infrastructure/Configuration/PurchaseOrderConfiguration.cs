@@ -7,10 +7,11 @@
         {
             builder.Property(builder => builder.Details)
             .HasMaxLength(100)
-            .IsRequired();
+            .IsRequired(false);
 
             builder.Property(builder => builder.Notes)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired(false);
 
             builder.Property(builder => builder.PurchaseOrderNumber)
                 .HasMaxLength(100)
@@ -18,10 +19,10 @@
 
             builder.Property(builder => builder.Value)
                 .HasMaxLength(100)
-                .IsRequired();
+                .IsRequired(false);
 
             builder.Property(builder => builder.PurchaseOrder_Date)
-                .IsRequired();
+                .IsRequired(false);
 
             builder.HasOne(builder => builder.Projects)
                 .WithMany(t => t.PurchaseOrderProjects)
@@ -45,7 +46,7 @@
 
             builder.Property(builder => builder.Currency)
                 .HasConversion<int>()
-                .IsRequired();
+                .IsRequired(false);
 
             builder.HasIndex(builder => builder.PurchaseOrderNumber)
                 .IsUnique();

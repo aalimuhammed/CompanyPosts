@@ -56,7 +56,6 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPurchaseOrdersReportByF
                     c.Id,
                     c.SerialNumber,
                     c.PurchaseOrderNumber,
-                    c.PurchaseOrderTypes.GetDisplayName(),
                     c.Projects.Name,
                     c.WorkType.Name,
                     c.PersonOrgs.Name,
@@ -64,7 +63,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPurchaseOrdersReportByF
                     c.Department.GetDisplayName(),
                     c.Currency.GetDisplayName(),
                     c.CreatedBy.UserName,
-                    c.PurchaseOrder_Date.ToString("dd-MM-yyyy"),
+                    c.PurchaseOrder_Date?.ToString("dd-MM-yyyy"),
                     c.CreatedAt.ToString("yyyy-MM-dd"),
                     c.PurchaseOrderAttachments?.Select(a => $"/purchaseorders/{a.FileName}").ToList() ?? new List<string>()
                 ));
