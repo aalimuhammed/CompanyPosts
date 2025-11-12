@@ -7,11 +7,11 @@
         string ProjectName,
         string WorkType,
         string SubContractor,
-        string PurchaseOrderValue,
         string Department,
         string Currency,
         string CreatedBy,
         string PurchaseOrderDate,
         string CreatedAt,
+        string Value,
         List<string> Attachments);
 }

@@ -17,8 +17,7 @@ internal sealed class CreateIncomingHandler
 	{
 		var incomingRepository = _unitOfWork.Repository<InComing>();
 		var adminRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
-
+		var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
         if (await incomingRepository.FindAnyAsync(x => x.DocumentNumber == request.createIncomingDTO.DocumentNumber))
         {
@@ -43,6 +42,7 @@ internal sealed class CreateIncomingHandler
 			WorkTypeId = request.createIncomingDTO.WorkTypeId,
 			CreatedById = admin.Id,
 		};
+
 		var postExternalID = incoming.Id;
 		await _unitOfWork.BeginTransactionAsync();
 		try

@@ -29,6 +29,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
             if (request.DTO.ProjectId.HasValue)
                 predicate = predicate.And(c => c.ProjectId == request.DTO.ProjectId.Value);
 
+            if (request.DTO.PublisherId.HasValue)
+                predicate = predicate.And(c => c.PersonOrgId == request.DTO.PublisherId.Value);
+
             if (Enum.TryParse<Departments>(request.DTO.DepartmentId, out var department))
                 predicate = predicate.And(c => c.Department == department);
 
@@ -55,7 +58,6 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                     c.ContractNumber,
                     c.SerialNumber.ToString(),
                     c.WorkType.Name,
-                    c.Value,
                     c.Contract_Date.ToString("yyyy-MM-dd"),
                     c.Department.GetDisplayName(),
                     c.purchase_order_ref,
@@ -64,6 +66,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                     c.HasReference ? "Original" : "Attached",
                     c.CreatedBy.UserName,
                     c.CreatedAt.ToString("yyyy-MM-dd"),
+                    c.Value,
                     c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList() ?? new List<string>()
                 ));
 

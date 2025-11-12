@@ -5,8 +5,7 @@
         string Project , 
         string ContractNum ,
         string SerialNum , 
-        string WorkType , 
-        string ContractValue ,
+        string WorkType ,
         string ContractDate ,
         string Department,
         string PurchaseOrderRef,
@@ -15,5 +14,6 @@
         string Type,
         string CreatedBy,
         string CreatedAt,
+        string Value,
         List<string> AttachmentPaths);
 }

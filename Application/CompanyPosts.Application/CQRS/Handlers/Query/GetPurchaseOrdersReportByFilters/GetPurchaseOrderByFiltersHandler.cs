@@ -52,20 +52,20 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPurchaseOrdersReportByF
                 cancellationToken);
 
 
-            var purchaseOrderResponse = purchaseOrders.Select(c => new PurchaseOrdersReportResponseDTO(
-                    c.Id,
-                    c.SerialNumber,
-                    c.PurchaseOrderNumber,
-                    c.Projects.Name,
-                    c.WorkType.Name,
-                    c.PersonOrgs.Name,
-                    c.Value,
-                    c.Department.GetDisplayName(),
-                    c.Currency.GetDisplayName(),
-                    c.CreatedBy.UserName,
-                    c.PurchaseOrder_Date?.ToString("dd-MM-yyyy"),
-                    c.CreatedAt.ToString("yyyy-MM-dd"),
-                    c.PurchaseOrderAttachments?.Select(a => $"/purchaseorders/{a.FileName}").ToList() ?? new List<string>()
+            var purchaseOrderResponse = purchaseOrders.Select(p => new PurchaseOrdersReportResponseDTO(
+                    p.Id,
+                    p.SerialNumber,
+                    p.PurchaseOrderNumber,
+                    p.Projects.Name,
+                    p.WorkType.Name,
+                    p.PersonOrgs.Name,
+                    p.Department.GetDisplayName(),
+                    p.Currency.GetDisplayName(),
+                    p.CreatedBy.UserName,
+                    p.PurchaseOrder_Date?.ToString("dd-MM-yyyy"),
+                    p.CreatedAt.ToString("yyyy-MM-dd"),
+                    p.Value,
+                    p.PurchaseOrderAttachments?.Select(a => $"/purchaseorders/{a.FileName}").ToList() ?? new List<string>()
                 ));
             return purchaseOrderResponse;
         }

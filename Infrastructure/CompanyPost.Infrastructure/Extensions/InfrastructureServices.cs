@@ -1,4 +1,5 @@
 ﻿using CompanyPost.Infrastructure.Settings;
+using Microsoft.Extensions.Logging;
 
 namespace CompanyPost.Infrastructure.Extensions;
 public static class InfrastructureServices
@@ -12,7 +13,9 @@ public static class InfrastructureServices
 		services.AddDbContext<CompanyPostDbContext>(
 			options => options.UseMySql(defaultConnectionString,
 			ServerVersion.AutoDetect(defaultConnectionString))
-			.UseSnakeCaseNamingConvention());
+			.UseSnakeCaseNamingConvention()
+			.EnableSensitiveDataLogging()
+			.LogTo(Console.WriteLine , LogLevel.Information));
 
 		services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 

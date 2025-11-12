@@ -1,4 +1,4 @@
-﻿namespace CompanyPost.Application.CQRS.Handlers.Commands.PostInernal;
+﻿namespace CompanyPost.Application.CQRS.Handlers.Commands.PostInernals;
 internal sealed class CreatePostInternalHandler
 	: IRequestHandler<CreatePostInternalCommand, Unit>
 {
@@ -15,8 +15,7 @@ internal sealed class CreatePostInternalHandler
 	{
 		var postInternalRepository = _unitOfWork.Repository<PostInternal>();
 		var adminRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
-
+		var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
         if (await postInternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostInternalDTO.DocumentNumber))
         {

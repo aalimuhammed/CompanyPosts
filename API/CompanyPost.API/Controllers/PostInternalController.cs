@@ -20,7 +20,7 @@ public class PostInternalController : ControllerBase
 	}
 	[HttpPost("CreatePostInternal")]
 	public async Task<IActionResult> CreatePostInternal(
-		[FromForm] CreatePostInternalDTO createPostInternalDTO, 
+		[FromForm] CreatePostInternalDTO createPostInternalDTO,
 		CancellationToken cancellationToken)
 	{
 		try
@@ -34,5 +34,4 @@ public class PostInternalController : ControllerBase
 			return BadRequest(new ApiResponse { Success = false, Message = $"An error occurred while saving the data: {ex.Message}" });
 		}
 	}
-
 }

@@ -1,0 +1,18 @@
+﻿namespace CompanyPost.Application.DTO.Response
+{
+    public record SelectedInComingByIdDTO(
+        string DocumentNumber,
+        string Subject,
+        string Summary,
+        string Notes,
+        Guid PublishedArea,
+        Guid OriginalSender,
+        Guid WorkTypeId,
+        DateTime DocumentDate,
+        DateTime DeliveryDate,
+        DateTime SavingDate,
+        int Department,
+        int DeliveryMethod,
+        Guid ProjectId,
+        int DocumentType);
+}
