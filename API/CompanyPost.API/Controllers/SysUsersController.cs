@@ -53,5 +53,9 @@ namespace CompanyPost.API.Controllers
 			var results = await _mediator.Send(query);
 			return Ok(results);
 		}
-	}
+
+        //[HttpPost("activate")]
+
+    
+    }
 }

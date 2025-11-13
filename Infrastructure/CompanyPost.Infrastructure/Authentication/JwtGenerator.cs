@@ -6,7 +6,7 @@ internal class JwtGenerator : IJwTGenerator
 	{
 		_jwtSettings = jwtSettings.Value;
 	}
-	public string CreateToken(Guid userId)
+	public string CreateToken(Guid userId , int? expirationInMinutes = null)
 	{
 		var claims = new List<Claim>
 		{
@@ -22,7 +22,7 @@ internal class JwtGenerator : IJwTGenerator
 			issuer: _jwtSettings.Issuer,
 			audience: _jwtSettings.Audience,
 			claims: claims,
-			expires: DateTime.Now.AddMinutes(_jwtSettings.ExpirationInMinutes),
+			expires: DateTime.Now.AddMinutes(expirationInMinutes ?? _jwtSettings.ExpirationInMinutes),
 			signingCredentials: credentials
 		);
 		return new JwtSecurityTokenHandler().WriteToken(token);

@@ -9,6 +9,7 @@ public class AuthController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+
 	[AllowAnonymous]
 	[HttpPost("login")]
 	public async Task<ActionResult<AuthResultDTO>> Login([FromBody] SysUserLoginQuery command)
@@ -30,4 +31,6 @@ public class AuthController : ControllerBase
 
 		return Ok(result);
 	}
+
+	
 }
