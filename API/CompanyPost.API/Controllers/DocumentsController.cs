@@ -1,4 +1,5 @@
-﻿using CompanyPost.Application.DTO.Request.Base;
+﻿using CompanyPost.Application.CQRS.Commands.InComing;
+using CompanyPost.Application.DTO.Request.Base;
 
 namespace CompanyPost.API.Controllers
 {
@@ -89,6 +90,18 @@ namespace CompanyPost.API.Controllers
             return Ok(post);
         }
 
+        [HttpPut("post-transformer/{id}")]
+        public async Task<IActionResult> UpdatePostTransformerDocuments(
+            Guid id,
+            [FromBody] UpdatePostTransformerDocumentRequestDTO updatePostTransformerDocumentRequestDTO,
+            CancellationToken cancellationToken)
+        {
+            var query = new UpdatePostTransformerDocumentCommand(id , updatePostTransformerDocumentRequestDTO);
+            var post = await _mediator.Send(query, cancellationToken);
+            return Ok(post);
+        }
+
+
         [HttpGet("incoming")]
 		public async Task<IActionResult> GetInComingDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
 		{
@@ -103,6 +116,17 @@ namespace CompanyPost.API.Controllers
             var query = new GetInComingByIdQuery(id);
             var incoming = await _mediator.Send(query, cancellationToken);
             return Ok(incoming);
+        }
+
+        [HttpPut("incoming/{id}")]
+        public async Task<IActionResult> UpdateInComingDocument(
+            Guid id,
+            [FromBody] UpdateInComingDocumentRequestDTO updateInComingDocumentRequestDTO,
+            CancellationToken cancellationToken)
+        {
+            var command = new UpdateInComingDocumentCommand(id, updateInComingDocumentRequestDTO);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
         }
 
         [HttpGet("get-contracts")]
