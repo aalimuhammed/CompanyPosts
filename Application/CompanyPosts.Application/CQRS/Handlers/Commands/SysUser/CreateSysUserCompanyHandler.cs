@@ -77,8 +77,13 @@ internal sealed class CreateSysUserCompanyHandler
     {
         if (string.IsNullOrWhiteSpace(recipientEmail)) return;
 
-        var subject = "Welcome to Company Posts";
-        var html = "<p>Your account has been created. Please set your password using the link provided by your administrator.</p>";
+        var subject = "Welcome to Company Post";
+        var html = @"
+				<p>Dear User,</p>
+				<p>Your account has been successfully created.</p>
+				<p>Please use the link below to log in:</p>
+				<p><a href='http://192.168.121.29:3000/login' target='_blank'>Click here to access your account</a></p>
+				<p>Best regards,<br/>The Support Team</p>";
 
         try
         {

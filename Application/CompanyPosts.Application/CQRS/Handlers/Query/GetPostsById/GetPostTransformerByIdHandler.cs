@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
+﻿using CompanyPost.Application.DTO.Response.Base;
+
+namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
 {
     internal sealed class GetPostTransformerByIdHandler
         : IRequestHandler<GetPostTransformerByIdQuery, SelectedPostByIdDTO>
@@ -19,7 +21,7 @@
                 throw new Exception($"Post with Id {request.Id} not found.");
             }
 
-            var selectedPostDto = new SelectedPostByIdDTO(
+            var selectedPostDto = new SelectedPostTransformerByIdDTO(
                 post.DocumentNumber,
                 post.Subject,
                 post.Summary,
@@ -31,9 +33,13 @@
                 post.DocumentDate,
                 post.DeliveryDate,
                 (int)post.Department,
-                (int)post.DeliveryMethods);
+                (int)post.DeliveryMethods , 
+                post.IncomingNumber,
+                post.PostNumber,
+                post.RecivedByName,
+                (int)post.DocumentType);
 
-            return selectedPostDto;
+                return selectedPostDto;
         }
     }
 }

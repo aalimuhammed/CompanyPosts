@@ -1,4 +1,4 @@
-﻿namespace CompanyPost.Application.DTO.Response
+﻿namespace CompanyPost.Application.DTO.Response.Base
 {
     public record SelectedPostByIdDTO(
         string DocumentNumber,

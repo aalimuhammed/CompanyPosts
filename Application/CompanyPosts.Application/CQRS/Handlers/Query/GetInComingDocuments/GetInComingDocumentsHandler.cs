@@ -1,4 +1,5 @@
-﻿using CompanyPost.Application.Extension;
+﻿using CompanyPost.Application.DTO.Response.Base;
+using CompanyPost.Application.Extension;
 
 namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 {

@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
+﻿using CompanyPost.Application.DTO.Response.Base;
+
+namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
 {
     internal sealed class GetPostExternalByIdHandler 
         : IRequestHandler<GetPostExternalByIdQuery, SelectedPostByIdDTO>
