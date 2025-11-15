@@ -1,4 +1,6 @@
-﻿using CompanyPost.Application.CQRS.Commands.InComing;
+﻿using CompanyPost.API.Model;
+using CompanyPost.Application.CQRS.Commands.InComing;
+using CompanyPost.Application.CQRS.Commands.PurchaseOrder;
 using CompanyPost.Application.DTO.Request.Base;
 
 namespace CompanyPost.API.Controllers
@@ -101,7 +103,6 @@ namespace CompanyPost.API.Controllers
             return Ok(post);
         }
 
-
         [HttpGet("incoming")]
 		public async Task<IActionResult> GetInComingDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
 		{
@@ -143,6 +144,54 @@ namespace CompanyPost.API.Controllers
 			var query = new GetPurchaseOrderByFiltersQuery(filterDTO);
 			var purchaseOrders = await _mediator.Send(query, cancellationToken);
 			return Ok(purchaseOrders);
+        }
+
+        [HttpGet("get-purchase-order/{id}")]
+        public async Task<IActionResult> GetPurchaseOrdersById(Guid id, CancellationToken cancellationToken)
+        {
+            var query = new GetPurchaseOrderByIdQuery(id);
+            var purchaseOrder = await _mediator.Send(query, cancellationToken);
+            return Ok(purchaseOrder);
+        }
+
+        [HttpPut("purchase-order/{id}")]
+        public async Task<IActionResult> UpdatePurchaseOrderDocument(
+          Guid id,
+          [FromBody] UpdatePurchaseOrderDocumentRequestDTO updatePurchaseOrderRequest,
+          CancellationToken cancellationToken)
+        {
+            var command = new UpdatePurchaseOrderDocumentCommand(id, updatePurchaseOrderRequest);
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result);
+        }
+        [HttpDelete("deletepurchaseorder/{id}")]
+        public async Task<IActionResult> DeletePurchaseOrder(Guid id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var command = new DeletePurchaseOrderCommand(id);
+                var result = await _mediator.Send(command, cancellationToken);
+                if (result)
+                {
+                    return Ok(new ApiResponse { Success = true, Message = "Purchase order deleted successfully ✅" });
+                }
+                else
+                {
+                    return NotFound(new ApiResponse { Success = false, Message = "Purchase order not found ❌" });
+                }
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new ApiResponse { Success = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
+                {
+                    Success = false,
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                });
+            }
         }
     }
 }

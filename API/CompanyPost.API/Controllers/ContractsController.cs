@@ -26,6 +26,7 @@ public class ContractsController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
+
 	[HttpPost("create-contract")]
 	public async Task<IActionResult> CreateContract(
 		[FromForm] CreateContractDTO creatrContractDTO,
@@ -51,17 +52,36 @@ public class ContractsController : ControllerBase
 		return Ok(contracts);
 	}
 
-	[HttpPut("update-contract")]
-	public async Task<IActionResult> UpdateContract(
-		[FromForm] UpdateContractDTO updateContractDTO,
-		CancellationToken cancellationToken)
-	{
-		var command = new UpdateContractCommand(updateContractDTO);
-		await _mediator.Send(command, cancellationToken);
-		return StatusCode(204);
-	}
+	//[HttpPut("update-contract")]
+	//public async Task<IActionResult> UpdateContract(
+	//	[FromForm] UpdateContractDTO updateContractDTO,
+	//	CancellationToken cancellationToken)
+	//{
+	//	var command = new UpdateContractCommand(updateContractDTO);
+	//	await _mediator.Send(command, cancellationToken);
+	//	return StatusCode(204);
+	//}
 
-	[HttpDelete("deletecontract")]
+	[HttpGet("get-contract/{id}")]
+	public async Task<IActionResult> GetContractDocumentById(Guid Id, CancellationToken cancellationToken)
+	{
+		var query = new GetContractDocumentByIdQuery(Id);
+		var contract = await _mediator.Send(query, cancellationToken);
+		return Ok(contract);
+    }
+
+    [HttpPut("get-contract/{id}")]
+    public async Task<IActionResult> UpdateContractDocumentById(
+		Guid Id,
+		[FromBody] UpdateContractDocumentRequestDTO updateContractDocumentDTO,
+        CancellationToken cancellationToken)
+    {
+        var query = new UpdateContractDocumentCommand(Id , updateContractDocumentDTO);
+        var contract = await _mediator.Send(query, cancellationToken);
+        return Ok(contract);
+    }
+
+    [HttpDelete("deletecontract")]
 	public async Task<IActionResult> DeleteContract([FromQuery]Guid Id, CancellationToken cancellationToken)
 	{
 		var command = new DeleteContractCommand(Id);

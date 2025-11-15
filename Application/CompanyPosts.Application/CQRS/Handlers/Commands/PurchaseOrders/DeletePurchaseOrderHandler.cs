@@ -1,5 +1,4 @@
 ﻿using CompanyPost.Application.CQRS.Commands.PurchaseOrder;
-using CompanyPost.Domain.Entities;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
 {
