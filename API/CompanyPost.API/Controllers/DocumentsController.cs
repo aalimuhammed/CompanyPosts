@@ -8,177 +8,107 @@ namespace CompanyPost.API.Controllers
 	[Route("api/[controller]")]
 	[ApiController]
 	public class DocumentsController : ControllerBase
-	{
-		private readonly IMediator _mediator;
-		public DocumentsController(IMediator mediator)
-		{
-			_mediator = mediator;
-		}
-		[HttpGet("post-external")]
-		public async Task<IActionResult> GetPostExternalDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
-		{
-			var query = new GetPostExternalDocumentsQuery(baseDocumentFilterRequestDTO);
-			var documents = await _mediator.Send(query);
-			return Ok(documents);
-		}
+    {
+        #region Constructor
+        private readonly IMediator _mediator;
+        public DocumentsController(IMediator mediator) => _mediator = mediator;
+        #endregion
+
+
+        #region Post External
+        [HttpGet("post-external")]
+        public async Task<IActionResult> GetPostExternalDocuments([FromQuery] BaseDocumentFilterRequestDTO dto)
+            => Ok(await _mediator.Send(new GetPostExternalDocumentsQuery(dto)));
 
         [HttpGet("post-external/{id}")]
-        public async Task<IActionResult> GetPostExternalById(Guid id, CancellationToken cancellationToken)
-        {
-            var query = new GetPostExternalByIdQuery(id);
-            var post = await _mediator.Send(query, cancellationToken);
-            return Ok(post);
-        }
+        public async Task<IActionResult> GetPostExternalById(Guid id, CancellationToken ct)
+            => Ok(await _mediator.Send(new GetPostExternalByIdQuery(id), ct));
 
         [HttpPut("post-external/{id}")]
-        public async Task<IActionResult> UpdatePostExternalDocument(
-            Guid id, 
-            [FromBody] UpdatePostExternalDocumentRequestDTO updateRequestDTO, 
-            CancellationToken cancellationToken)
-        {
-            var command = new UpdatePostExternalDocumentCommand(id, updateRequestDTO);
-            var result = await _mediator.Send(command, cancellationToken);
-            return Ok(result);
-        }
+        public async Task<IActionResult> UpdatePostExternalDocument(Guid id, [FromBody] UpdatePostExternalDocumentRequestDTO dto, CancellationToken ct)
+            => Ok(await _mediator.Send(new UpdatePostExternalDocumentCommand(id, dto), ct));
 
         [HttpDelete("post-external/{id}")]
-        public async Task<IActionResult> DeletePostExternalDocument(Guid id, CancellationToken cancellationToken)
-        {
-            //var command = new DeletePostExternalDocumentCommand(id);
-            //await _mediator.Send(command, cancellationToken);
-            return NoContent();
-        }
+        public Task<IActionResult> DeletePostExternalDocument(Guid id, CancellationToken ct)
+            => Task.FromResult<IActionResult>(NoContent());
+        #endregion
 
+
+        #region Post Internal
         [HttpGet("post-internal")]
-		public async Task<IActionResult> GetPostInternalDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
-		{
-			var query = new GetPostInternalDocumentsQuery(baseDocumentFilterRequestDTO);
-			var documents = await _mediator.Send(query);
-			return Ok(documents);
-		}
+        public async Task<IActionResult> GetPostInternalDocuments([FromQuery] BaseDocumentFilterRequestDTO dto)
+            => Ok(await _mediator.Send(new GetPostInternalDocumentsQuery(dto)));
 
         [HttpGet("post-internal/{id}")]
-        public async Task<IActionResult> GetPostInternalById(Guid id, CancellationToken cancellationToken)
-        {
-            var query = new GetPostInternalByIdQuery(id);
-            var post = await _mediator.Send(query, cancellationToken);
-            return Ok(post);
-        }
+        public async Task<IActionResult> GetPostInternalById(Guid id, CancellationToken ct)
+            => Ok(await _mediator.Send(new GetPostInternalByIdQuery(id), ct));
 
         [HttpPut("post-internal/{id}")]
-        public async Task<IActionResult> UpdatePostInternalDocument(
-            Guid id, 
-            [FromBody] UpdatePostInternalDocumentRequestDTO updatePostExternalDocumentRequestDTO, 
-            CancellationToken cancellationToken)
-        {
-            var query = new UpdatePostInternalDocumentCommand(id , updatePostExternalDocumentRequestDTO);
-            var details = await _mediator.Send(query, cancellationToken);
-            return Ok(details);
-        }
+        public async Task<IActionResult> UpdatePostInternalDocument(Guid id, [FromBody] UpdatePostInternalDocumentRequestDTO dto, CancellationToken ct)
+            => Ok(await _mediator.Send(new UpdatePostInternalDocumentCommand(id, dto), ct));
+        #endregion
 
+
+        #region Post Transformer
         [HttpGet("post-transformer")]
-		public async Task<IActionResult> GetPostTransformerDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
-		{
-			var query = new GetPostTransformerDocumentsQuery(baseDocumentFilterRequestDTO);
-			var documents = await _mediator.Send(query);
-			return Ok(documents);
-		}
+        public async Task<IActionResult> GetPostTransformerDocuments([FromQuery] BaseDocumentFilterRequestDTO dto)
+            => Ok(await _mediator.Send(new GetPostTransformerDocumentsQuery(dto)));
 
         [HttpGet("post-transformer/{id}")]
-        public async Task<IActionResult> GetPostTransformerById(Guid id, CancellationToken cancellationToken)
-        {
-            var query = new GetPostTransformerByIdQuery(id);
-            var post = await _mediator.Send(query, cancellationToken);
-            return Ok(post);
-        }
+        public async Task<IActionResult> GetPostTransformerById(Guid id, CancellationToken ct)
+            => Ok(await _mediator.Send(new GetPostTransformerByIdQuery(id), ct));
 
         [HttpPut("post-transformer/{id}")]
-        public async Task<IActionResult> UpdatePostTransformerDocuments(
-            Guid id,
-            [FromBody] UpdatePostTransformerDocumentRequestDTO updatePostTransformerDocumentRequestDTO,
-            CancellationToken cancellationToken)
-        {
-            var query = new UpdatePostTransformerDocumentCommand(id , updatePostTransformerDocumentRequestDTO);
-            var post = await _mediator.Send(query, cancellationToken);
-            return Ok(post);
-        }
+        public async Task<IActionResult> UpdatePostTransformerDocuments(Guid id, [FromBody] UpdatePostTransformerDocumentRequestDTO dto, CancellationToken ct)
+            => Ok(await _mediator.Send(new UpdatePostTransformerDocumentCommand(id, dto), ct));
+        #endregion
 
+
+        #region Incoming Documents
         [HttpGet("incoming")]
-		public async Task<IActionResult> GetInComingDocuments([FromQuery] BaseDocumentFilterRequestDTO baseDocumentFilterRequestDTO)
-		{
-			var query = new GetInComingDocumentsQuery(baseDocumentFilterRequestDTO);
-			var documents = await _mediator.Send(query);
-			return Ok(documents);
-		}
+        public async Task<IActionResult> GetIncomingDocuments([FromQuery] BaseDocumentFilterRequestDTO dto)
+            => Ok(await _mediator.Send(new GetInComingDocumentsQuery(dto)));
 
         [HttpGet("incoming/{id}")]
-        public async Task<IActionResult> GetInComingById(Guid id, CancellationToken cancellationToken)
-        {
-            var query = new GetInComingByIdQuery(id);
-            var incoming = await _mediator.Send(query, cancellationToken);
-            return Ok(incoming);
-        }
+        public async Task<IActionResult> GetIncomingById(Guid id, CancellationToken ct)
+            => Ok(await _mediator.Send(new GetInComingByIdQuery(id), ct));
 
         [HttpPut("incoming/{id}")]
-        public async Task<IActionResult> UpdateInComingDocument(
-            Guid id,
-            [FromBody] UpdateInComingDocumentRequestDTO updateInComingDocumentRequestDTO,
-            CancellationToken cancellationToken)
-        {
-            var command = new UpdateInComingDocumentCommand(id, updateInComingDocumentRequestDTO);
-            var result = await _mediator.Send(command, cancellationToken);
-            return Ok(result);
-        }
+        public async Task<IActionResult> UpdateIncomingDocument(Guid id, [FromBody] UpdateInComingDocumentRequestDTO dto, CancellationToken ct)
+            => Ok(await _mediator.Send(new UpdateInComingDocumentCommand(id, dto), ct));
+        #endregion
 
-        [HttpGet("get-contracts")]
-        public async Task<IActionResult> GetContractsByFilters([FromQuery] ContractsFilterRequestDTO filterDTO, CancellationToken cancellationToken)
-        {
-            var query = new GetContractsByFiltersQuery(filterDTO);
-            var contracts = await _mediator.Send(query, cancellationToken);
-            return Ok(contracts);
-        }
 
-		[HttpGet("get-purchase-orders")]
-		public async Task<IActionResult> GetPurchaseOrdersByFilters([FromQuery] PurchaseOrderFilterRequestDTO filterDTO, CancellationToken cancellationToken)
-		{
-			var query = new GetPurchaseOrderByFiltersQuery(filterDTO);
-			var purchaseOrders = await _mediator.Send(query, cancellationToken);
-			return Ok(purchaseOrders);
-        }
+        #region Contracts
+        [HttpGet("contracts")]
+        public async Task<IActionResult> GetContractsByFilters([FromQuery] ContractsFilterRequestDTO dto, CancellationToken ct)
+            => Ok(await _mediator.Send(new GetContractsByFiltersQuery(dto), ct));
+        #endregion
 
-        [HttpGet("get-purchase-order/{id}")]
-        public async Task<IActionResult> GetPurchaseOrdersById(Guid id, CancellationToken cancellationToken)
-        {
-            var query = new GetPurchaseOrderByIdQuery(id);
-            var purchaseOrder = await _mediator.Send(query, cancellationToken);
-            return Ok(purchaseOrder);
-        }
 
-        [HttpPut("purchase-order/{id}")]
-        public async Task<IActionResult> UpdatePurchaseOrderDocument(
-          Guid id,
-          [FromBody] UpdatePurchaseOrderDocumentRequestDTO updatePurchaseOrderRequest,
-          CancellationToken cancellationToken)
-        {
-            var command = new UpdatePurchaseOrderDocumentCommand(id, updatePurchaseOrderRequest);
-            var result = await _mediator.Send(command, cancellationToken);
-            return Ok(result);
-        }
-        [HttpDelete("deletepurchaseorder/{id}")]
-        public async Task<IActionResult> DeletePurchaseOrder(Guid id, CancellationToken cancellationToken)
+        #region Purchase Orders
+        [HttpGet("purchase-orders")]
+        public async Task<IActionResult> GetPurchaseOrdersByFilters([FromQuery] PurchaseOrderFilterRequestDTO dto, CancellationToken ct)
+            => Ok(await _mediator.Send(new GetPurchaseOrderByFiltersQuery(dto), ct));
+
+        [HttpGet("purchase-orders/{id}")]
+        public async Task<IActionResult> GetPurchaseOrdersById(Guid id, CancellationToken ct)
+            => Ok(await _mediator.Send(new GetPurchaseOrderByIdQuery(id), ct));
+
+        [HttpPut("purchase-orders/{id}")]
+        public async Task<IActionResult> UpdatePurchaseOrderDocument(Guid id, [FromBody] UpdatePurchaseOrderDocumentRequestDTO dto, CancellationToken ct)
+            => Ok(await _mediator.Send(new UpdatePurchaseOrderDocumentCommand(id, dto), ct));
+
+        [HttpDelete("purchase-orders/{id}")]
+        public async Task<IActionResult> DeletePurchaseOrder(Guid id, CancellationToken ct)
         {
             try
             {
-                var command = new DeletePurchaseOrderCommand(id);
-                var result = await _mediator.Send(command, cancellationToken);
-                if (result)
-                {
-                    return Ok(new ApiResponse { Success = true, Message = "Purchase order deleted successfully ✅" });
-                }
-                else
-                {
-                    return NotFound(new ApiResponse { Success = false, Message = "Purchase order not found ❌" });
-                }
+                var result = await _mediator.Send(new DeletePurchaseOrderCommand(id), ct);
+
+                return result
+                    ? Ok(new ApiResponse { Success = true, Message = "Purchase order deleted successfully ✅" })
+                    : NotFound(new ApiResponse { Success = false, Message = "Purchase order not found ❌" });
             }
             catch (KeyNotFoundException ex)
             {
@@ -186,12 +116,14 @@ namespace CompanyPost.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ApiResponse
-                {
-                    Success = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                });
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new ApiResponse
+                    {
+                        Success = false,
+                        Message = $"An unexpected error occurred: {ex.Message}"
+                    });
             }
         }
+        #endregion
     }
 }

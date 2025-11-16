@@ -27,7 +27,15 @@ public class ContractsController : ControllerBase
 		return Ok(result);
 	}
 
-	[HttpPost("create-contract")]
+	[HttpGet("GetAttachedContractData/{id}")]
+	public async Task<IActionResult> GetAttachedContractData(Guid id, CancellationToken cancellationToken)
+	{
+		var query = new GetContractAttachedDataQuery(id);
+		var result = await _mediator.Send(query, cancellationToken);
+		return Ok(result);
+    }
+
+    [HttpPost("create-contract")]
 	public async Task<IActionResult> CreateContract(
 		[FromForm] CreateContractDTO creatrContractDTO,
 		CancellationToken cancellationToken)

@@ -74,14 +74,14 @@ internal sealed class CreateContractCommandHandler
                 throw new Exception("Contract Number already exists.");
             }
 
-            var purchaseOrderRefExists = await contractRefRepository.FindAnyAsync(
-                x => x.purchase_order_ref == request.CreatrContractDTO.PurchaseOrdNumRef,
-                cancellationToken);
+            //var purchaseOrderRefExists = await contractRefRepository.FindAnyAsync(
+            //    x => x.purchase_order_ref == request.CreatrContractDTO.PurchaseOrdNumRef,
+            //    cancellationToken);
 
-            if (purchaseOrderRefExists)
-            {
-                throw new Exception("Purchase Order Reference already exists.");
-            }
+            //if (purchaseOrderRefExists)
+            //{
+            //    throw new Exception("Purchase Order Reference already exists.");
+            //}
 
             try
 			{
@@ -134,13 +134,13 @@ internal sealed class CreateContractCommandHandler
             ContractNumber = request.CreatrContractDTO.ContractNum,
 			Details = request.CreatrContractDTO.Details,
 			Notes = request.CreatrContractDTO.Notes,
-			Contract_Date = request.CreatrContractDTO.ContractDate,
-			WorkTypeId = request.CreatrContractDTO.WorkTypeId,
-			purchase_order_ref = request.CreatrContractDTO.PurchaseOrdNumRef,
-			ProjectId = request.CreatrContractDTO.ProjectId,
-			PersonOrgId = request.CreatrContractDTO.PersonOrgId,
+			//Contract_Date = request.CreatrContractDTO.ContractDate,
+			//WorkTypeId = request.CreatrContractDTO.WorkTypeId,
+			//purchase_order_ref = request.CreatrContractDTO.PurchaseOrdNumRef,
+			//ProjectId = request.CreatrContractDTO.ProjectId,
+			//PersonOrgId = request.CreatrContractDTO.PersonOrgId,
 			Currency = (Currency)request.CreatrContractDTO.Currency,
-			Department = (Departments)request.CreatrContractDTO.Department,
+			//Department = (Departments)request.CreatrContractDTO.Department,
 			ContractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!)
         };
 	}
