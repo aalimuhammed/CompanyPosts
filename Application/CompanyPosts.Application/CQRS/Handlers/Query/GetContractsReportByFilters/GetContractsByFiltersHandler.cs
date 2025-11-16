@@ -56,7 +56,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                     c.Id,
                     c.Projects.Name,
                     c.ContractNumber,
-                    c.SerialNumber.ToString(),
+                   c.HasReference
+                    ? c.SerialNumber.ToString()
+                    : $"{c.ContractNumber}-{c.SerialNumber}",
                     c.WorkType.Name,
                     c.Contract_Date.ToString("yyyy-MM-dd"),
                     c.Department.GetDisplayName(),

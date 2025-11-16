@@ -40,7 +40,13 @@ internal sealed class CreateContractCommandHandler
 
             try
 			{
-				var newContract = CreateContract(request);
+                var maxSerialNumber = await
+						contractRepository.FindAllAsync(cancellationToken: cancellationToken);
+
+                var SerialNum =  maxSerialNumber.Any() ? maxSerialNumber.Max(x => x.SerialNumber) + 1 : 1;
+				//request.CreatrContractDTO.SerialNumber = SerialNum;
+                var newContract = CreateContract(request , SerialNum);
+
 				newContract.CreatedById = admin.Id;
 
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);
@@ -85,7 +91,12 @@ internal sealed class CreateContractCommandHandler
 
             try
 			{
-				var newContract = CreateContractRef(request);
+                var maxSerialNumber = await
+                       contractRefRepository.FindAllAsync(cancellationToken: cancellationToken);
+
+                var SerialNum = maxSerialNumber.Any() ? maxSerialNumber.Max(x => x.SerialNumber) + 1 : 1;
+
+                var newContract = CreateContractRef(request , SerialNum);
 				newContract.CreatedById = admin.Id;
 
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);
@@ -106,12 +117,12 @@ internal sealed class CreateContractCommandHandler
 
 		return Unit.Value;
 	}
-	private Contracts CreateContract(CreateContractCommand request)
+	private Contracts CreateContract(CreateContractCommand request , int SerialNum)
 	{
 		return new Contracts
 		{
 			Value = request.CreatrContractDTO.Value,
-			SerialNumber = request.CreatrContractDTO.SerialNumber,
+			SerialNumber = SerialNum,
             ContractNumber = request.CreatrContractDTO.ContractNum,
 			Details = request.CreatrContractDTO.Details,
 			Notes = request.CreatrContractDTO.Notes,
@@ -125,12 +136,12 @@ internal sealed class CreateContractCommandHandler
 		};
 	}
 
-	private ContractRef CreateContractRef(CreateContractCommand request)
+	private ContractRef CreateContractRef(CreateContractCommand request, int SerialNum)
 	{
 		return new ContractRef
 		{
 			Value = request.CreatrContractDTO.Value,
-            SerialNumber = request.CreatrContractDTO.SerialNumber,
+            SerialNumber = SerialNum,
             ContractNumber = request.CreatrContractDTO.ContractNum,
 			Details = request.CreatrContractDTO.Details,
 			Notes = request.CreatrContractDTO.Notes,

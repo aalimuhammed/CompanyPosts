@@ -4,7 +4,6 @@ public record CreateContractDTO(
 	string Details,
 	string ContractNum,
 	DateTime ContractDate,
-	int SerialNumber,
 	Guid PersonOrgId,
 	Guid WorkTypeId,
 	string? Notes,
