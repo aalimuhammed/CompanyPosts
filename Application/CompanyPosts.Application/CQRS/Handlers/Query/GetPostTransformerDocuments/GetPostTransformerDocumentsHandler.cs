@@ -60,8 +60,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
 				p.WorkType.Name,
-				p.RecievedFrom.Name,
-				p.Department.GetDisplayName()
+				p.RecievedFrom.Name
 			));
 			return postDTOs;
 		}

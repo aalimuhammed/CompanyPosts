@@ -11,7 +11,6 @@
         DateTime DocumentDate,
         DateTime DeliveryDate,
         DateTime SavingDate,
-        int Department,
         int DeliveryMethod,
         Guid ProjectId,
         int DocumentType);

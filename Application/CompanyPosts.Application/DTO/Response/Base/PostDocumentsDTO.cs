@@ -15,7 +15,6 @@
 		string DeliveryMethod,
 		string CompanyName,
 		string WorkTypeName,
-		string ReceivedFromName,
-		string DepartmentName
+		string ReceivedFromName
 	);
 }

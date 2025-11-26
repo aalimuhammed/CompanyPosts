@@ -40,7 +40,7 @@ internal sealed class CreatePostTransformerHandler
 			Summary = request.CreatePostTransofrmerDTO.Summary,
 			Notes = request.CreatePostTransofrmerDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostTransofrmerDTO.DeliveryMethod,
-			DocumentType = (DocumentType)request.CreatePostTransofrmerDTO.DocumentType,
+			//DocumentType = (DocumentType)request.CreatePostTransofrmerDTO.DocumentType,
 			Department = (Departments)request.CreatePostTransofrmerDTO.Department,
 			IncomingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
 			RecivedByName = request.CreatePostTransofrmerDTO.RecivedName,
@@ -52,7 +52,10 @@ internal sealed class CreatePostTransformerHandler
 		try
 		{
 			await postTransofrmerRepository.AddAsync(postTransformer);
-			await AddAttachments(postExternalID, request.CreatePostTransofrmerDTO.Attachments, cancellationToken);
+
+			if (request.CreatePostTransofrmerDTO.Attachments != null &&
+				request.CreatePostTransofrmerDTO.Attachments.Any())
+                await AddAttachments(postExternalID, request.CreatePostTransofrmerDTO.Attachments, cancellationToken);
 
 			var sysUsers = await systUserRepository.FindAllAsync(
 				x => request.CreatePostTransofrmerDTO.SentEmailsTo.Contains(x.Id),

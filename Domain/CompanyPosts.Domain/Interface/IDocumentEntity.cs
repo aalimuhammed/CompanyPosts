@@ -12,4 +12,5 @@ public interface IDocumentEntity
 	public Publisher Publisher { get; set; }
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; }
+	public string? OldReferenceNumber { get; set; }
 }

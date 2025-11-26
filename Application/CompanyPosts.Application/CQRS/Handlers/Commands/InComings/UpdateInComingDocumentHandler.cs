@@ -20,7 +20,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.InComings
             postInternal.DeliveryMethods = (DeliveryMethods)request.UpdateInComingDocumentRequest.deliveryMethod;
             postInternal.DocumentNumber = request.UpdateInComingDocumentRequest.documentNumber;
             postInternal.DocumentDate = request.UpdateInComingDocumentRequest.documentDate;
-            postInternal.Department = (Departments)request.UpdateInComingDocumentRequest.department;
+           // postInternal.Department = (Departments)request.UpdateInComingDocumentRequest.department;
             postInternal.OriginalPublisherId = request.UpdateInComingDocumentRequest.receivedFromId;
             postInternal.WorkTypeId = request.UpdateInComingDocumentRequest.workTypeId;
             postInternal.Subject = request.UpdateInComingDocumentRequest.subject;

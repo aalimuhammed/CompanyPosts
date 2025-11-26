@@ -1,8 +1,7 @@
 ﻿namespace CompanyPost.Domain.Entities;
-public class PostTransformer : PostBaseEntity , IHasSharedProperty , IReceivedInfo
+public class PostTransformer : PostBaseEntity , IReceivedInfo
 {
 	public string PostNumber { get; set; } = null!;
-	public DocumentType DocumentType { get; set; }
 	public string IncomingNumber { get; set; } = null!;
 	public string RecivedByName { get; set; } = null!;
 	public string FollowingPerson { get; set; } = null!;

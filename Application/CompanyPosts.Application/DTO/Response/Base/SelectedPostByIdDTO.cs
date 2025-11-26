@@ -11,6 +11,5 @@
         Guid WorkTypeId,
         DateTime DocumentDate,
         DateTime DeliveryDate,
-        int Department,
         int DeliveryMethod);
 }

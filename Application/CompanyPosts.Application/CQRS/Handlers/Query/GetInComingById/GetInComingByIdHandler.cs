@@ -29,7 +29,6 @@
                 inComing.DocumentDate,
                 inComing.DeliveryDate,
                 inComing.SaveDate,
-                (int)inComing.Department,
                 (int)inComing.DeliveryMethods,
                 inComing.ProjectId,
                 (int)inComing.DocumentType);

@@ -52,8 +52,11 @@ internal sealed class CreateContractCommandHandler
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);
                 await contractRepository.AddAsync(newContract);
 
-				await AddAttachments(newContract.Id,
-					request.CreatrContractDTO.Attachments, cancellationToken);
+				if (request.CreatrContractDTO.Attachments is not null && request.CreatrContractDTO.Attachments.Any())
+                {
+                    await AddAttachments(newContract.Id,
+                        request.CreatrContractDTO.Attachments, cancellationToken);
+                }
 
 				await _unitOfWork.SaveChangesAsync();
 				await _unitOfWork.CommitTransactionAsync(cancellationToken);
@@ -102,8 +105,11 @@ internal sealed class CreateContractCommandHandler
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);
                 await contractRefRepository.AddAsync(newContract);
 
-				await AddContractRefAttachments(newContract.Id,
-					request.CreatrContractDTO.Attachments, cancellationToken);
+				if (request.CreatrContractDTO.Attachments is not null)
+				{
+                    await AddContractRefAttachments(newContract.Id,
+                        request.CreatrContractDTO.Attachments, cancellationToken);
+                }
 
 				await _unitOfWork.SaveChangesAsync();
 				await _unitOfWork.CommitTransactionAsync(cancellationToken);

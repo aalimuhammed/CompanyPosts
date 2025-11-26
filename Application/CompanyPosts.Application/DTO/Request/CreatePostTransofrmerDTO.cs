@@ -21,4 +21,4 @@ public record CreatePostTransofrmerDTO(
 	IEnumerable<Guid> SentEmailsTo,
 	string EmailContent,
 	PostTransformerOptions Options,
-	List<IFormFile> Attachments);
+	List<IFormFile>? Attachments);

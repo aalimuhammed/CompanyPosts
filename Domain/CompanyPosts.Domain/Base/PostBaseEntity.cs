@@ -16,4 +16,6 @@ public abstract class PostBaseEntity : BaseEntity , IDocumentEntity
 	public DeliveryMethods DeliveryMethods { get; set; }
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; } = null!;
+	public string? OldReferenceNumber { get; set; } = string.Empty;
+    public PostDocumentTypes PostDocumentTypes { get; set; }
 }

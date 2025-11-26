@@ -12,5 +12,5 @@
     Guid ProjectId,
     int? Currency,
     int Department,
-    List<IFormFile> Attachments);
+    List<IFormFile>? Attachments);
 }

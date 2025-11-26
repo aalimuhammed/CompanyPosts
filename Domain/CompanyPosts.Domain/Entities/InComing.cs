@@ -1,5 +1,5 @@
 ﻿namespace CompanyPost.Domain.Entities;
-public class InComing : BaseEntity , IDocumentEntity , IHasSharedProperty
+public class InComing : BaseEntity, IDocumentEntity
 {
 	public int SerialNumber { get; set; }
 	public string DocumentNumber { get; set; } = null!;
@@ -19,9 +19,11 @@ public class InComing : BaseEntity , IDocumentEntity , IHasSharedProperty
 	public Publisher Publisher { get; set; } = null!;
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; } = null!;
-	public Departments Department { get; set; }
 	public Guid WorkTypeId { get; set; }
 	public WorkType WorkType { get; set; } = null!;
     public ICollection<InComingAttachments> IncomingAttachments { get; set; } = new List<InComingAttachments>();
-	public ICollection<InComingResponsibleEmployee> inComingResponsibleEmployees = new List<InComingResponsibleEmployee>();
+    public string? OldReferenceNumber { get ; set ; }
+	public PostDocumentTypes PostDocumentTypes { get; set; }
+
+    public ICollection<InComingResponsibleEmployee> inComingResponsibleEmployees = new List<InComingResponsibleEmployee>();
 }

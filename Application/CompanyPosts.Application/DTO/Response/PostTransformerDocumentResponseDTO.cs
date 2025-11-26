@@ -39,6 +39,5 @@ namespace CompanyPost.Application.DTO.Response
             DeliveryMethod,
             CompanyName,
             WorkTypeName,
-            ReceivedFromName,
-            DepartmentName);
+            ReceivedFromName);
 }

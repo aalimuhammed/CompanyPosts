@@ -1,5 +1,4 @@
 using CompanyPost.Application.Exceptions;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace CompanyPost.API;
 public class Program
@@ -31,7 +30,9 @@ public class Program
 		}
 
 		app.UseHttpsRedirection();
+
 		app.UseStaticFiles();
+
 		app.UseCors(policy => policy.AllowAnyHeader()
 										.AllowAnyMethod()
 										.SetIsOriginAllowed(origin => true)

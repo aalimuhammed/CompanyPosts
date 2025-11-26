@@ -36,8 +36,8 @@ internal sealed class CreatePostExternalHandler :
 			Summary = request.CreatePostExternalDTO.Summary,
 			Notes = request.CreatePostExternalDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostExternalDTO.DeliveryMethod,
-			Department = (Departments)request.CreatePostExternalDTO.Department,
-			IncomingNumber = request.CreatePostExternalDTO.IncomingNumber,
+			//Department = (Departments)request.CreatePostExternalDTO.Department,
+			//IncomingNumber = request.CreatePostExternalDTO.IncomingNumber,
 			CreatedById = admin.Id,
 		};
 		var postExternalID = postExternal.Id;
@@ -45,7 +45,10 @@ internal sealed class CreatePostExternalHandler :
 		try
 		{
 			await postExternalRepository.AddAsync(postExternal);
-			await AddAttachments(postExternalID, request.CreatePostExternalDTO.Attachments, cancellationToken);
+			if (request.CreatePostExternalDTO.Attachments is not null)
+			{
+                await AddAttachments(postExternalID, request.CreatePostExternalDTO.Attachments, cancellationToken);
+            }
 
 			await _unitOfWork.SaveChangesAsync();
 			await _unitOfWork.CommitTransactionAsync();

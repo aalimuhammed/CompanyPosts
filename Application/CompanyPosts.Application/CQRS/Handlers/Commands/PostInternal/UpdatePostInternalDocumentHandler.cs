@@ -19,7 +19,7 @@
             postInternal.DeliveryMethods = (DeliveryMethods)request.UpdatePostInternalDocumentRequestDTO.deliveryMethod;
             postInternal.DocumentNumber = request.UpdatePostInternalDocumentRequestDTO.documentNumber;
             postInternal.DocumentDate = request.UpdatePostInternalDocumentRequestDTO.documentDate;
-            postInternal.Department = (Departments)request.UpdatePostInternalDocumentRequestDTO.department;
+           // postInternal.Department = (Departments)request.UpdatePostInternalDocumentRequestDTO.department;
             postInternal.RecievedFromId = request.UpdatePostInternalDocumentRequestDTO.receivedFromId;
             postInternal.WorkTypeId = request.UpdatePostInternalDocumentRequestDTO.workTypeId;
             postInternal.Subject = request.UpdatePostInternalDocumentRequestDTO.subject;

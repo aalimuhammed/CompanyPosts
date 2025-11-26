@@ -36,7 +36,7 @@ internal sealed class CreatePostInternalHandler
 			Summary = request.CreatePostInternalDTO.Summary,
 			Notes = request.CreatePostInternalDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostInternalDTO.DeliveryMethod,
-			Department = (Departments)request.CreatePostInternalDTO.Department,
+			//Department = (Departments)request.CreatePostInternalDTO.Department,
 			CreatedById = admin.Id,
 		};
 		var postInternalID = postInternal.Id;
@@ -44,7 +44,11 @@ internal sealed class CreatePostInternalHandler
 		try
 		{
 			await postInternalRepository.AddAsync(postInternal);
-			await AddAttachments(postInternalID, request.CreatePostInternalDTO.Attachments, cancellationToken);
+			if (request.CreatePostInternalDTO.Attachments is not null &&
+				request.CreatePostInternalDTO.Attachments.Any())
+			{
+				await AddAttachments(postInternalID, request.CreatePostInternalDTO.Attachments, cancellationToken);
+            }
 
 			await _unitOfWork.SaveChangesAsync();
 			await _unitOfWork.CommitTransactionAsync();

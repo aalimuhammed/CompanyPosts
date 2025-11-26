@@ -19,6 +19,8 @@ public class Contracts : BaseEntity, ISharedContractProperty
 	public Departments Department { get; set; }
 	public Guid WorkTypeId { get; set; }
 	public WorkType WorkType { get; set; } = null!;
-	public ICollection<ContractAttachments> ContractAttachments { get; set; } = new List<ContractAttachments>();
+	public string? CommercialRegisterNumber { get; set; } = string.Empty;
+	public string? OldReferenceNumber { get; set; } = string.Empty;
+    public ICollection<ContractAttachments> ContractAttachments { get; set; } = new List<ContractAttachments>();
 	public ICollection<ContractRef> ContractRefs { get; set; } = new List<ContractRef>();
 }

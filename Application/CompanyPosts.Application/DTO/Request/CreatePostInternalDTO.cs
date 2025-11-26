@@ -13,4 +13,4 @@ public record CreatePostInternalDTO(
 	string? Notes,
 	int DeliveryMethod,
 	int Department,
-	List<IFormFile> Attachments);
+	List<IFormFile>? Attachments);

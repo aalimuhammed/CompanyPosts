@@ -37,8 +37,12 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
                 await _unitOfWork.BeginTransactionAsync();
                 await purchaseOrderRepo.AddAsync(newPurchaseOrder,cancellationToken);
 
-                await AddAttachments(newPurchaseOrder.Id,
+                if (request.CreatePurchaseOrderDTO.Attachments != null &&
+                    request.CreatePurchaseOrderDTO.Attachments.Any())
+                {
+                    await AddAttachments(newPurchaseOrder.Id,
                     request.CreatePurchaseOrderDTO.Attachments, cancellationToken);
+                }
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);

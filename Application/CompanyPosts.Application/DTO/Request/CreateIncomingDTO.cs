@@ -14,4 +14,4 @@ public record CreateIncomingDTO(
 	int DeliveryMethod,
 	int DocumentType,
 	int Department,
-	List<IFormFile> Attachments);
+	List<IFormFile>? Attachments);

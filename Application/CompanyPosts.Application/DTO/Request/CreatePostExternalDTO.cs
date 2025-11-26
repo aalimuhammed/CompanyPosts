@@ -14,4 +14,4 @@ string? Notes,
 int DeliveryMethod,
 string IncomingNumber,
 int Department,
-List<IFormFile> Attachments);
+List<IFormFile>? Attachments);

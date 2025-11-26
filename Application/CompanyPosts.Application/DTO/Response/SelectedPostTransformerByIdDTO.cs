@@ -13,12 +13,10 @@ namespace CompanyPost.Application.DTO.Response
     Guid WorkTypeId,
     DateTime DocumentDate,
     DateTime DeliveryDate,
-    int Department,
     int DeliveryMethod,
     string InComingNumber,  
     string PostNumber, 
-    string RecivedByName,
-    int DocumentType
+    string RecivedByName
             ) : SelectedPostByIdDTO(
                 DocumentNumber,
                 Subject,
@@ -30,7 +28,6 @@ namespace CompanyPost.Application.DTO.Response
                 WorkTypeId,
                 DocumentDate,
                 DeliveryDate,
-                Department,
                 DeliveryMethod
             );
 }

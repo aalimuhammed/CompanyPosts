@@ -36,7 +36,7 @@ internal sealed class CreateIncomingHandler
 			ProjectId = request.createIncomingDTO.ProjectId,
 			SaveDate = request.createIncomingDTO.SaveDate,
 			DocumentType = (DocumentType)request.createIncomingDTO.DocumentType,
-			Department = (Departments)request.createIncomingDTO.Department,
+			//Department = (Departments)request.createIncomingDTO.Department,
 			OriginalPublisherId = request.createIncomingDTO.OriginalPublisherId,
 			PublishedId = request.createIncomingDTO.PublishedId,
 			WorkTypeId = request.createIncomingDTO.WorkTypeId,
@@ -48,9 +48,12 @@ internal sealed class CreateIncomingHandler
 		try
 		{
 			await incomingRepository.AddAsync(incoming);
-			
-			await AddAttachments(postExternalID, 
-				request.createIncomingDTO.Attachments, cancellationToken);
+
+			if (request.createIncomingDTO.Attachments != null)
+			{
+                await AddAttachments(postExternalID,
+                    request.createIncomingDTO.Attachments, cancellationToken);
+            }
 
 			await _unitOfWork.SaveChangesAsync();
 			await _unitOfWork.CommitTransactionAsync();

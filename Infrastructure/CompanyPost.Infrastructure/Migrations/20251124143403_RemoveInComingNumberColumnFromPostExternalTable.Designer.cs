@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251124143403_RemoveInComingNumberColumnFromPostExternalTable")]
+    partial class RemoveInComingNumberColumnFromPostExternalTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,11 +228,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.Property<string>("CommercialRegisterNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("commercial_register_number");
-
                     b.Property<string>("ContractNumber")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -270,10 +268,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("notes");
-
-                    b.Property<string>("OldReferenceNumber")
-                        .HasColumnType("longtext")
-                        .HasColumnName("old_reference_number");
 
                     b.Property<Guid>("PersonOrgId")
                         .HasColumnType("char(36)")
@@ -373,6 +367,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
 
+                    b.Property<int>("Department")
+                        .HasColumnType("int")
+                        .HasColumnName("department");
+
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("document_date");
@@ -391,17 +389,9 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("notes");
 
-                    b.Property<string>("OldReferenceNumber")
-                        .HasColumnType("longtext")
-                        .HasColumnName("old_reference_number");
-
                     b.Property<Guid>("OriginalPublisherId")
                         .HasColumnType("char(36)")
                         .HasColumnName("original_publisher_id");
-
-                    b.Property<int>("PostDocumentTypes")
-                        .HasColumnType("int")
-                        .HasColumnName("post_document_types");
 
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("char(36)")
@@ -563,14 +553,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("notes");
 
-                    b.Property<string>("OldReferenceNumber")
-                        .HasColumnType("longtext")
-                        .HasColumnName("old_reference_number");
-
-                    b.Property<int>("PostDocumentTypes")
-                        .HasColumnType("int")
-                        .HasColumnName("post_document_types");
-
                     b.Property<Guid>("PublishedId")
                         .HasColumnType("char(36)")
                         .HasColumnName("published_id");
@@ -681,6 +663,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
 
+                    b.Property<int>("Department")
+                        .HasColumnType("int")
+                        .HasColumnName("department");
+
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("document_date");
@@ -694,14 +680,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("longtext")
                         .HasColumnName("notes");
-
-                    b.Property<string>("OldReferenceNumber")
-                        .HasColumnType("longtext")
-                        .HasColumnName("old_reference_number");
-
-                    b.Property<int>("PostDocumentTypes")
-                        .HasColumnType("int")
-                        .HasColumnName("post_document_types");
 
                     b.Property<Guid>("PublishedId")
                         .HasColumnType("char(36)")
@@ -827,6 +805,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("document_number");
 
+                    b.Property<int>("DocumentType")
+                        .HasColumnType("int")
+                        .HasColumnName("document_type");
+
                     b.Property<string>("FollowingPerson")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -842,14 +824,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("longtext")
                         .HasColumnName("notes");
-
-                    b.Property<string>("OldReferenceNumber")
-                        .HasColumnType("longtext")
-                        .HasColumnName("old_reference_number");
-
-                    b.Property<int>("PostDocumentTypes")
-                        .HasColumnType("int")
-                        .HasColumnName("post_document_types");
 
                     b.Property<string>("PostNumber")
                         .IsRequired()
@@ -1009,10 +983,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("notes");
-
-                    b.Property<string>("OldReferenceNumber")
-                        .HasColumnType("longtext")
-                        .HasColumnName("old_reference_number");
 
                     b.Property<Guid>("PersonOrgId")
                         .HasColumnType("char(36)")

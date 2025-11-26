@@ -22,9 +22,9 @@ internal sealed class PostExternalConfiguration : IEntityTypeConfiguration<PostE
 		builder.Property(x => x.DeliveryDate)
 			.IsRequired();
 
-		builder.Property(x => x.IncomingNumber)
-				.HasMaxLength(50)
-				.IsRequired();
+		//builder.Property(x => x.IncomingNumber)
+		//		.HasMaxLength(50)
+		//		.IsRequired();
 
 		builder.HasOne(builder => builder.Publisher)
 			.WithMany(t => t.PublishedPostExternals)

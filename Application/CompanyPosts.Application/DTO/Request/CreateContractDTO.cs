@@ -13,4 +13,4 @@ public record CreateContractDTO(
 	string? PurchaseOrdNumRef ,
 	ContractTypes HasReference,
 	string? BaseContractId,
-    List<IFormFile> Attachments);
+    List<IFormFile>? Attachments);

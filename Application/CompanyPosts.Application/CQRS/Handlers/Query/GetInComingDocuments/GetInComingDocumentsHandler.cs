@@ -61,8 +61,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				null,
 				p.WorkType.Name,
-				p.OriginalPublisher.Name,
-				p.Department.GetDisplayName()
+				p.OriginalPublisher.Name
 			));
 			return inComingDto;
 		}

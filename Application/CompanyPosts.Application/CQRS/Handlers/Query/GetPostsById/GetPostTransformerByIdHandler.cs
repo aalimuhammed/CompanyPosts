@@ -32,12 +32,10 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.WorkTypeId,
                 post.DocumentDate,
                 post.DeliveryDate,
-                (int)post.Department,
                 (int)post.DeliveryMethods , 
                 post.IncomingNumber,
                 post.PostNumber,
-                post.RecivedByName,
-                (int)post.DocumentType);
+                post.RecivedByName);
 
                 return selectedPostDto;
         }

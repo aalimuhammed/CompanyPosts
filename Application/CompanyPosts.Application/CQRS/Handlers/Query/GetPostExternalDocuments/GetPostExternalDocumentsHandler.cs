@@ -60,8 +60,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
 				p.WorkType.Name,
-				p.ReceivedFromSupplier.Name,
-				p.Department.GetDisplayName()
+				p.ReceivedFromSupplier.Name
 			));
 
 			return postDTOs;

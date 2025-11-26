@@ -1,7 +1,6 @@
 ﻿namespace CompanyPost.Domain.Entities;
-public class PostInternal : PostBaseEntity , IHasSharedProperty , IReceivedInfo
+public class PostInternal : PostBaseEntity  , IReceivedInfo
 {
-	public Departments Department { get; set; }
 	public Guid RecievedFromId { get; set; }
 	public Publisher RecievedFrom { get; set; } = null!;
 	public Guid WorkTypeId { get; set; }
