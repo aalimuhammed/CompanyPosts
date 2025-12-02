@@ -26,4 +26,5 @@ public class InComing : BaseEntity, IDocumentEntity
 	public PostDocumentTypes PostDocumentTypes { get; set; }
 
     public ICollection<InComingResponsibleEmployee> inComingResponsibleEmployees = new List<InComingResponsibleEmployee>();
+    public string? InComingNumber { get; set; }
 }

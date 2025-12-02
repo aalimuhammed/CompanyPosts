@@ -3,5 +3,7 @@
     public record BaseDocumentFilterRequestDTO(
         DateTime? StartDate ,
         DateTime? EndDate , 
-        string? DocumentNumber);
+        string? DocumentNumber ,
+        string? InComingNumber ,
+        string? ProjectId);
 }

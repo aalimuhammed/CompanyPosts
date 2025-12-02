@@ -11,6 +11,7 @@ public class PostInternalController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+
 	[HttpGet("GetPostInternalMaxSerialNumber")]
 	public async Task<IActionResult> GetPostInternalMaxSerialNumber(CancellationToken cancellationToken)
 	{
@@ -18,7 +19,16 @@ public class PostInternalController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
-	[HttpPost("CreatePostInternal")]
+
+    [HttpGet("GetDocumentNumbers")]
+    public async Task<IActionResult> GetPostInternalDocumentNumbers(CancellationToken cancellationToken)
+    {
+        var query = new GetPostInternalDocumentNumberQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPost("CreatePostInternal")]
 	public async Task<IActionResult> CreatePostInternal(
 		[FromForm] CreatePostInternalDTO createPostInternalDTO,
 		CancellationToken cancellationToken)

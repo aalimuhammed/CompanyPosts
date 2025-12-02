@@ -13,4 +13,6 @@ public record CreateContractDTO(
 	string? PurchaseOrdNumRef ,
 	ContractTypes HasReference,
 	string? BaseContractId,
+    string? CommercialRegisterNumber,
+	string? OldRef,
     List<IFormFile>? Attachments);

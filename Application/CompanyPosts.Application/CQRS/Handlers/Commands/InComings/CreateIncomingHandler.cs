@@ -41,9 +41,10 @@ internal sealed class CreateIncomingHandler
 			PublishedId = request.createIncomingDTO.PublishedId,
 			WorkTypeId = request.createIncomingDTO.WorkTypeId,
 			CreatedById = admin.Id,
-		};
+			InComingNumber = request.createIncomingDTO.InComingNumber,
+        };
 
-		var postExternalID = incoming.Id;
+		var inComingId = incoming.Id;
 		await _unitOfWork.BeginTransactionAsync();
 		try
 		{
@@ -51,7 +52,7 @@ internal sealed class CreateIncomingHandler
 
 			if (request.createIncomingDTO.Attachments != null)
 			{
-                await AddAttachments(postExternalID,
+                await AddAttachments(inComingId,
                     request.createIncomingDTO.Attachments, cancellationToken);
             }
 

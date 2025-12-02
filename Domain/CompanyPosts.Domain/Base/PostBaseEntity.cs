@@ -1,5 +1,5 @@
 ﻿namespace CompanyPost.Domain.Base;
-public abstract class PostBaseEntity : BaseEntity , IDocumentEntity
+public abstract class PostBaseEntity : BaseEntity, IDocumentEntity
 {
 	public int SerialNumber { get; set; }
 	public string DocumentNumber { get; set; } = null!;
@@ -17,5 +17,6 @@ public abstract class PostBaseEntity : BaseEntity , IDocumentEntity
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; } = null!;
 	public string? OldReferenceNumber { get; set; } = string.Empty;
-    public PostDocumentTypes PostDocumentTypes { get; set; }
+	public PostDocumentTypes PostDocumentTypes { get; set; }
+    public string? InComingNumber { get; set; }
 }

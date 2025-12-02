@@ -13,4 +13,5 @@ public interface IDocumentEntity
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; }
 	public string? OldReferenceNumber { get; set; }
+    public string? InComingNumber { get; set; }
 }

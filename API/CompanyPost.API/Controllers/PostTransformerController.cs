@@ -11,6 +11,7 @@ public class PostTransformerController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+
 	[HttpGet("GetPostTransformerMaxSerialNumber")]
 	public async Task<IActionResult> GetPostTransformerMaxSerialNumber(CancellationToken cancellationToken)
 	{
@@ -18,7 +19,16 @@ public class PostTransformerController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
-	[HttpPost("CreatePostTransformer")]
+
+    [HttpGet("GetDocumentNumbers")]
+    public async Task<IActionResult> GetPostTransformerDocumentNumbers(CancellationToken cancellationToken)
+    {
+        var query = new GetPostTransformerDocumentsNumbersQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPost("CreatePostTransformer")]
 	public async Task<IActionResult> CreatePostTransformer(
 		[FromForm] CreatePostTransofrmerDTO createPostTransofrmerDTO,
 		CancellationToken cancellationToken)

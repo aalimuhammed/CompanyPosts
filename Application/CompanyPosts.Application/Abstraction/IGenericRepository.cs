@@ -12,9 +12,11 @@ public interface IGenericRepository<T> where T : BaseEntity , IEntity
 		Expression<Func<T, bool>>? predicate = null,
 		CancellationToken cancellationToken = default);
 
-	Task<IReadOnlyList<T>> ListAllAsync(CancellationToken cancellationToken = default );
+	Task<IReadOnlyList<T>> ListAllAsync(CancellationToken cancellationToken = default);
+	//Task<IReadOnlyList<T>> ListAllWithSelection(IEnumerable<Expression<Func<T, object>>>? columns , CancellationToken cancellationToken1 = default);
 
-	Task<IEnumerable<T>> FindWithIncludeAsync(
+
+    Task<IEnumerable<T>> FindWithIncludeAsync(
 	   Expression<Func<T, bool>>? predicate = null,
 	   IEnumerable<Expression<Func<T, object>>>? includes = null,
 	   CancellationToken cancellationToken = default);

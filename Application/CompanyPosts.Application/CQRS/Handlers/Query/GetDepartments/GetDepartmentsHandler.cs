@@ -1,9 +1,9 @@
 ﻿namespace CompanyPost.Application.CQRS.Handlers.Query.GetDepartments;
-internal sealed class GetDepartmentsHander
+internal sealed class GetDepartmentsHandler
 	: IRequestHandler<GetDepartmentsQuery, IEnumerable<DepartmentDTO>>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	public GetDepartmentsHander(IUnitOfWork unitOfWork)
+	public GetDepartmentsHandler(IUnitOfWork unitOfWork)
 	{
 		_unitOfWork = unitOfWork;
 	}

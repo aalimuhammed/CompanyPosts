@@ -38,12 +38,14 @@ internal sealed class CreatePostInternalHandler
 			DeliveryMethods = (DeliveryMethods)request.CreatePostInternalDTO.DeliveryMethod,
 			//Department = (Departments)request.CreatePostInternalDTO.Department,
 			CreatedById = admin.Id,
-		};
+            InComingNumber = request.CreatePostInternalDTO.InComingNumber,
+        };
 		var postInternalID = postInternal.Id;
 		await _unitOfWork.BeginTransactionAsync();
 		try
 		{
 			await postInternalRepository.AddAsync(postInternal);
+
 			if (request.CreatePostInternalDTO.Attachments is not null &&
 				request.CreatePostInternalDTO.Attachments.Any())
 			{

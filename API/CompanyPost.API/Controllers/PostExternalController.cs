@@ -18,6 +18,15 @@ public class PostExternalController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
+
+	[HttpGet("GetDocumentNumbers")]
+	public async Task<IActionResult> GetPostExternalDocumentNumbers(CancellationToken cancellationToken)
+	{
+		var query = new GetPostExternalDocumentNumbersQuery();
+		var result = await _mediator.Send(query, cancellationToken);
+		return Ok(result);
+	}
+
 	[HttpPost("CreatePostExternal")]
 	public async Task<IActionResult> CreatePostExternal(
 		[FromForm] CreatePostExternalDTO createPostExternalDTO,

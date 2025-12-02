@@ -18,8 +18,8 @@ public class AuthController : ControllerBase
 		return Ok(result);
 	}
 
-	[HttpGet("verify-token")]
-	[Authorize]
+    [AllowAnonymous]
+    [HttpGet("verify-token")]
 	public async Task<IActionResult> VerifyToken(CancellationToken cancellationToken)
 	{
 		var query = new VerifyTokenQuery();
@@ -31,6 +31,4 @@ public class AuthController : ControllerBase
 
 		return Ok(result);
 	}
-
-	
 }

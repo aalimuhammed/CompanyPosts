@@ -46,7 +46,8 @@ internal sealed class CreatePostTransformerHandler
 			RecivedByName = request.CreatePostTransofrmerDTO.RecivedName,
 			FollowingPerson = request.CreatePostTransofrmerDTO.FollowingPerson,
 			CreatedById = admin.Id,
-		};
+			InComingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
+        };
 		var postExternalID = postTransformer.Id;
 		await _unitOfWork.BeginTransactionAsync();
 		try

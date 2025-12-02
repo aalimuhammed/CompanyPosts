@@ -31,6 +31,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 			{
 				predicate = predicate.And(p => p.DocumentDate >= request.BaseDocumentFilterRequestDTO.StartDate.Value);
             }
+
             if (request.BaseDocumentFilterRequestDTO.EndDate.HasValue)
             {
                 predicate = predicate.And(p => p.DocumentDate <= request.BaseDocumentFilterRequestDTO.EndDate.Value);
@@ -39,6 +40,21 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
             if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.DocumentNumber))
             {
                 predicate = predicate.And(p => p.DocumentNumber  == request.BaseDocumentFilterRequestDTO.DocumentNumber);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.InComingNumber))
+            {
+                predicate = predicate.And(p => p.InComingNumber == request.BaseDocumentFilterRequestDTO.InComingNumber);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.ProjectId))
+            {
+                predicate = predicate.And(p => p.PublishedId == Guid.Parse(request.BaseDocumentFilterRequestDTO.ProjectId));
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.ProjectId))
+            {
+                predicate = predicate.And(p => p.ReceivedFromSupplierId == Guid.Parse(request.BaseDocumentFilterRequestDTO.ProjectId));
             }
 
             var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);

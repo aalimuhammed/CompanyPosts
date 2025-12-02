@@ -41,6 +41,11 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
                 predicate = predicate.And(p => p.DocumentNumber == request.BaseDocumentFilterRequestDTO.DocumentNumber);
             }
 
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.InComingNumber))
+            {
+                predicate = predicate.And(p => p.InComingNumber == request.BaseDocumentFilterRequestDTO.InComingNumber);
+            }
+
             var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
 
 			var postDTOs = posts.Select(p => new PostDocumentsDTO(

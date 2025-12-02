@@ -5,6 +5,7 @@ public class Publisher : BaseEntity , IHasName
 	public bool IsDepartment { get; set; } = false;
 	public bool IsProject { get; set; } = false;
 	public bool IsSupplierOrSubContractor { get; set; } = false;
+	public bool IsCompany { get; set; } = false;
 	public ICollection<PostInternal> PublishedPostInternals { get; set; } = new List<PostInternal>();
 	public ICollection<PostInternal> RecievedPostInternals { get; set; } = new List<PostInternal>();
 	public ICollection<PostExternal> PublishedPostExternals { get; set; } = new List<PostExternal>();

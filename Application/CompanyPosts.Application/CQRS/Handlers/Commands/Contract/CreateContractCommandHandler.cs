@@ -15,7 +15,6 @@ internal sealed class CreateContractCommandHandler
 	{
 		if (request.CreatrContractDTO.HasReference == ContractTypes.Original)
 		{
-
 			var contractRepository = _unitOfWork.Repository<Contracts>();
 			var adminRepository = _unitOfWork.Repository<SysUsers>();
 			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
@@ -138,8 +137,10 @@ internal sealed class CreateContractCommandHandler
 			ProjectId = request.CreatrContractDTO.ProjectId,
 			PersonOrgId = request.CreatrContractDTO.PersonOrgId,
 			Currency = (Currency)request.CreatrContractDTO.Currency,
-			Department = (Departments)request.CreatrContractDTO.Department
-		};
+			Department = (Departments)request.CreatrContractDTO.Department,
+		    CommercialRegisterNumber = request.CreatrContractDTO.CommercialRegisterNumber,
+            OldReferenceNumber = request.CreatrContractDTO.OldRef
+        };
 	}
 
 	private ContractRef CreateContractRef(CreateContractCommand request, int SerialNum)
@@ -158,7 +159,7 @@ internal sealed class CreateContractCommandHandler
 			//PersonOrgId = request.CreatrContractDTO.PersonOrgId,
 			Currency = (Currency)request.CreatrContractDTO.Currency,
 			//Department = (Departments)request.CreatrContractDTO.Department,
-			ContractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!)
+			ContractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!),
         };
 	}
 	private async Task AddAttachments(

@@ -31,6 +31,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
             {
                 predicate = predicate.And(p => p.DocumentDate >= request.BaseDocumentFilterRequestDTO.StartDate.Value);
             }
+
             if (request.BaseDocumentFilterRequestDTO.EndDate.HasValue)
             {
                 predicate = predicate.And(p => p.DocumentDate <= request.BaseDocumentFilterRequestDTO.EndDate.Value);
@@ -39,6 +40,11 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
             if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.DocumentNumber))
             {
                 predicate = predicate.And(p => p.DocumentNumber == request.BaseDocumentFilterRequestDTO.DocumentNumber);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.InComingNumber))
+            {
+                predicate = predicate.And(p => p.InComingNumber == request.BaseDocumentFilterRequestDTO.InComingNumber);
             }
 
             var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
