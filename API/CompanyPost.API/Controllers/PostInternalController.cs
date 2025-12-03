@@ -28,6 +28,14 @@ public class PostInternalController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("GetPostInternalToBeCopied/{id}")]
+    public async Task<IActionResult> GetPostInternalToBeCopied(Guid Id, CancellationToken cancellationToken)
+    {
+        var query = new GetPostInternalToBeCopiedQuery(Id);
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost("CreatePostInternal")]
 	public async Task<IActionResult> CreatePostInternal(
 		[FromForm] CreatePostInternalDTO createPostInternalDTO,

@@ -28,6 +28,14 @@ public class PostTransformerController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("GetPostTransformerToBeCopied/{id}")]
+    public async Task<IActionResult> GetPostTransformerToBeCopied(Guid Id, CancellationToken cancellationToken)
+    {
+        var query = new GetPostTransformerToBeCopiedQuery(Id);
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost("CreatePostTransformer")]
 	public async Task<IActionResult> CreatePostTransformer(
 		[FromForm] CreatePostTransofrmerDTO createPostTransofrmerDTO,
