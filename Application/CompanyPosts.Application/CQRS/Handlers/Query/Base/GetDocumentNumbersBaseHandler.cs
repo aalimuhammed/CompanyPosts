@@ -23,6 +23,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.Base
         public async Task<IEnumerable<PostDocumentNumbersDTO>> Handle(TQuery request, CancellationToken cancellationToken)
         {
             var repository = _unitOfWork.Repository<TEntity>();
+
             var entities = await repository.ListAllAsync(cancellationToken);
 
             var documents = entities.Select(x => new PostDocumentNumbersDTO(_idSelector(x), _documentNumberSelector(x)));

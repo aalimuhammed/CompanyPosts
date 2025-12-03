@@ -11,6 +11,7 @@ public class PostExternalController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+
 	[HttpGet("GetPostExternalMaxSerialNumber")]
 	public async Task<IActionResult> GetPostExternalMaxSerialNumber(CancellationToken cancellationToken)
 	{
@@ -27,7 +28,15 @@ public class PostExternalController : ControllerBase
 		return Ok(result);
 	}
 
-	[HttpPost("CreatePostExternal")]
+    [HttpGet("GetPostExternalToBeCopied/{id}")]
+	public async Task<IActionResult> GetPostExternalToBeCopied(Guid Id,CancellationToken cancellationToken)
+	{
+		var query = new GetPostExternalToBeCopiedQuery(Id);
+		var result = await _mediator.Send(query,cancellationToken);
+		return Ok(result);
+	}
+
+    [HttpPost("CreatePostExternal")]
 	public async Task<IActionResult> CreatePostExternal(
 		[FromForm] CreatePostExternalDTO createPostExternalDTO,
 		CancellationToken cancellationToken)

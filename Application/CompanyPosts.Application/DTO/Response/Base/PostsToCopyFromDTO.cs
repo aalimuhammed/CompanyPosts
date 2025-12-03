@@ -6,8 +6,6 @@
         string Summary,
         Guid CompanyId,
         Guid PublisherId,
-        Guid WorkTypeId,
-        Guid RecivedFromId,
         DateTime DocumentDate,
         DateTime DeliveryDate);
 }
