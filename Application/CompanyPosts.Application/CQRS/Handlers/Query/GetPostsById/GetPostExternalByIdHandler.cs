@@ -28,7 +28,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.Notes,
                 post.CompanyId,
                 post.PublishedId,
-                post.ReceivedFromSupplierId,
+                post.RecievedFromId,
                 post.WorkTypeId,
                 post.DocumentDate,
                 post.DeliveryDate,

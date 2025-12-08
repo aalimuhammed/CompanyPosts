@@ -20,8 +20,14 @@ public interface IGenericRepository<T> where T : BaseEntity , IEntity
 	   Expression<Func<T, bool>>? predicate = null,
 	   IEnumerable<Expression<Func<T, object>>>? includes = null,
 	   CancellationToken cancellationToken = default);
-	   
-	Task AddAsync(T entity , CancellationToken cancellationToken = default);
+
+	Task<T> FindWithIncludeFirstOrDefaultAsync(
+	   Expression<Func<T, bool>> predicate = null,
+	   IEnumerable<Expression<Func<T, object>>> includes = null,
+	   CancellationToken cancellationToken = default);
+
+
+    Task AddAsync(T entity , CancellationToken cancellationToken = default);
 
 	void Update(T entity);
 

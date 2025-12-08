@@ -19,7 +19,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 				 {
 					 post => post.CreatedBy,
 					 post => post.Publisher,
-					 post => post.ReceivedFromSupplier,
+					 post => post.RecievedFrom,
 					 post => post.WorkType,
 					 post => post.Company,
 					 post => post.Attachments,
@@ -54,7 +54,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 
             if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.ProjectId))
             {
-                predicate = predicate.And(p => p.ReceivedFromSupplierId == Guid.Parse(request.BaseDocumentFilterRequestDTO.ProjectId));
+                predicate = predicate.And(p => p.RecievedFromId == Guid.Parse(request.BaseDocumentFilterRequestDTO.ProjectId));
             }
 
             var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
@@ -76,7 +76,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
 				p.WorkType.Name,
-				p.ReceivedFromSupplier.Name
+				p.RecievedFrom.Name
 			));
 
 			return postDTOs;

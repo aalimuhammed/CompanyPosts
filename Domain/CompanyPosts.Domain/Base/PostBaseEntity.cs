@@ -7,7 +7,11 @@ public abstract class PostBaseEntity : BaseEntity, IDocumentEntity
 	public Company Company { get; set; } = null!;
 	public Guid PublishedId { get; set; }
 	public Publisher Publisher { get; set; } = null!;
-	public string? Subject { get; set; } = null!;
+    public Guid RecievedFromId { get; set; }
+    public Publisher RecievedFrom { get; set; } = null!;
+    public Guid WorkTypeId { get; set; }
+    public WorkType WorkType { get; set; } = null!;
+    public string? Subject { get; set; } = null!;
 	public string? AboutWork { get; set; } = null!;
 	public DateTime DocumentDate { get; set; }
 	public DateTime DeliveryDate { get; set; }

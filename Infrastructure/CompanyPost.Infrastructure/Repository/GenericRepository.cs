@@ -29,7 +29,7 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 		CancellationToken cancellationToken = default)
 	{
 		if (predicate != null)
-		return await _dbSet.Where(predicate).FirstOrDefaultAsync(cancellationToken);
+		    return await _dbSet.Where(predicate).FirstOrDefaultAsync(cancellationToken);
 		
 		return await _dbSet.FirstOrDefaultAsync(cancellationToken);
 	}
@@ -55,7 +55,29 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 
 		return await query.AsNoTracking().ToListAsync(cancellationToken);
 	}
-	public async Task<IReadOnlyList<T>> FindAllAsync(
+    public async Task<T> FindWithIncludeFirstOrDefaultAsync(
+       Expression<Func<T, bool>> predicate = null,
+       IEnumerable<Expression<Func<T, object>>> includes = null,
+       CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _context.Set<T>();
+
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query.FirstOrDefaultAsync(cancellationToken);
+    }
+    public async Task<IReadOnlyList<T>> FindAllAsync(
 		Expression<Func<T, bool>> predicate = null,
 		CancellationToken cancellationToken = default)
 	{

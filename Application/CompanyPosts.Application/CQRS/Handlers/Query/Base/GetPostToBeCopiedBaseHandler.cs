@@ -16,7 +16,18 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.Base
         {
             var repo = _unitOfWork.Repository<TEntity>();
 
-            var post = await repo.FindAsync(x => x.Id == request.Id);
+            Expression<Func<TEntity, object>>[] includes = 
+                { c => c.Publisher , c => c.RecievedFrom , c => c.WorkType };
+
+            var post = await repo.FindWithIncludeFirstOrDefaultAsync(
+                x => x.Id == request.Id , includes , cancellationToken);
+
+            var publisherType = post.Publisher switch
+            {
+                { IsDepartment: true } => "Department",
+                { IsProject: true } => "Project",
+                _ => ""
+            };
 
             var copiedPost = new PostsToCopyFromDTO
                 (
@@ -25,8 +36,13 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.Base
                     post.Summary,
                     post.CompanyId,
                     post.PublishedId,
+                    post.RecievedFromId,
+                    post.WorkTypeId,
                     post.DocumentDate,
-                    post.DeliveryDate
+                    post.DeliveryDate,
+                    publisherType,
+                    (int)post.PostDocumentTypes,
+                    (int)post.DeliveryMethods
                 );
 
             return copiedPost;

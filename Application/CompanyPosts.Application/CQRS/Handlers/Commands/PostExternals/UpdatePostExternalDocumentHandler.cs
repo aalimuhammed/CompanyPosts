@@ -19,7 +19,7 @@
             postExternal.DocumentNumber = request.UpdatePostExternalDocumentRequestDTO.documentNumber;
             postExternal.DocumentDate = request.UpdatePostExternalDocumentRequestDTO.documentDate;
             //postExternal.Department = (Departments)request.UpdatePostExternalDocumentRequestDTO.department;
-            postExternal.ReceivedFromSupplierId = request.UpdatePostExternalDocumentRequestDTO.receivedFromId;
+            postExternal.RecievedFromId = request.UpdatePostExternalDocumentRequestDTO.receivedFromId;
             postExternal.WorkTypeId = request.UpdatePostExternalDocumentRequestDTO.workTypeId;
             postExternal.Subject = request.UpdatePostExternalDocumentRequestDTO.subject;
             postExternal.Notes = request.UpdatePostExternalDocumentRequestDTO.notes;

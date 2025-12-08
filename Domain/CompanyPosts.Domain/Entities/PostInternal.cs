@@ -1,9 +1,5 @@
 ﻿namespace CompanyPost.Domain.Entities;
-public class PostInternal : PostBaseEntity  , IReceivedInfo
+public class PostInternal : PostBaseEntity
 {
-	public Guid RecievedFromId { get; set; }
-	public Publisher RecievedFrom { get; set; } = null!;
-	public Guid WorkTypeId { get; set; }
-	public WorkType WorkType { get; set; } = null!;
 	public ICollection<PostInternalAttachment> Attachments { get; set; } = new List<PostInternalAttachment>();
 }
