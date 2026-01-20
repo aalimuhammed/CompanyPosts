@@ -7,14 +7,17 @@ internal sealed class CreateSysUserCompanyHandler
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IPasswordService _passwordService;
 	private readonly IEmailServices _emailServices;
+	private readonly IJwTGenerator _jwTGenerator;
 	public CreateSysUserCompanyHandler(
 		IUnitOfWork unitOfWork, 
 		IPasswordService passwordService,
-		IEmailServices emailServices)
+		IEmailServices emailServices,
+		IJwTGenerator jwTGenerator)
 	{
 		_unitOfWork = unitOfWork;
 		_passwordService = passwordService;
 		_emailServices = emailServices;
+		_jwTGenerator = jwTGenerator;
 	}
 	public async Task<Unit> Handle(CreateSysUserCompanyCommand request, CancellationToken cancellationToken)
 	{
@@ -59,6 +62,7 @@ internal sealed class CreateSysUserCompanyHandler
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await _unitOfWork.CommitTransactionAsync(cancellationToken);
+			 _jwTGenerator.CreateToken(sysUser.Id);
             _= SendWelcomeEmailAsync(sysUser.Email, cancellationToken);
         }
         catch (InvalidOperationException)
@@ -81,8 +85,8 @@ internal sealed class CreateSysUserCompanyHandler
         var html = @"
 				<p>Dear User,</p>
 				<p>Your account has been successfully created.</p>
-				<p>Please use the link below to log in:</p>
-				<p><a href='http://192.168.121.29:3000/login' target='_blank'>Click here to access your account</a></p>
+				<p>Please use the link below to verify your account :</p>
+				<p><a href='http://192.168.121.29:3000/login' target='_blank'>Click here to verify your account</a></p>
 				<p>Best regards,<br/>The Support Team</p>";
 
         try

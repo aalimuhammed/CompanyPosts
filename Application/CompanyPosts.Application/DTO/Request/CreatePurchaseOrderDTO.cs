@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.DTO.Request
 {
     public record CreatePurchaseOrderDTO(
-    string? Value,
+    double Value,
     string? Details,
     string PurchaseOrderNumber,
     DateTime? PurchaseOrderDate,

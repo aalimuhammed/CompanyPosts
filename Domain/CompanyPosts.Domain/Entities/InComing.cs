@@ -27,4 +27,5 @@ public class InComing : BaseEntity, IDocumentEntity
 
     public ICollection<InComingResponsibleEmployee> inComingResponsibleEmployees = new List<InComingResponsibleEmployee>();
     public string? InComingNumber { get; set; }
+    public Status Status { get; set; }
 }

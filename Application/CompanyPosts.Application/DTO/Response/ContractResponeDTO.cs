@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.DTO.Response;
 public record ContractResponeDTO(
 	Guid id,
-	string value,
+	double value,
 	string contract_number,
 	string details,
 	string notes,

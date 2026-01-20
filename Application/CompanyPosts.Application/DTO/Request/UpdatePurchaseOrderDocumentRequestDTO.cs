@@ -2,7 +2,7 @@
 {
     public record UpdatePurchaseOrderDocumentRequestDTO(
         string PurchaseOrderNumber,
-        string PurchaseOrderValue,
+        double PurchaseOrderValue,
         Guid WorkTypeId,
         Guid SupplierId,
         Guid ProjectId,

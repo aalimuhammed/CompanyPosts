@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.DTO.Request
 {
     public record UpdateContractDocumentRequestDTO
-        (string ContractValue,
+        (double ContractValue,
         string? Details,
         string ContractNumber,
         DateTime ContractDate,

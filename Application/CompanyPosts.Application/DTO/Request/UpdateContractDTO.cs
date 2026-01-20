@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.DTO.Request;
 public record UpdateContractDTO(
 	Guid Id,
-	string Value,
+	double Value,
 	string Details,
 	string ContractNum,
 	DateTime ContractDate,

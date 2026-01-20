@@ -1,6 +1,6 @@
 ﻿namespace CompanyPost.Application.DTO.Request;
 public record CreateContractDTO(
-	string Value ,
+	double Value ,
 	string Details,
 	string ContractNum,
 	DateTime ContractDate,

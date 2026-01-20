@@ -14,4 +14,5 @@ public interface IDocumentEntity
 	public SysUsers CreatedBy { get; set; }
 	public string? OldReferenceNumber { get; set; }
     public string? InComingNumber { get; set; }
+	public Status Status { get; set; }
 }

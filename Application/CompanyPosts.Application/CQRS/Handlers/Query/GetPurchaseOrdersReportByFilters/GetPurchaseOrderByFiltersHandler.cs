@@ -45,12 +45,10 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPurchaseOrdersReportByF
             if (request.DTO.EndDate.HasValue)
                 predicate = predicate.And(c => c.PurchaseOrder_Date <= request.DTO.EndDate.Value);
 
-
             var purchaseOrders = await purchaseOrderRepository.FindWithIncludeAsync(
                 predicate: predicate,
                 includes: includes,
                 cancellationToken);
-
 
             var purchaseOrderResponse = purchaseOrders.Select(p => new PurchaseOrdersReportResponseDTO(
                     p.Id,

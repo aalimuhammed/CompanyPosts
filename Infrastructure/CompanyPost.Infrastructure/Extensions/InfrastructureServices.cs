@@ -20,6 +20,7 @@ public static class InfrastructureServices
 		services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
 		services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+		services.AddScoped(typeof(ICurrencyRepository<>), typeof(CurrencyRepository<>));
 		services.AddScoped<IUnitOfWork , UnitOfWork>();
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IEmailServices, EmailServices>();

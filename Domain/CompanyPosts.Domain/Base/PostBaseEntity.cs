@@ -23,4 +23,5 @@ public abstract class PostBaseEntity : BaseEntity, IDocumentEntity
 	public string? OldReferenceNumber { get; set; } = string.Empty;
 	public PostDocumentTypes PostDocumentTypes { get; set; }
     public string? InComingNumber { get; set; }
+	public Status Status {  get; set; }
 }

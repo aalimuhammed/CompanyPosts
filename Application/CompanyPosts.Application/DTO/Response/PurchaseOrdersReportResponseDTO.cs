@@ -12,6 +12,6 @@
         string CreatedBy,
         string PurchaseOrderDate,
         string CreatedAt,
-        string Value,
+        double Value,
         List<string> Attachments);
 }

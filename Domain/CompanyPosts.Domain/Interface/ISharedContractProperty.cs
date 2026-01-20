@@ -2,7 +2,6 @@
 {
 	public interface ISharedContractProperty  : IHasSharedProperty
 	{
-		public string Value { get; set; }
 		public string Details { get; set; }
 		public string ContractNumber { get; set; } 
 		public string? Notes { get; set; }
@@ -12,10 +11,10 @@
 		public Publisher Projects { get; set; }
 		public Guid PersonOrgId { get; set; }
 		public Publisher PersonOrgs { get; set; }
-		public Currency Currency { get; set; }
 		public Guid CreatedById { get; set; }
 		public SysUsers CreatedBy { get; set; }
 		public Guid WorkTypeId { get; set; }
 		public WorkType WorkType { get; set; }
+		public Status Status { get; set; }
 	}
 }

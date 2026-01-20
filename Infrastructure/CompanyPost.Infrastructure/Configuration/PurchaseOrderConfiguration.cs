@@ -19,7 +19,7 @@
 
             builder.Property(builder => builder.Value)
                 .HasMaxLength(100)
-                .IsRequired(false);
+                .IsRequired(true);
 
             builder.Property(builder => builder.PurchaseOrder_Date)
                 .IsRequired(false);
@@ -46,7 +46,7 @@
 
             builder.Property(builder => builder.Currency)
                 .HasConversion<int>()
-                .IsRequired(false);
+                .IsRequired(true);
 
             builder.HasIndex(builder => builder.PurchaseOrderNumber)
                 .IsUnique();

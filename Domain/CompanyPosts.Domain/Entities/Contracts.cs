@@ -1,8 +1,8 @@
 ﻿namespace CompanyPost.Domain.Entities;
-public class Contracts : BaseEntity, ISharedContractProperty
+public class Contracts : BaseEntity, ISharedContractProperty , IHasCurrencyAndValue
 {
 	public int SerialNumber { get; set; }
-	public string Value { get; set; } = string.Empty;
+	public double Value { get; set; }
 	public string? Details { get; set; } = string.Empty;
 	public string ContractNumber { get; set; } = string.Empty;
 	public string? Notes { get; set; }
@@ -23,4 +23,5 @@ public class Contracts : BaseEntity, ISharedContractProperty
 	public string? OldReferenceNumber { get; set; } = string.Empty;
     public ICollection<ContractAttachments> ContractAttachments { get; set; } = new List<ContractAttachments>();
 	public ICollection<ContractRef> ContractRefs { get; set; } = new List<ContractRef>();
+    public Status Status { get ; set; }
 }

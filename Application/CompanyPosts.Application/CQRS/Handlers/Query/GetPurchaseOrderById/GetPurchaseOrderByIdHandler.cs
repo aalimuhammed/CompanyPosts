@@ -21,7 +21,7 @@
             var purchaseOrderDTO = new PurchaseOrderByIdResponseDTO(
                 purchaseOrder.Id,
                 PurchaseOrderNumber: purchaseOrder.PurchaseOrderNumber,
-                PurchaseOrderValue: purchaseOrder.Value ?? string.Empty,
+                PurchaseOrderValue: purchaseOrder.Value,
                 WorkTypeId: purchaseOrder.WorkTypeId ?? Guid.Empty,
                 SupplierId: purchaseOrder.PersonOrgId,
                 ProjectId: purchaseOrder.ProjectId,

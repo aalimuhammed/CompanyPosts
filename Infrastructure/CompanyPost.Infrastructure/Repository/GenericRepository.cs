@@ -1,10 +1,11 @@
-﻿using CompanyPost.Domain.Result;
+﻿using CompanyPost.Domain.Enums;
+using CompanyPost.Domain.Result;
 
 namespace CompanyPost.Infrastructure.Repository;
-internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity , IEntity
+internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity, IEntity
 {
 	private readonly CompanyPostDbContext _context;
-	private readonly DbSet<T> _dbSet;
+	protected readonly DbSet<T> _dbSet;
 	public GenericRepository(CompanyPostDbContext context)
 	{
 		_context = context;
@@ -126,4 +127,8 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 
 		return new PaginatedResult<T>(items, totalCount, pageNumber, pageSize);
 	}
+    public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+    {
+		return await _dbSet.CountAsync(cancellationToken);
+    }
 }

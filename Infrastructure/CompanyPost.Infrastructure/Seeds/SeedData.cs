@@ -17,7 +17,7 @@ public static class SeedData
 				  {
 					  UserName = "admin",
 					  Name = "Karim Mousa",
-                      Email = "karim.mousa@siac-construction.com",
+                      Email = "	karim.mousa@siac-construction.com",
 					  Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
 					  IsAdmin = true,
 				  }

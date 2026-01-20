@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119102040_MakeValueNotNullInPurchaseOrderTable")]
+    partial class MakeValueNotNullInPurchaseOrderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,9 +186,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
 
-                    b.Property<double>("Value")
+                    b.Property<string>("Value")
+                        .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("double")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("value");
 
                     b.Property<Guid?>("WorkTypeId")
@@ -290,9 +294,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("status");
 
-                    b.Property<double>("Value")
+                    b.Property<string>("Value")
+                        .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("double")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("value");
 
                     b.Property<Guid>("WorkTypeId")
@@ -1074,9 +1079,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("status");
 
-                    b.Property<double>("Value")
+                    b.Property<string>("Value")
+                        .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("double")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("value");
 
                     b.Property<Guid?>("WorkTypeId")

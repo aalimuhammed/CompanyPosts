@@ -4,15 +4,12 @@ internal sealed class UpdateContractCommandHandler
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
-	private readonly IWebHostEnvironment _environment;
 	public UpdateContractCommandHandler(
 		IUnitOfWork unitOfWork,
-		IFileService saveAttachment,
-		IWebHostEnvironment environment)
+		IFileService saveAttachment)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
-		_environment = environment;
 	}
 	public async Task<Unit> Handle(UpdateContractCommand request, CancellationToken cancellationToken)
 	{

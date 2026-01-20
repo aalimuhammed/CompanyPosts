@@ -14,6 +14,6 @@
         string Type,
         string CreatedBy,
         string CreatedAt,
-        string Value,
+        double Value,
         List<string> AttachmentPaths);
 }

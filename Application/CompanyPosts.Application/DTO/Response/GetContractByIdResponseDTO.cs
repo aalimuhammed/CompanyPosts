@@ -3,7 +3,7 @@
     public record GetContractByIdResponseDTO(
         Guid Id,
         string ContractNumber,
-        string ContractValue,
+        double ContractValue,
         string ContractDate,
         string? Details ,
         string? notes , 

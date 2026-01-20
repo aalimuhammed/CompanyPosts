@@ -1,9 +1,9 @@
 ﻿namespace CompanyPost.Domain.Entities
 {
-	public class ContractRef : BaseEntity
+	public class ContractRef : BaseEntity , IHasCurrencyAndValue
 	{
 		public int SerialNumber { get; set; }
-		public string Value { get; set; } = string.Empty;
+		public double Value { get; set; }
 		public string Details { get; set; } = string.Empty;
 		public string ContractNumber { get; set; } = string.Empty;
 		public string? Notes { get; set; }

@@ -53,7 +53,15 @@ public class UnitOfWork : IUnitOfWork
 
 		return repository;
 	}
-	public void Dispose()
+    public ICurrencyRepository<T> CurrencyRepository<T>() 
+		where T : BaseEntity, IHasCurrencyAndValue
+    {
+        var repository = ServiceProvider.GetService<ICurrencyRepository<T>>()
+        ?? throw new InvalidOperationException("Currency Repository is not registered in DI container");
+
+        return repository;
+    }
+    public void Dispose()
 	{
 		Dispose(true);
 		GC.SuppressFinalize(this);

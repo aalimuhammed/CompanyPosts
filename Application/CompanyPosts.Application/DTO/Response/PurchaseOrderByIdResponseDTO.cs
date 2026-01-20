@@ -3,7 +3,7 @@
     public record PurchaseOrderByIdResponseDTO(
         Guid Id,
         string PurchaseOrderNumber,
-        string PurchaseOrderValue,
+        double PurchaseOrderValue,
         Guid WorkTypeId,
         Guid SupplierId,
         Guid ProjectId,
