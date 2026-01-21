@@ -4,18 +4,21 @@ internal sealed class CreatePostInternalHandler
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
+	private readonly IEmailServices _emailServices;
 	public CreatePostInternalHandler(
 		IUnitOfWork unitOfWork,
-		IFileService saveAttachment)
+		IFileService saveAttachment,
+		IEmailServices emailServices)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment =saveAttachment;
+		_emailServices = emailServices;
 	}
 	public async Task<Unit> Handle(CreatePostInternalCommand request, CancellationToken cancellationToken)
 	{
 		var postInternalRepository = _unitOfWork.Repository<PostInternal>();
-		var adminRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
+		var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
         if (await postInternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostInternalDTO.DocumentNumber))
         {
@@ -54,7 +57,18 @@ internal sealed class CreatePostInternalHandler
 
 			await _unitOfWork.SaveChangesAsync();
 			await _unitOfWork.CommitTransactionAsync();
-			return Unit.Value;
+
+            var sysUsers = await sysUserRepository.FindAllAsync(
+                x => request.CreatePostInternalDTO.SentEmailsTo.Contains(x.Id),
+                cancellationToken);
+
+            _ = _emailServices.SendBulkEmailAsync(
+					$"متابعة المستند رقم {request.CreatePostInternalDTO.DocumentNumber} في الصادر داخلي",
+				request.CreatePostInternalDTO.EmailContent,
+				sysUsers.Select(u => u.Email!),
+				cancellationToken);
+
+            return Unit.Value;
 		}
 		catch (Exception ex)
 		{

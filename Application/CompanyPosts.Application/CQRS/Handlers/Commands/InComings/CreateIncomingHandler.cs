@@ -1,4 +1,5 @@
 ﻿using CompanyPost.Application.CQRS.Commands.InComing;
+using CompanyPost.Domain.Entities;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.InComings;
 internal sealed class CreateIncomingHandler
@@ -6,18 +7,21 @@ internal sealed class CreateIncomingHandler
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
+	private readonly IEmailServices _emailServices;
 	public CreateIncomingHandler(
 		IUnitOfWork unitOfWork ,
-		IFileService saveAttachment)
+		IFileService saveAttachment,
+		IEmailServices emailServices)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
+		_emailServices = emailServices;
 	}
 	public async Task<Unit> Handle(CreateIncomingCommand request, CancellationToken cancellationToken)
 	{
 		var incomingRepository = _unitOfWork.Repository<InComing>();
-		var adminRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
+		var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
         if (await incomingRepository.FindAnyAsync(x => x.DocumentNumber == request.createIncomingDTO.DocumentNumber))
         {
@@ -57,8 +61,21 @@ internal sealed class CreateIncomingHandler
             }
 
 			await _unitOfWork.SaveChangesAsync();
-			await _unitOfWork.CommitTransactionAsync();
-			return Unit.Value;
+
+
+            var sysUsers = await sysUserRepository.FindAllAsync(
+                x => request.createIncomingDTO.SentEmailsTo.Contains(x.Id),
+                cancellationToken);
+
+            _ = _emailServices.SendBulkEmailAsync(
+					$"متابعة المستند رقم {request.createIncomingDTO.DocumentNumber} في  الوارد",
+				request.createIncomingDTO.EmailContent,
+				sysUsers.Select(u => u.Email!),
+				cancellationToken);
+
+            await _unitOfWork.CommitTransactionAsync();
+
+            return Unit.Value;
 		}
 		catch (Exception ex)
 		{

@@ -12,5 +12,7 @@
     Guid ProjectId,
     int? Currency,
     int Department,
+    string EmailContent,
+    IEnumerable<Guid> SentEmailsTo,
     List<IFormFile>? Attachments);
 }

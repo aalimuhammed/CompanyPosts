@@ -11,8 +11,10 @@ public record CreateIncomingDTO(
 	DateTime DeliveryDate,
 	DateTime SaveDate,
 	string Summary,
-	int DeliveryMethod,
+	int? DeliveryMethod,
 	int DocumentType,
 	int Department,
     string? InComingNumber,
+    string EmailContent,
+    IEnumerable<Guid> SentEmailsTo,
     List<IFormFile>? Attachments);

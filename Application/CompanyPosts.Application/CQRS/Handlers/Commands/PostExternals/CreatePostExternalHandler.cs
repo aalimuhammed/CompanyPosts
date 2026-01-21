@@ -4,18 +4,21 @@ internal sealed class CreatePostExternalHandler :
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
+	private readonly IEmailServices _emailServices;
 	public CreatePostExternalHandler(
 		IUnitOfWork unitOfWork,
-		IFileService saveAttachment)
+		IFileService saveAttachment,
+		IEmailServices emailServices)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
+		_emailServices = emailServices;
 	}
 	public async Task<Unit> Handle(CreatePostExternalCommand request, CancellationToken cancellationToken)
 	{
 		var postExternalRepository = _unitOfWork.Repository<PostExternal>();
-		var adminRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await adminRepository.FindAsync(predicate: null, cancellationToken);
+		var sysUserRepo = _unitOfWork.Repository<SysUsers>();
+		var admin = await sysUserRepo.FindAsync(x => x.IsAdmin, cancellationToken);
 
 		if (await postExternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostExternalDTO.DocumentNumber))
 		{
@@ -52,7 +55,18 @@ internal sealed class CreatePostExternalHandler :
 
 			await _unitOfWork.SaveChangesAsync();
 			await _unitOfWork.CommitTransactionAsync();
-			return Unit.Value;
+
+            var sysUsers = await sysUserRepo.FindAllAsync(
+					x => request.CreatePostExternalDTO.SentEmailsTo.Contains(x.Id),
+					cancellationToken);
+
+            _ = _emailServices.SendBulkEmailAsync(
+					$"متابعة المستند رقم {request.CreatePostExternalDTO.DocumentNumber} في الصادر خارجي",
+				request.CreatePostExternalDTO.EmailContent,
+                sysUsers.Select(u => u.Email!),
+				cancellationToken);
+
+            return Unit.Value;
 		}
 		catch (Exception ex)
 		{

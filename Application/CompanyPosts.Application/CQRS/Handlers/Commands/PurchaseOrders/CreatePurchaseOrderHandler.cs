@@ -7,11 +7,15 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFileService _saveAttachment;
+        private readonly IEmailServices _emailServices;
         public CreatePurchaseOrderHandler(
-            IUnitOfWork unitOfWork, IFileService saveAttachment)
+            IUnitOfWork unitOfWork, 
+            IFileService saveAttachment,
+            IEmailServices emailServices)
         {
             _unitOfWork = unitOfWork;
             _saveAttachment = saveAttachment;
+            _emailServices = emailServices;
         }
         public async Task<Unit> Handle(CreatePurchaseOrderCommand request, CancellationToken cancellationToken)
         {
@@ -46,6 +50,17 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
 
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
+
+                var sysUsers = await systUserRepository.FindAllAsync(
+                    x => request.CreatePurchaseOrderDTO.SentEmailsTo.Contains(x.Id),
+                    cancellationToken);
+
+                _ = _emailServices.SendBulkEmailAsync(
+                    $"متابعة المستند رقم {request.CreatePurchaseOrderDTO.PurchaseOrderNumber} في  امر التوريد",
+                request.CreatePurchaseOrderDTO.EmailContent,
+                sysUsers.Select(u => u.Email!),
+                cancellationToken);
             }
             catch (Exception ex)
             {

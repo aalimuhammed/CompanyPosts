@@ -1,7 +1,7 @@
 ﻿using CompanyPost.Infrastructure.Settings;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
-using MailKit.Net.Smtp;
 
 namespace CompanyPost.Infrastructure.Services
 {
@@ -16,7 +16,19 @@ namespace CompanyPost.Infrastructure.Services
 			_logger = logger;
 			_emailSettings = emailSettings.Value;
 		}
-		public async Task<bool> SendEmailAsync(
+        public async Task SendBulkEmailAsync(
+			string subject, 
+			string htmlMessage, 
+			IEnumerable<string> recipients, 
+			CancellationToken cancellationToken = default)
+        {
+            var sendEmails = recipients.Select(
+				recipient => SendEmailAsync(recipient, subject, htmlMessage, cancellationToken));
+
+            await Task.WhenAll(sendEmails);
+        }
+
+        public async Task<bool> SendEmailAsync(
 			string toEmail, 
 			string subject, 
 			string body, 

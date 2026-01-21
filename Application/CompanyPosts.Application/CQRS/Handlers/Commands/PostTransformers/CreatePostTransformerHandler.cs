@@ -66,7 +66,7 @@ internal sealed class CreatePostTransformerHandler
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await _unitOfWork.CommitTransactionAsync();
 
-			await SendBulkEmailAsync(
+			_ = _emailServices.SendBulkEmailAsync(
 					$"متابعة المستند رقم {request.CreatePostTransofrmerDTO.DocumentNumber} في الصادر المحول",
 				request.CreatePostTransofrmerDTO.EmailContent,
 				sysUsers.Select(u => u.Email!),
@@ -97,16 +97,5 @@ internal sealed class CreatePostTransformerHandler
 			};
 			await attachmentRepository.AddAsync(attachment, cancellationToken);
 		}
-	}
-	private async Task SendBulkEmailAsync(
-	   string subject,
-	   string htmlMessage,
-	   IEnumerable<string> recipients,
-	   CancellationToken cancellationToken = default)
-	{
-		var sendEmails = recipients.Select(recipient =>
-			_emailServices.SendEmailAsync(recipient, subject, htmlMessage, cancellationToken));
-
-		await Task.WhenAll(sendEmails);
 	}
 }
