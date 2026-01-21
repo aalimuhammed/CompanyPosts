@@ -24,4 +24,5 @@ public abstract class PostBaseEntity : BaseEntity, IDocumentEntity
 	public PostDocumentTypes PostDocumentTypes { get; set; }
     public string? InComingNumber { get; set; }
 	public Status Status {  get; set; }
+	public string? FollowingPerson { get; set; }
 }

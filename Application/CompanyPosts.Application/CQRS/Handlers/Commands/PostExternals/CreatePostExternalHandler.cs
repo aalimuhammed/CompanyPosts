@@ -41,6 +41,7 @@ internal sealed class CreatePostExternalHandler :
 			DeliveryMethods = (DeliveryMethods)request.CreatePostExternalDTO.DeliveryMethod,
 			//Department = (Departments)request.CreatePostExternalDTO.Department,
 			InComingNumber = request.CreatePostExternalDTO.IncomingNumber,
+			FollowingPerson = request.CreatePostExternalDTO.FollowingPerson,
 			CreatedById = admin.Id,
 		};
 		var postExternalID = postExternal.Id;

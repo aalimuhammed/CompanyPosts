@@ -16,4 +16,5 @@ public record CreatePostInternalDTO(
     string? InComingNumber,
     string EmailContent,
     IEnumerable<Guid> SentEmailsTo,
+    string FollowingPerson,
     List<IFormFile>? Attachments);

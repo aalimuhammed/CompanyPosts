@@ -42,6 +42,7 @@ internal sealed class CreatePostInternalHandler
 			//Department = (Departments)request.CreatePostInternalDTO.Department,
 			CreatedById = admin.Id,
             InComingNumber = request.CreatePostInternalDTO.InComingNumber,
+			FollowingPerson = request.CreatePostInternalDTO.FollowingPerson
         };
 		var postInternalID = postInternal.Id;
 		await _unitOfWork.BeginTransactionAsync();
