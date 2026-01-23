@@ -9,10 +9,12 @@ public class SysUsers : BaseEntity , IHasName
     public bool IsPasswordDefault { get; set; } = true;
 	public bool IsAdmin { get; set; } = false;
 	public bool IsVerified { get; set; } = false;
+	public Guid? CompanyId { get; set; }
+	public Company Company { get; set; }
 	public ICollection<PostBaseEntity> Posts { get; set; } = new List<PostBaseEntity>();
 	public ICollection<Contracts> Contracts { get; set; } = new List<Contracts>();
 	public ICollection<ContractRef> ContractRefs { get; set; } = new List<ContractRef>();
 	public ICollection<InComing> IncomingDocuments { get; set; } = new List<InComing>();
-	public ICollection<SysUsersCompany> SysUsersCompanies { get; set; } = new List<SysUsersCompany>();
+	//public ICollection<SysUsersCompany> SysUsersCompanies { get; set; } = new List<SysUsersCompany>();
 	public ICollection<PurchaseOrder> PurchaseOrdersCreatedBy { get; set; } = new List<PurchaseOrder>();
 }

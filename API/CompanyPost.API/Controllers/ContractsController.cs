@@ -60,16 +60,6 @@ public class ContractsController : ControllerBase
 		return Ok(contracts);
 	}
 
-	//[HttpPut("update-contract")]
-	//public async Task<IActionResult> UpdateContract(
-	//	[FromForm] UpdateContractDTO updateContractDTO,
-	//	CancellationToken cancellationToken)
-	//{
-	//	var command = new UpdateContractCommand(updateContractDTO);
-	//	await _mediator.Send(command, cancellationToken);
-	//	return StatusCode(204);
-	//}
-
 	[HttpGet("get-contract/{id}")]
 	public async Task<IActionResult> GetContractDocumentById(Guid Id, CancellationToken cancellationToken)
 	{
@@ -78,10 +68,10 @@ public class ContractsController : ControllerBase
 		return Ok(contract);
     }
 
-    [HttpPut("get-contract/{id}")]
+    [HttpPut("update-contract/{id}")]
     public async Task<IActionResult> UpdateContractDocumentById(
 		Guid Id,
-		[FromBody] UpdateContractDocumentRequestDTO updateContractDocumentDTO,
+		[FromForm] UpdateContractDocumentRequestDTO updateContractDocumentDTO,
         CancellationToken cancellationToken)
     {
         var query = new UpdateContractDocumentCommand(Id , updateContractDocumentDTO);

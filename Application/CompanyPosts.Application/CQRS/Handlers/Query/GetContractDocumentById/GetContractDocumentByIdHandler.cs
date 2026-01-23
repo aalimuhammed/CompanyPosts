@@ -15,6 +15,7 @@
             {
                 throw new Exception("Contract not found");
             }
+
             var response = new GetContractByIdResponseDTO(
                 Id: contract.Id,
                 ContractNumber: contract.ContractNumber,
@@ -26,6 +27,8 @@
                 PurchaseOrderRef: contract.purchase_order_ref,
                 SupplierId: contract.PersonOrgId,
                 ProjectId: contract.ProjectId,
+                WorkTypeId: contract.WorkTypeId,
+                OldReferenceNumber: contract.OldReferenceNumber,
                 Department: (int)contract.Department);
 
             return response;

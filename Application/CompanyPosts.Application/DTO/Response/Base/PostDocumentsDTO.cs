@@ -10,11 +10,11 @@
 		string Subject,
 		string Summary,
 		string Notes,
-		string CreatedByName,
+		string CreatedBy,
 		string PublishedName,
 		string DeliveryMethod,
 		string CompanyName,
 		string WorkTypeName,
-		string ReceivedFromName
-	);
+		string ReceivedFromName,
+		string CreatedAt);
 }

@@ -9,5 +9,6 @@ namespace CompanyPost.Application.DTO.Request
      DateTime? StartDate,
      DateTime? EndDate,
      string? ContractRef,
-     string? PurchaseOrderRef) : BaseFilterRequestDTO(ProjectId, DepartmentId, PublisherId, StartDate, EndDate);
+     string? PurchaseOrderRef,
+     Guid? WorkTypeId) : BaseFilterRequestDTO(ProjectId, DepartmentId, PublisherId, StartDate, EndDate);
 }

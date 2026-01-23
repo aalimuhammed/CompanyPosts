@@ -10,5 +10,8 @@
         Guid ProjectId,
         int Currency,
         string? PurchaseOrderRef,
-        int Department);
+        Guid WorkTypeId,
+        string? OldReferenceNumber,
+        int Department,
+        List<IFormFile>? Attachments);
 }

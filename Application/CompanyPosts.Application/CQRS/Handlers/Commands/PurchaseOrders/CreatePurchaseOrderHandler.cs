@@ -84,7 +84,10 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
                 ProjectId = request.CreatePurchaseOrderDTO.ProjectId,
                 PersonOrgId = request.CreatePurchaseOrderDTO.PersonOrgId,
                 Currency = (Currency)request.CreatePurchaseOrderDTO.Currency,
-                Department = (Departments)request.CreatePurchaseOrderDTO.Department
+                Department = (Departments)request.CreatePurchaseOrderDTO.Department,
+                CommericalRegisterId = request.CreatePurchaseOrderDTO.CommericalRegisterId,
+                NatureOfWorks = (NatureOfWorks)request.CreatePurchaseOrderDTO.NatureOfWork,
+                ImportingStatus = (ImportingStatus)request.CreatePurchaseOrderDTO.ImportingStatus
             };
         }
         private async Task AddAttachments(

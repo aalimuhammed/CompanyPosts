@@ -11,4 +11,5 @@ public record UpdateContractDTO(
 	Guid ProjectId,
 	string Currency,
 	string PurchaseOrdeRef,
-	IFormFile? Attachments);
+	Guid WorkTypeId,
+	List<IFormFile>? Attachments);

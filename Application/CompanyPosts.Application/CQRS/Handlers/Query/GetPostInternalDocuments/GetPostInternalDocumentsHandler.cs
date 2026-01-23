@@ -66,8 +66,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
 				p.WorkType.Name,
-				p.RecievedFrom.Name
-			));
+				p.RecievedFrom.Name,
+                p.CreatedAt.ToString("yyyy-MM-dd")
+            ));
 
 			return postDTOs;
 		}

@@ -22,7 +22,6 @@ internal sealed class CreateSysUserCompanyHandler
 	public async Task<Unit> Handle(CreateSysUserCompanyCommand request, CancellationToken cancellationToken)
 	{
 		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
-		var sysUserCompanyRepository = _unitOfWork.Repository<SysUsersCompany>();
 		try
 		{
             bool hrCodeExists  = await sysUserRepository.FindAnyAsync(
@@ -38,32 +37,24 @@ internal sealed class CreateSysUserCompanyHandler
             if (userNameExists) throw new InvalidOperationException("Username already exists.");
 
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
-			var plainPassword = _passwordService.GenerateRandomPassword();
 
 			var sysUser = new SysUsers
 			{
 				Email = request.CreateSysUserCompanyDTO.Email,
 				UserName = request.CreateSysUserCompanyDTO.UserName,
 				Name = request.CreateSysUserCompanyDTO.Name,
-				Password = _passwordService.HashPassword(plainPassword),
-				HrCode = request.CreateSysUserCompanyDTO.HrCode
+				Password = _passwordService.HashPassword(request.CreateSysUserCompanyDTO.Password),
+				HrCode = request.CreateSysUserCompanyDTO.HrCode,
+				CompanyId = request.CreateSysUserCompanyDTO.Company
             };
 
-			await sysUserRepository.AddAsync(sysUser);
-			foreach (var item in request.CreateSysUserCompanyDTO.Companies)
-			{
-				var sysUserCompany = new SysUsersCompany
-				{
-					SysUserId = sysUser.Id,
-					CompanyId = Guid.Parse(item)
-				};
-				await sysUserCompanyRepository.AddAsync(sysUserCompany);
-			}
+			await sysUserRepository.AddAsync(sysUser,cancellationToken);
 
-			await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
 			 _jwTGenerator.CreateToken(sysUser.Id);
-            _= SendWelcomeEmailAsync(sysUser.Email, cancellationToken);
+            _ = SendWelcomeEmailAsync(sysUser.Email, cancellationToken);
         }
         catch (InvalidOperationException)
         {

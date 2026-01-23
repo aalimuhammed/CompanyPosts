@@ -21,5 +21,9 @@
         public string? OldReferenceNumber { get; set; } = string.Empty;
         public ICollection<PurchaseOrderAttachment> PurchaseOrderAttachments { get; set; } = new List<PurchaseOrderAttachment>();
         public Status Status { get; set; }
+        public NatureOfWorks NatureOfWorks { get; set; }
+        public double? CheckValue { get; set; }
+        public string? CommericalRegisterId { get; set; }
+        public ImportingStatus? ImportingStatus { get; set; }
     }
 }

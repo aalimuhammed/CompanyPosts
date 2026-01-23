@@ -48,6 +48,14 @@
                 .HasConversion<int>()
                 .IsRequired(true);
 
+            builder.Property(x => x.CommericalRegisterId)
+                .HasMaxLength(20)
+                .IsRequired(false);
+
+            builder.Property(x => x.OldReferenceNumber)
+               .HasMaxLength(20)
+               .IsRequired(false);
+
             builder.HasIndex(builder => builder.PurchaseOrderNumber)
                 .IsUnique();
         }

@@ -61,8 +61,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				null,
 				p.WorkType.Name,
-				p.OriginalPublisher.Name
-			));
+				p.OriginalPublisher.Name,
+                p.CreatedAt.ToString("yyyy-MM-dd") 
+				));
 			return inComingDto;
 		}
 	}

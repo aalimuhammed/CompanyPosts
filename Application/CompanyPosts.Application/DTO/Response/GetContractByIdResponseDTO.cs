@@ -11,5 +11,7 @@
         int Currency,
         Guid SupplierId,
         Guid ProjectId,
+        Guid WorkTypeId,
+        string? OldReferenceNumber,
         int Department);
 }

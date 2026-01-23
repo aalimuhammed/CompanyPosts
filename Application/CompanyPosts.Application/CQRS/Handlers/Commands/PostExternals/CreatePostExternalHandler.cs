@@ -63,7 +63,7 @@ internal sealed class CreatePostExternalHandler :
 
             _ = _emailServices.SendBulkEmailAsync(
 					$"متابعة المستند رقم {request.CreatePostExternalDTO.DocumentNumber} في الصادر خارجي",
-				request.CreatePostExternalDTO.EmailContent + "بخصوص الموضوع"+ request.CreatePostExternalDTO.Subject,
+				request.CreatePostExternalDTO.EmailContent,
                 sysUsers.Select(u => u.Email!),
 				cancellationToken);
 

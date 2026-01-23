@@ -25,5 +25,10 @@ internal sealed class SysUsersConfiguration : IEntityTypeConfiguration<SysUsers>
 
 		builder.Property(builder => builder.IsPasswordDefault)
 			.HasDefaultValueSql("1");
-	}
+
+        builder.HasOne(builder => builder.Company)
+            .WithMany(t => t.SysUsers)
+            .HasForeignKey(builder => builder.CompanyId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }

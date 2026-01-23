@@ -17,7 +17,7 @@ public class CompanyPostDbContext : DbContext
 	public DbSet<Publisher> Publishers { get; set; }
 	public DbSet<WorkType> WorkTypes { get; set; }
 	public DbSet<InComingResponsibleEmployee> inComingResponsibleEmployees { get; set; }
-	public DbSet<SysUsersCompany> SysUsersCompanies { get; set; }
+	//public DbSet<SysUsersCompany> SysUsersCompanies { get; set; }
 	public DbSet<BridgeUsers> BridgeUsers { get; set; }
 	public DbSet<ContractRef> ContractRefs { get; set; }
 	public DbSet<PurchaseOrder> PurchaseOrders { get; set; }

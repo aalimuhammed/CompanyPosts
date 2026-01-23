@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260121173219_AddNewColumnsInPurchaseOrderCalledNatureOfWorksCheckValueAndCommercialRegisterId")]
+    partial class AddNewColumnsInPurchaseOrderCalledNatureOfWorksCheckValueAndCommercialRegisterId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1054,10 +1057,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("details");
 
-                    b.Property<int?>("ImportingStatus")
-                        .HasColumnType("int")
-                        .HasColumnName("importing_status");
-
                     b.Property<int>("NatureOfWorks")
                         .HasColumnType("int")
                         .HasColumnName("nature_of_works");
@@ -1166,10 +1165,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("CompanyId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("company_id");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
@@ -1221,10 +1216,34 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_sys_users");
 
-                    b.HasIndex("CompanyId")
-                        .HasDatabaseName("ix_sys_users_company_id");
-
                     b.ToTable("sys_users", (string)null);
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsersCompany", b =>
+                {
+                    b.Property<Guid>("SysUserId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("sys_user_id");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("company_id");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.HasKey("SysUserId", "CompanyId", "Id")
+                        .HasName("pk_sys_users_companies");
+
+                    b.HasIndex("CompanyId")
+                        .HasDatabaseName("ix_sys_users_companies_company_id");
+
+                    b.ToTable("sys_users_companies", (string)null);
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.WorkType", b =>
@@ -1660,20 +1679,30 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("PurchaseOrder");
                 });
 
-            modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsers", b =>
+            modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsersCompany", b =>
                 {
                     b.HasOne("CompanyPost.Domain.Entities.Company", "Company")
-                        .WithMany("SysUsers")
+                        .WithMany("SysUsersCompanies")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_sys_users_companies_company_id");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_sys_users_companies_companies_company_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.SysUsers", "SysUser")
+                        .WithMany("SysUsersCompanies")
+                        .HasForeignKey("SysUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_sys_users_companies_sys_users_sys_user_id");
 
                     b.Navigation("Company");
+
+                    b.Navigation("SysUser");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Company", b =>
                 {
-                    b.Navigation("SysUsers");
+                    b.Navigation("SysUsersCompanies");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.ContractRef", b =>
@@ -1762,6 +1791,8 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("IncomingDocuments");
 
                     b.Navigation("PurchaseOrdersCreatedBy");
+
+                    b.Navigation("SysUsersCompanies");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.WorkType", b =>

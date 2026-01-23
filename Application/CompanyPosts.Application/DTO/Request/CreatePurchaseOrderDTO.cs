@@ -14,5 +14,8 @@
     int Department,
     string EmailContent,
     IEnumerable<Guid> SentEmailsTo,
+    string? CommericalRegisterId,
+    int NatureOfWork,
+    int? ImportingStatus,
     List<IFormFile>? Attachments);
 }

@@ -11,7 +11,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
         {
               _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<ContractReportResponseDTO>> Handle(GetContractsByFiltersQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ContractReportResponseDTO>> Handle(
+            GetContractsByFiltersQuery request, 
+            CancellationToken cancellationToken)
         {
             var contractRepository = _unitOfWork.Repository<Contracts>();
 
@@ -31,6 +33,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 
             if (request.DTO.PublisherId.HasValue)
                 predicate = predicate.And(c => c.PersonOrgId == request.DTO.PublisherId.Value);
+
+            if (request.DTO.WorkTypeId.HasValue)
+                predicate = predicate.And(c => c.WorkTypeId == request.DTO.WorkTypeId.Value);
 
             if (Enum.TryParse<Departments>(request.DTO.DepartmentId, out var department))
                 predicate = predicate.And(c => c.Department == department);
@@ -65,7 +70,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                     c.purchase_order_ref,
                     c.Currency.GetDisplayName(),
                     c.PersonOrgs.Name,
-                    c.HasReference ? "Original" : "Attached",
+                    c.HasReference ? "Attached" : "Original",
                     c.CreatedBy.UserName,
                     c.CreatedAt.ToString("yyyy-MM-dd"),
                     c.Value,
