@@ -13,21 +13,22 @@ internal sealed class CreateContractCommandHandler
 	}
 	public async Task<Unit> Handle(CreateContractCommand request, CancellationToken cancellationToken)
 	{
-		if (request.CreatrContractDTO.HasReference == ContractTypes.Original)
+        var contractRepository = _unitOfWork.Repository<Contracts>();
+		
+		var adminRepository = _unitOfWork.Repository<SysUsers>();
+
+        var contractNumberExists = await contractRepository.FindAnyAsync(
+                x => x.ContractNumber == request.CreatrContractDTO.ContractNum,
+                cancellationToken);
+        if (contractNumberExists)
+        {
+            throw new Exception("رقم العقد موجود");
+        }
+
+        var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+
+        if (request.CreatrContractDTO.HasReference == ContractTypes.Original)
 		{
-			var contractRepository = _unitOfWork.Repository<Contracts>();
-			var adminRepository = _unitOfWork.Repository<SysUsers>();
-			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
-
-			var contractNumberExists = await contractRepository.FindAnyAsync(
-				x => x.ContractNumber == request.CreatrContractDTO.ContractNum,
-				cancellationToken);
-
-			if (contractNumberExists)
-			{
-				throw new Exception("Contract Number already exists.");
-            }
-
 			var purchaseOrderRefExists = await contractRepository.FindAnyAsync(
 				x => x.purchase_order_ref == request.CreatrContractDTO.PurchaseOrdNumRef, 
 				cancellationToken);
@@ -43,7 +44,6 @@ internal sealed class CreateContractCommandHandler
 						contractRepository.FindAllAsync(cancellationToken: cancellationToken);
 
                 var SerialNum =  maxSerialNumber.Any() ? maxSerialNumber.Max(x => x.SerialNumber) + 1 : 1;
-				//request.CreatrContractDTO.SerialNumber = SerialNum;
                 var newContract = CreateContract(request , SerialNum);
 
 				newContract.CreatedById = admin.Id;
@@ -69,27 +69,6 @@ internal sealed class CreateContractCommandHandler
 		else
 		{
 			var contractRefRepository = _unitOfWork.Repository<ContractRef>();
-			var adminRepository = _unitOfWork.Repository<SysUsers>();
-			var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
-
-
-            var contractNumberExists = await contractRefRepository.FindAnyAsync(
-                x => x.ContractNumber == request.CreatrContractDTO.ContractNum,
-                cancellationToken);
-
-            if (contractNumberExists)
-            {
-                throw new Exception("Contract Number already exists.");
-            }
-
-            //var purchaseOrderRefExists = await contractRefRepository.FindAnyAsync(
-            //    x => x.purchase_order_ref == request.CreatrContractDTO.PurchaseOrdNumRef,
-            //    cancellationToken);
-
-            //if (purchaseOrderRefExists)
-            //{
-            //    throw new Exception("Purchase Order Reference already exists.");
-            //}
 
             try
 			{
