@@ -12,7 +12,7 @@ public record CreatePostInternalDTO(
 	string Summary,
 	string? Notes,
 	int DeliveryMethod,
-	int Department,
+	int PostDocumentType,
     string? InComingNumber,
     string EmailContent,
     IEnumerable<Guid> SentEmailsTo,

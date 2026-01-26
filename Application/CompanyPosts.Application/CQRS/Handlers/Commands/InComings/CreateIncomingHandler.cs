@@ -40,7 +40,7 @@ internal sealed class CreateIncomingHandler
 			ProjectId = request.createIncomingDTO.ProjectId,
 			SaveDate = request.createIncomingDTO.SaveDate,
 			DocumentType = (DocumentType)request.createIncomingDTO.DocumentType,
-			//Department = (Departments)request.createIncomingDTO.Department,
+			PostDocumentTypes = (PostDocumentTypes)request.createIncomingDTO.PostDocumentType,
 			OriginalPublisherId = request.createIncomingDTO.OriginalPublisherId,
 			PublishedId = request.createIncomingDTO.PublishedId,
 			WorkTypeId = request.createIncomingDTO.WorkTypeId,

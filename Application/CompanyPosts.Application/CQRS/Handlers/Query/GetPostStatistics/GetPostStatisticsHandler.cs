@@ -11,9 +11,12 @@ internal sealed class GetPostStatisticsHandler : IRequestHandler<GetPostStatisti
         var postInternalRepo = _unitOfWork.Repository<PostInternal>();
         var postExternalRepo = _unitOfWork.Repository<PostExternal>();
         var postTransformerRepo = _unitOfWork.Repository<PostTransformer>();
+
         var contractRepo = _unitOfWork.Repository<Contracts>();
         var contractRefRepo = _unitOfWork.Repository<ContractRef>();
+
         var purchaseOrderRepo = _unitOfWork.Repository<PurchaseOrder>();
+
         var inComingRepo = _unitOfWork.Repository<InComing>();
 
         var contractCurrencyRepo = _unitOfWork.CurrencyRepository<Contracts>();
@@ -23,8 +26,11 @@ internal sealed class GetPostStatisticsHandler : IRequestHandler<GetPostStatisti
         var postInternalCount = await postInternalRepo.CountAsync(cancellationToken);
         var postExternalCount = await postExternalRepo.CountAsync(cancellationToken);
         var postTransformerCount = await postTransformerRepo.CountAsync(cancellationToken);
+
         var contractCount = await contractRepo.CountAsync(cancellationToken);
+
         var purchaseOrderCount = await purchaseOrderRepo.CountAsync(cancellationToken);
+
         var inComingCount = await inComingRepo.CountAsync(cancellationToken);
 
         var totalValueContractsUSD = await contractCurrencyRepo.SumForCurrency(Currency.USD, cancellationToken);

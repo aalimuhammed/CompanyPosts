@@ -39,8 +39,8 @@ internal sealed class CreatePostInternalHandler
 			Summary = request.CreatePostInternalDTO.Summary,
 			Notes = request.CreatePostInternalDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostInternalDTO.DeliveryMethod,
-			//Department = (Departments)request.CreatePostInternalDTO.Department,
-			CreatedById = admin.Id,
+			PostDocumentTypes = (PostDocumentTypes)request.CreatePostInternalDTO.PostDocumentType,
+            CreatedById = admin.Id,
             InComingNumber = request.CreatePostInternalDTO.InComingNumber,
 			FollowingPerson = request.CreatePostInternalDTO.FollowingPerson
         };

@@ -17,7 +17,7 @@ public record CreatePostTransofrmerDTO(
 	string RecivedName,
 	string FollowingPerson,
 	string PostNumber,
-	int Department,
+	int PostDocumentType,
 	IEnumerable<Guid> SentEmailsTo,
 	string EmailContent,
 	PostTransformerOptions Options,

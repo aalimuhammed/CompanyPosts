@@ -13,7 +13,7 @@ public record CreateIncomingDTO(
 	string Summary,
 	int? DeliveryMethod,
 	int DocumentType,
-	int Department,
+	int PostDocumentType,
     string? InComingNumber,
     string EmailContent,
     IEnumerable<Guid> SentEmailsTo,
