@@ -6,10 +6,12 @@ internal class CurrencyRepository<T>
     where T : BaseEntity, IHasCurrencyAndValue
 {
     public CurrencyRepository(CompanyPostDbContext context) : base(context) { }
-    public async Task<double> SumForCurrency(Currency currency, CancellationToken cancellationToken = default)
+    public async Task<decimal> SumForCurrency(Currency currency, CancellationToken cancellationToken = default)
     {
-        return await _dbSet
+        var sum =  await _dbSet
             .Where(x => x.Currency == currency)
             .SumAsync(x => x.Value, cancellationToken);
+
+        return Convert.ToDecimal(sum);
     }
 }

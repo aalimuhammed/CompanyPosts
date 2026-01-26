@@ -61,13 +61,18 @@ internal sealed class GetPostStatisticsHandler : IRequestHandler<GetPostStatisti
                 inComingCount,
                 contractCount,
                 purchaseOrderCount,
-                totalValueAllContractsEGP,
-                totalValueAllContractsUSD,
-                totalValueAllContractsSAR,
-                totalValueAllContractsEUR,
-                totalValuePurchaseOrderEGP,
-                totalValuePurchaseOrderUSD,
-                totalValuePurchaseOrderSAR,
-                totalValuePurchaseOrderEUR);
+
+                Format(totalValueAllContractsEGP),
+                Format(totalValueAllContractsUSD),
+                Format(totalValueAllContractsSAR),
+                Format(totalValueAllContractsEUR),
+                Format(totalValuePurchaseOrderEGP),
+                Format(totalValuePurchaseOrderUSD),
+                Format(totalValuePurchaseOrderSAR),
+                Format(totalValuePurchaseOrderEUR));
+    }
+    private string Format(decimal value)
+    {
+        return value.ToString("N2");
     }
 }
