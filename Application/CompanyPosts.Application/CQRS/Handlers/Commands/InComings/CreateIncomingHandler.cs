@@ -1,5 +1,4 @@
 ﻿using CompanyPost.Application.CQRS.Commands.InComing;
-using CompanyPost.Domain.Entities;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.InComings;
 internal sealed class CreateIncomingHandler
@@ -20,17 +19,20 @@ internal sealed class CreateIncomingHandler
 	public async Task<Unit> Handle(CreateIncomingCommand request, CancellationToken cancellationToken)
 	{
 		var incomingRepository = _unitOfWork.Repository<InComing>();
-		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
         if (await incomingRepository.FindAnyAsync(x => x.DocumentNumber == request.createIncomingDTO.DocumentNumber))
         {
             throw new Exception("Cannot have duplicated Document Number");
         }
 
+        var sysUserRepository = _unitOfWork.Repository<SysUsers>();
+
+		var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+
+		var maxSerial = await incomingRepository.MaxSerialNumber<InComing>(cancellationToken);
         var incoming = new InComing
 		{
-			SerialNumber = request.createIncomingDTO.SerialNumber,
+			SerialNumber = maxSerial,
 			DocumentNumber = request.createIncomingDTO.DocumentNumber,
 			Subject = request.createIncomingDTO.Subject,
 			DocumentDate = request.createIncomingDTO.DocumentDate,
@@ -46,6 +48,8 @@ internal sealed class CreateIncomingHandler
 			WorkTypeId = request.createIncomingDTO.WorkTypeId,
 			CreatedById = admin.Id,
 			InComingNumber = request.createIncomingDTO.InComingNumber,
+			Status = (Status) request.createIncomingDTO.StatusMethod,
+			OldReferenceNumber = request.createIncomingDTO.OldRef
         };
 
 		var inComingId = incoming.Id;

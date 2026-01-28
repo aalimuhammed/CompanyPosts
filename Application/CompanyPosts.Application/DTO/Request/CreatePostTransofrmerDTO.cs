@@ -22,4 +22,6 @@ public record CreatePostTransofrmerDTO(
 	string EmailContent,
 	PostTransformerOptions Options,
 	string? InComingNumber,
-    List<IFormFile>? Attachments);
+    List<IFormFile>? Attachments,
+    int StatusMethod,
+	string OldRef);

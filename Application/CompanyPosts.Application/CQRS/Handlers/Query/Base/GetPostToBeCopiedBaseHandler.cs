@@ -26,6 +26,16 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.Base
             {
                 { IsDepartment: true } => "Department",
                 { IsProject: true } => "Project",
+                { IsCompany: true} => "Company",
+                _ => ""
+            };
+
+            var recievedType = post.RecievedFrom switch
+            {
+                { IsDepartment: true } => "Department",
+                { IsProject: true } => "Project",
+                { IsCompany: true } => "Company",
+                { IsSupplierOrSubContractor: true } => "Company",
                 _ => ""
             };
 
@@ -41,8 +51,10 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.Base
                     post.DocumentDate,
                     post.DeliveryDate,
                     publisherType,
+                    recievedType,
                     (int)post.PostDocumentTypes,
-                    (int)post.DeliveryMethods
+                    (int)post.DeliveryMethods,
+                    (int)post.Status
                 );
 
             return copiedPost;

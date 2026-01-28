@@ -1,8 +1,8 @@
 ﻿namespace CompanyPost.Domain.Base;
 public abstract class PostBaseEntity : BaseEntity, IDocumentEntity
 {
-	public int SerialNumber { get; set; }
-	public string DocumentNumber { get; set; } = null!;
+    public int SerialNumber { get; set; }
+    public string DocumentNumber { get; set; } = null!;
 	public Guid CompanyId { get; set; }
 	public Company Company { get; set; } = null!;
 	public Guid PublishedId { get; set; }

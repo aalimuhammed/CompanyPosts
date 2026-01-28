@@ -29,6 +29,14 @@ public class IncomingController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("GetInComingToBeCopied/{id}")]
+    public async Task<IActionResult> GetInComingToBeCopied(Guid Id, CancellationToken cancellationToken)
+    {
+        var query = new GetInComingToBeCopiedQuery(Id);
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost("CreateIncoming")]
 	public async Task<IActionResult> CreateIncomingAsync(
 		[FromForm] CreateIncomingDTO createIncomingDTO,

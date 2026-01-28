@@ -17,5 +17,7 @@
     string? CommericalRegisterId,
     int NatureOfWork,
     int? ImportingStatus,
-    List<IFormFile>? Attachments);
+    List<IFormFile>? Attachments,
+    int StatusMethod,
+    string OldRef);
 }

@@ -17,17 +17,19 @@ internal sealed class CreatePostExternalHandler :
 	public async Task<Unit> Handle(CreatePostExternalCommand request, CancellationToken cancellationToken)
 	{
 		var postExternalRepository = _unitOfWork.Repository<PostExternal>();
-		var sysUserRepo = _unitOfWork.Repository<SysUsers>();
+        if (await postExternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostExternalDTO.DocumentNumber))
+        {
+            throw new Exception("Cannot have duplicated Document Number");
+        }
+
+        var sysUserRepo = _unitOfWork.Repository<SysUsers>();
 		var admin = await sysUserRepo.FindAsync(x => x.IsAdmin, cancellationToken);
 
-		if (await postExternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostExternalDTO.DocumentNumber))
+		
+        var maxSerial = await postExternalRepository.MaxSerialNumber<PostExternal>(cancellationToken);
+        var postExternal = new PostExternal
 		{
-			throw new Exception("Cannot have duplicated Document Number");
-		}
-
-		var postExternal = new PostExternal
-		{
-			SerialNumber = request.CreatePostExternalDTO.SerialNumber,
+			SerialNumber = maxSerial,
 			DocumentNumber = request.CreatePostExternalDTO.DocumentNumber,
 			CompanyId = request.CreatePostExternalDTO.CompanyId,
 			PublishedId = request.CreatePostExternalDTO.PublishedId,
@@ -42,6 +44,7 @@ internal sealed class CreatePostExternalHandler :
 			PostDocumentTypes = (PostDocumentTypes)request.CreatePostExternalDTO.PostDocumentType,
 			InComingNumber = request.CreatePostExternalDTO.IncomingNumber,
 			FollowingPerson = request.CreatePostExternalDTO.FollowingPerson,
+			Status = (Status) request.CreatePostExternalDTO.StatusMethod,
 			CreatedById = admin.Id,
 		};
 		var postExternalID = postExternal.Id;

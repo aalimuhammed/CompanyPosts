@@ -1,5 +1,4 @@
-﻿using CompanyPost.Domain.Enums;
-using CompanyPost.Domain.Result;
+﻿using CompanyPost.Domain.Result;
 
 namespace CompanyPost.Infrastructure.Repository;
 internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity, IEntity
@@ -130,5 +129,13 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     public async Task<int> CountAsync(CancellationToken cancellationToken = default)
     {
 		return await _dbSet.CountAsync(cancellationToken);
+    }
+    public async Task<int> MaxSerialNumber<TC>(CancellationToken cancellationToken = default) 
+		where TC : class, IDocumentEntity
+    {
+        var nextSerial = await _context.Set<TC>()
+          .MaxAsync(x => (int?)x.SerialNumber, cancellationToken);
+
+        return nextSerial == null ? 1 : nextSerial.Value + 1;
     }
 }

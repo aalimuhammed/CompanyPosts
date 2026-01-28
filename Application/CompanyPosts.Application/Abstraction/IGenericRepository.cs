@@ -34,4 +34,6 @@ public interface IGenericRepository<T> where T : BaseEntity , IEntity
 			Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
 			CancellationToken cancellationToken = default);
 	Task<int> CountAsync(CancellationToken cancellationToken = default);
+	Task<int> MaxSerialNumber<TC>(CancellationToken cancellationToken = default)
+          where TC : class , IDocumentEntity;
 }

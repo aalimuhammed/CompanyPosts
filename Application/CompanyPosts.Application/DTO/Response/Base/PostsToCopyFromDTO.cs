@@ -10,7 +10,9 @@
         Guid WorkTypeId,
         DateTime DocumentDate,
         DateTime DeliveryDate,
-        string PublisherType , 
+        string PublisherType ,
+        string ReceivedType,
         int DocumentType , 
-        int DeliveryMethod);
+        int DeliveryMethod,
+        int StatusMethod);
 }

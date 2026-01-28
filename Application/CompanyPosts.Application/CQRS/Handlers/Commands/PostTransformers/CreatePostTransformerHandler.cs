@@ -17,18 +17,21 @@ internal sealed class CreatePostTransformerHandler
 	public async Task<Unit> Handle(CreatePostTransformerCommand request, CancellationToken cancellationToken)
 	{
 		var postTransofrmerRepository = _unitOfWork.Repository<PostTransformer>();
-		var systUserRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await systUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
-		if (await postTransofrmerRepository.FindAnyAsync(
-			x => x.DocumentNumber == request.CreatePostTransofrmerDTO.DocumentNumber, cancellationToken))
-		{
-			throw new Exception("Cannot have duplicated Document Number");
+        if (await postTransofrmerRepository.FindAnyAsync(
+            x => x.DocumentNumber == request.CreatePostTransofrmerDTO.DocumentNumber, cancellationToken))
+        {
+            throw new Exception("Cannot have duplicated Document Number");
         }
 
-        var postTransformer = new PostTransformer
+        var systUserRepository = _unitOfWork.Repository<SysUsers>();
+		var admin = await systUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+		
+        var maxSerial = await postTransofrmerRepository.MaxSerialNumber<PostTransformer>(cancellationToken);
+
+		var postTransformer = new PostTransformer
 		{
-			SerialNumber = request.CreatePostTransofrmerDTO.SerialNumber,
+			SerialNumber = maxSerial,
 			PostNumber = request.CreatePostTransofrmerDTO.PostNumber,
 			DocumentNumber = request.CreatePostTransofrmerDTO.DocumentNumber,
 			CompanyId = request.CreatePostTransofrmerDTO.CompanyId,
@@ -47,6 +50,8 @@ internal sealed class CreatePostTransformerHandler
 			FollowingPerson = request.CreatePostTransofrmerDTO.FollowingPerson,
 			CreatedById = admin.Id,
 			InComingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
+			Status = (Status)request.CreatePostTransofrmerDTO.StatusMethod,
+            OldReferenceNumber = request.CreatePostTransofrmerDTO.OldRef
         };
 		var postExternalID = postTransformer.Id;
 		await _unitOfWork.BeginTransactionAsync();

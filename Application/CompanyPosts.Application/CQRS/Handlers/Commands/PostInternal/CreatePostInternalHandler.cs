@@ -24,10 +24,10 @@ internal sealed class CreatePostInternalHandler
         {
             throw new Exception("Cannot have duplicated Document Number");
         }
-
-        var postInternal = new PostInternal
+        var maxSerial = await postInternalRepository.MaxSerialNumber<PostInternal>(cancellationToken);
+		var postInternal = new PostInternal
 		{
-			SerialNumber = request.CreatePostInternalDTO.SerialNumber,
+			SerialNumber = maxSerial,
 			DocumentNumber = request.CreatePostInternalDTO.DocumentNumber,
 			CompanyId = request.CreatePostInternalDTO.CompanyId,
 			PublishedId = request.CreatePostInternalDTO.PublishedId,
@@ -40,10 +40,12 @@ internal sealed class CreatePostInternalHandler
 			Notes = request.CreatePostInternalDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostInternalDTO.DeliveryMethod,
 			PostDocumentTypes = (PostDocumentTypes)request.CreatePostInternalDTO.PostDocumentType,
-            CreatedById = admin.Id,
-            InComingNumber = request.CreatePostInternalDTO.InComingNumber,
-			FollowingPerson = request.CreatePostInternalDTO.FollowingPerson
-        };
+			CreatedById = admin.Id,
+			InComingNumber = request.CreatePostInternalDTO.InComingNumber,
+			FollowingPerson = request.CreatePostInternalDTO.FollowingPerson,
+			Status = (Status)request.CreatePostInternalDTO.StatusMethod,
+			OldReferenceNumber = request.CreatePostInternalDTO.OldRef
+		};
 		var postInternalID = postInternal.Id;
 		await _unitOfWork.BeginTransactionAsync();
 		try
