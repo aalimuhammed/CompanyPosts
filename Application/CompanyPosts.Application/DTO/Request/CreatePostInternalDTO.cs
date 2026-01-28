@@ -14,9 +14,9 @@ public record CreatePostInternalDTO(
 	int DeliveryMethod,
 	int PostDocumentType,
     string? InComingNumber,
-    string EmailContent,
-    IEnumerable<Guid> SentEmailsTo,
-    string FollowingPerson,
+    string? EmailContent,
+    IEnumerable<Guid>? SentEmailsTo,
+    string? FollowingPerson,
     List<IFormFile>? Attachments,
 	int StatusMethod,
 	string OldRef);

@@ -15,8 +15,8 @@ public record CreateIncomingDTO(
 	int DocumentType,
 	int PostDocumentType,
     string? InComingNumber,
-    string EmailContent,
-    IEnumerable<Guid> SentEmailsTo,
+    string? EmailContent,
+    IEnumerable<Guid>? SentEmailsTo,
     List<IFormFile>? Attachments,
     int StatusMethod,
 	string OldRef);
