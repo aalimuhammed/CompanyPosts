@@ -48,6 +48,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostTransformers
 				postTransformer.RecivedByName = request.UpdatePostTransformerDocumentRequestDTO.recivedByName;
 				postTransformer.IncomingNumber = request.UpdatePostTransformerDocumentRequestDTO.inComingNumber;
 				postTransformer.PostNumber = request.UpdatePostTransformerDocumentRequestDTO.postNumber;
+				postTransformer.DocumentType = (DocumentType)request.UpdatePostTransformerDocumentRequestDTO.documentType;
 
 				if (hasAttachments)
 				{

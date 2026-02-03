@@ -17,7 +17,8 @@ namespace CompanyPost.Application.DTO.Response
     string InComingNumber,  
     string PostNumber, 
     string RecivedByName ,
-    int PostDocumentType
+    int PostDocumentType,
+    int DocumentType
 			) : SelectedPostByIdDTO(
                 DocumentNumber,
                 Subject,

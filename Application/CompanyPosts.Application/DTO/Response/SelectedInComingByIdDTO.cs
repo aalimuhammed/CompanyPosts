@@ -12,5 +12,6 @@
         DateTime SavingDate,
         int DeliveryMethod,
         Guid ProjectId,
-        int Department);
+        int DocumentType,
+		int PostDocumentType);
 }

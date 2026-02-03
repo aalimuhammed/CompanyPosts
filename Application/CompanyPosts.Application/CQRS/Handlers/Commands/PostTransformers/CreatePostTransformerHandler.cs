@@ -52,7 +52,7 @@ internal sealed class CreatePostTransformerHandler
 			InComingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
 			Status = (Status)request.CreatePostTransofrmerDTO.StatusMethod,
             OldReferenceNumber = request.CreatePostTransofrmerDTO.OldRef,
-			//Department = (Departments)request.CreatePostTransofrmerDTO.Department,
+			DocumentType = (DocumentType)request.CreatePostTransofrmerDTO.DocumentType,
 		};
 		var postExternalID = postTransformer.Id;
 		await _unitOfWork.BeginTransactionAsync();

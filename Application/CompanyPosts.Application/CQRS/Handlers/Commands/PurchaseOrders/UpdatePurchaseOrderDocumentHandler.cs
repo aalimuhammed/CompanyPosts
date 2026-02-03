@@ -17,7 +17,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
         public async Task<bool> Handle(UpdatePurchaseOrderDocumentCommand request, CancellationToken cancellationToken)
         {
             var repository = _unitOfWork.Repository<PurchaseOrder>();
-            try
+			await _unitOfWork.BeginTransactionAsync(cancellationToken);
+			try
             {
 				var hasAttachments =
 						request.UpdateRequestDTO.Attachments?.Any() == true;

@@ -42,6 +42,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.InComings
 				inComing.PublishedId = request.UpdateInComingDocumentRequest.publishedId;
 				inComing.ProjectId = request.UpdateInComingDocumentRequest.projectId;
 				inComing.OriginalSender = request.UpdateInComingDocumentRequest.originalsender;
+				inComing.DocumentType = (DocumentType)request.UpdateInComingDocumentRequest.documentType;
 
 				if (request.UpdateInComingDocumentRequest.Attachments?.Any() == true)
 				{

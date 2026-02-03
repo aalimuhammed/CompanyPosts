@@ -50,6 +50,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
 
             var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
 
+			posts.OrderBy(x => x.SerialNumber);
+
 			var postDTOs = posts.Select(p => new PostDocumentsDTO(
 				p.Id,
 				p.SerialNumber,

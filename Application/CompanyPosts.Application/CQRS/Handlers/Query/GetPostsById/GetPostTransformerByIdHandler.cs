@@ -36,7 +36,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.IncomingNumber,
                 post.PostNumber,
                 post.RecivedByName,
-                (int)post.PostDocumentTypes);
+                (int)post.PostDocumentTypes ,
+                (int)post.DocumentType);
 
                 return selectedPostDto;
         }

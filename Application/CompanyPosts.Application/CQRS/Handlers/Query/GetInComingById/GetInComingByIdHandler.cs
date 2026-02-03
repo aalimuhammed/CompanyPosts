@@ -30,7 +30,8 @@
                 inComing.SaveDate,
                 (int)inComing.DeliveryMethods,
                 inComing.ProjectId,
-                (int)inComing.DocumentType);
+                (int)inComing.DocumentType , 
+                (int)inComing.PostDocumentTypes);
 
             return selectedInComing;
         }

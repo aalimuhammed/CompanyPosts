@@ -14,5 +14,6 @@
         int deliveryMethod,
         Guid projectId,
         string? originalsender,
+        int documentType,
 		List<IFormFile>? Attachments);
 }
