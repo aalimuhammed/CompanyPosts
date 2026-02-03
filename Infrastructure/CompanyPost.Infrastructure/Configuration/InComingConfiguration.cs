@@ -24,10 +24,10 @@ internal sealed class InComingConfiguration : IEntityTypeConfiguration<InComing>
 			.HasForeignKey(builder => builder.ProjectId)
 			.OnDelete(DeleteBehavior.Restrict);
 
-		builder.HasOne(builder => builder.OriginalPublisher)
-			.WithMany(t => t.OriginalPublisherInComings)
-			.HasForeignKey(builder => builder.OriginalPublisherId)
-			.OnDelete(DeleteBehavior.Restrict);
+		//builder.HasOne(builder => builder.OriginalPublisher)
+		//	.WithMany(t => t.OriginalPublisherInComings)
+		//	.HasForeignKey(builder => builder.OriginalPublisherId)
+		//	.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasOne(builder => builder.Publisher)
 			.WithMany(t => t.PublishedInComings)
@@ -41,5 +41,8 @@ internal sealed class InComingConfiguration : IEntityTypeConfiguration<InComing>
 
 		builder.HasIndex(x => x.DocumentNumber)
 			   .IsUnique();
+
+		builder.Property(x => x.OriginalSender)
+			.HasMaxLength(20);
 	}
 }

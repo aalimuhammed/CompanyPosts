@@ -13,8 +13,9 @@ namespace CompanyPost.Application.DTO.Request
         Guid workTypeId,
         string notes,
         string summary,
-        int department,
-        int deliveryMethod)
+        int? department,
+        int deliveryMethod ,
+		List<IFormFile>? Attachments)
         : UpdatePostDocumentRequestDTO(
             documentNumber,
             subject,
@@ -27,5 +28,6 @@ namespace CompanyPost.Application.DTO.Request
             notes,
             summary,
             department,
-            deliveryMethod);
+            deliveryMethod ,
+            Attachments);
 }

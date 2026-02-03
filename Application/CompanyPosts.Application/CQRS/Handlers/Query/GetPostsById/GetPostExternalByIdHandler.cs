@@ -32,7 +32,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.WorkTypeId,
                 post.DocumentDate,
                 post.DeliveryDate,
-                (int)post.DeliveryMethods);
+                (int)post.DeliveryMethods,
+                (int)post.PostDocumentTypes);
 
             return selectedPostDto;
         }

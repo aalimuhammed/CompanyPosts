@@ -4,17 +4,18 @@ namespace CompanyPost.Application.DTO.Request
 {
     public record UpdatePostExternalDocumentRequestDTO(
         string documentNumber,
-        string subject,
+        string? subject,
         DateTime documentDate,
         DateTime deliveryDate,
         Guid companyId ,
         Guid publishedId,
         Guid receivedFromId,
         Guid workTypeId,
-        string notes,
-        string summary,
-        int department,
-        int deliveryMethod) 
+        string? notes,
+        string? summary,
+        int? department,
+        int deliveryMethod , 
+        List<IFormFile>? Attachments) 
         : UpdatePostDocumentRequestDTO(
             documentNumber,
             subject,
@@ -27,5 +28,6 @@ namespace CompanyPost.Application.DTO.Request
             notes,
             summary,
             department,
-            deliveryMethod);
+            deliveryMethod ,
+            Attachments);
 }

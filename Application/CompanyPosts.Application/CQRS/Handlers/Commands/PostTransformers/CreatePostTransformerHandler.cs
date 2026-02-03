@@ -51,8 +51,9 @@ internal sealed class CreatePostTransformerHandler
 			CreatedById = admin.Id,
 			InComingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
 			Status = (Status)request.CreatePostTransofrmerDTO.StatusMethod,
-            OldReferenceNumber = request.CreatePostTransofrmerDTO.OldRef
-        };
+            OldReferenceNumber = request.CreatePostTransofrmerDTO.OldRef,
+			//Department = (Departments)request.CreatePostTransofrmerDTO.Department,
+		};
 		var postExternalID = postTransformer.Id;
 		await _unitOfWork.BeginTransactionAsync();
 		try

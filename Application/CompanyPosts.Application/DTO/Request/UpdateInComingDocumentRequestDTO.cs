@@ -2,15 +2,17 @@
 {
     public record UpdateInComingDocumentRequestDTO(
         string documentNumber,
-        string subject,
+        string? subject,
         DateTime documentDate,
         DateTime deliveryDate,
         Guid publishedId,
-        Guid receivedFromId,
+        Guid? receivedFromId,
         Guid workTypeId,
-        string notes,
-        string summary,
+        string? notes,
+        string? summary,
         int department,
         int deliveryMethod,
-        Guid projectId );
+        Guid projectId,
+        string? originalsender,
+		List<IFormFile>? Attachments);
 }

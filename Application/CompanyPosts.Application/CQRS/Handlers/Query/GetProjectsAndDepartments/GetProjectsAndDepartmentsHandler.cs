@@ -14,7 +14,7 @@ internal sealed class GetProjectsAndDepartmentsHandler :
 		var publisherRepository = _unitOfWork.Repository<Publisher>();
 
 		var projectsAndDepartments = await publisherRepository.FindAllAsync(
-			x => x.IsProject || x.IsDepartment,
+			x => x.IsProject || x.IsDepartment || x.IsSupplierOrSubContractor,
 			cancellationToken);
 
 		var projectsAndDepartmentsDTOs = projectsAndDepartments.Select

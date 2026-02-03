@@ -3,7 +3,6 @@
     public record InComingCopiedFromDTO(
         Guid Id ,
         Guid ProjectId,
-        Guid OriginalPublisherId,
         Guid PublishedId ,
         Guid WorkTypeId,
         int PostDocumentTypes , 

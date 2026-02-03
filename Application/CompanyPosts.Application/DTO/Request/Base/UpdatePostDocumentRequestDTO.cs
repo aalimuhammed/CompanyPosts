@@ -11,6 +11,7 @@
         Guid workTypeId,
         string notes,
         string summary,
-        int department,
-        int deliveryMethod);
+        int? department,
+        int deliveryMethod,
+	    List<IFormFile>? Attachments);
 }

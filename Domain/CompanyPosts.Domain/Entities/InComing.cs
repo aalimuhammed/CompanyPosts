@@ -12,8 +12,8 @@ public class InComing : BaseEntity, IDocumentEntity
 	public DocumentType DocumentType { get; set; }
 	public Guid ProjectId { get; set; }
 	public Publisher Projects { get; set; }  = null!;
-	public Guid OriginalPublisherId { get; set; }
-	public Publisher OriginalPublisher { get; set; } = null!;
+	//public Guid OriginalPublisherId { get; set; }
+	//public Publisher OriginalPublisher { get; set; } = null!;
 	public DateTime SaveDate { get; set; }
 	public Guid PublishedId { get; set; }
 	public Publisher Publisher { get; set; } = null!;
@@ -28,4 +28,5 @@ public class InComing : BaseEntity, IDocumentEntity
     public ICollection<InComingResponsibleEmployee> inComingResponsibleEmployees = new List<InComingResponsibleEmployee>();
     public string? InComingNumber { get; set; }
     public Status Status { get; set; }
+	public string? OriginalSender { get; set; } = string.Empty;
 }

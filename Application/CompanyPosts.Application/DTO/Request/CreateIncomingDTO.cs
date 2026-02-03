@@ -6,11 +6,11 @@ public record CreateIncomingDTO(
 	Guid OriginalPublisherId,
 	Guid ProjectId,
 	Guid WorkTypeId,
-	string Subject,
+	string? Subject,
 	DateTime DocumentDate,
 	DateTime DeliveryDate,
 	DateTime SaveDate,
-	string Summary,
+	string? Summary,
 	int? DeliveryMethod,
 	int DocumentType,
 	int PostDocumentType,
@@ -19,4 +19,5 @@ public record CreateIncomingDTO(
     IEnumerable<Guid>? SentEmailsTo,
     List<IFormFile>? Attachments,
     int StatusMethod,
-	string OldRef);
+	string? OldRef,
+	string? OriginalSender);

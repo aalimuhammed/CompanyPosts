@@ -7,9 +7,10 @@
         string Notes,
         Guid CompanyId, 
         Guid PublisherId ,
-        Guid DeliveredId, 
+        Guid RecievedFromId, 
         Guid WorkTypeId,
-        DateTime DocumentDate,
+		DateTime DocumentDate,
         DateTime DeliveryDate,
-        int DeliveryMethod);
+        int DeliveryMethod,
+        int PostDocumentType);
 }

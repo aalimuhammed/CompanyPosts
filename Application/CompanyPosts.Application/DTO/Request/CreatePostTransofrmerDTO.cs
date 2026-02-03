@@ -15,13 +15,12 @@ public record CreatePostTransofrmerDTO(
 	string IncomingNumber,
 	int DocumentType,
 	string RecivedName,
-	string FollowingPerson,
+	string? FollowingPerson,
 	string PostNumber,
 	int PostDocumentType,
 	IEnumerable<Guid>? SentEmailsTo,
 	string? EmailContent,
-	PostTransformerOptions Options,
 	string? InComingNumber,
     List<IFormFile>? Attachments,
     int StatusMethod,
-	string OldRef);
+	string? OldRef);

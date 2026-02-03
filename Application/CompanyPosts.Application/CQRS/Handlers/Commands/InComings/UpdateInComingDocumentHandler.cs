@@ -5,46 +5,133 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.InComings
     internal sealed class UpdateInComingDocumentHandler : IRequestHandler<UpdateInComingDocumentCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public UpdateInComingDocumentHandler(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
-        public async Task<bool> Handle(UpdateInComingDocumentCommand request, CancellationToken cancellationToken)
+		private readonly IFileService _fileService;
+		public UpdateInComingDocumentHandler(
+			IUnitOfWork unitOfWork, IFileService fileService)
+		{
+			_unitOfWork = unitOfWork;
+			_fileService = fileService;
+		}
+		public async Task<bool> Handle(UpdateInComingDocumentCommand request, CancellationToken cancellationToken)
         {
             var repository = _unitOfWork.Repository<InComing>();
-            var postInternal = await repository.FindAsync(x => x.Id == request.Id, cancellationToken);
 
-            if (postInternal == null)
-                throw new Exception($"InComing Post with ID '{request.Id}' not found.");
-
-            postInternal.DeliveryMethods = (DeliveryMethods)request.UpdateInComingDocumentRequest.deliveryMethod;
-            postInternal.DocumentNumber = request.UpdateInComingDocumentRequest.documentNumber;
-            postInternal.DocumentDate = request.UpdateInComingDocumentRequest.documentDate;
-           // postInternal.Department = (Departments)request.UpdateInComingDocumentRequest.department;
-            postInternal.OriginalPublisherId = request.UpdateInComingDocumentRequest.receivedFromId;
-            postInternal.WorkTypeId = request.UpdateInComingDocumentRequest.workTypeId;
-            postInternal.Subject = request.UpdateInComingDocumentRequest.subject;
-            postInternal.Notes = request.UpdateInComingDocumentRequest.notes;
-            postInternal.Summary = request.UpdateInComingDocumentRequest.summary;
-            postInternal.DeliveryDate = request.UpdateInComingDocumentRequest.deliveryDate;
-            postInternal.PublishedId = request.UpdateInComingDocumentRequest.publishedId;
-            postInternal.ProjectId = request.UpdateInComingDocumentRequest.projectId;
-
-            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+			await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
+				var inComing = await GetInComingAsync(
+					repository,
+					request.Id,
+					request.UpdateInComingDocumentRequest.Attachments?.Any() == true,
+					cancellationToken);
 
-                repository.Update(postInternal);
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-                await _unitOfWork.CommitTransactionAsync(cancellationToken);
-                return true;
-            }
+				if (inComing is null)
+				{
+					throw new Exception("InComing Record not found");
+				}
+
+				inComing.DeliveryMethods = (DeliveryMethods)request.UpdateInComingDocumentRequest.deliveryMethod;
+				inComing.PostDocumentTypes = (PostDocumentTypes)request.UpdateInComingDocumentRequest.department;
+				inComing.DocumentNumber = request.UpdateInComingDocumentRequest.documentNumber;
+				inComing.DocumentDate = request.UpdateInComingDocumentRequest.documentDate;
+				inComing.WorkTypeId = request.UpdateInComingDocumentRequest.workTypeId;
+				inComing.Subject = request.UpdateInComingDocumentRequest.subject;
+				inComing.Notes = request.UpdateInComingDocumentRequest.notes;
+				inComing.Summary = request.UpdateInComingDocumentRequest.summary;
+				inComing.DeliveryDate = request.UpdateInComingDocumentRequest.deliveryDate;
+				inComing.PublishedId = request.UpdateInComingDocumentRequest.publishedId;
+				inComing.ProjectId = request.UpdateInComingDocumentRequest.projectId;
+				inComing.OriginalSender = request.UpdateInComingDocumentRequest.originalsender;
+
+				if (request.UpdateInComingDocumentRequest.Attachments?.Any() == true)
+				{
+					await ReplaceAttachmentsAsync(
+						inComing,
+						request.UpdateInComingDocumentRequest.Attachments!,
+						cancellationToken);
+				}
+
+				repository.Update(inComing);
+				await _unitOfWork.SaveChangesAsync(cancellationToken);
+				await _unitOfWork.CommitTransactionAsync(cancellationToken);
+				return true;
+			}
             catch (Exception)
             {
-                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
-                return false;
-                throw;
+				await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+				return false;
+				throw;
             }
         }
-    }
+        private static async Task<InComing?> GetInComingAsync(
+            IGenericRepository<InComing> repository,
+            Guid inComingId,
+			bool includeAttachments,
+			CancellationToken cancellationToken)
+        {
+			if (!includeAttachments)
+			{
+				return await repository.FindAsync(
+					x => x.Id == inComingId,
+					cancellationToken);
+			}
+
+			Expression<Func<InComing, object>>[] includes =
+			{
+				c => c.IncomingAttachments
+			};
+
+			return (await repository.FindWithIncludeAsync(
+					x => x.Id == inComingId,
+					includes,
+					cancellationToken))
+				.FirstOrDefault();
+		}
+		private async Task ReplaceAttachmentsAsync(
+		   InComing inComing,
+		   List<IFormFile> newAttachments,
+		   CancellationToken cancellationToken)
+		{
+			DeleteExistingAttachments(inComing);
+			await AddAttachmentsAsync(inComing.Id, newAttachments, cancellationToken);
+		}
+		private void DeleteExistingAttachments(InComing inComing)
+		{
+			if (!inComing.IncomingAttachments.Any())
+				return;
+
+			var attachmentRepo = _unitOfWork.Repository<InComingAttachments>();
+
+			foreach (var attachment in inComing.IncomingAttachments)
+			{
+				if (!string.IsNullOrWhiteSpace(attachment.FileName))
+				{
+					_fileService.DeleteFile("incomings", attachment.FileName);
+					attachmentRepo.Delete(attachment);
+				}
+			}
+			inComing.IncomingAttachments.Clear();
+		}
+		private async Task AddAttachmentsAsync(
+			Guid inComingId,
+			List<IFormFile> attachments,
+			CancellationToken cancellationToken)
+		{
+			var attachmentRepo = _unitOfWork.Repository<InComingAttachments>();
+
+			foreach (var file in attachments)
+			{
+				var fileName = await _fileService.SaveAttachmentAsync(
+					file,
+					"incomings",
+					cancellationToken);
+
+				await attachmentRepo.AddAsync(new InComingAttachments
+				{
+					IncomingId = inComingId,
+					FileName = fileName
+				}, cancellationToken);
+			}
+		}
+	}
 }

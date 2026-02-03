@@ -138,4 +138,22 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 
         return nextSerial == null ? 1 : nextSerial.Value + 1;
     }
+	public async Task<T> GetByIdAsyncWithAttachmentIncluded(
+		Guid id, 
+		bool includeRelated, 
+		Expression<Func<T, object>> include, 
+		CancellationToken cancellationToken = default)
+	{
+		if (!includeRelated || include == null)
+		{
+			return await FindAsync(
+				x => EF.Property<Guid>(x, "Id") == id,
+				cancellationToken);
+		}
+
+		return await FindWithIncludeFirstOrDefaultAsync(
+			x => EF.Property<Guid>(x, "Id") == id,
+			new[] { include },
+			cancellationToken);
+	}
 }

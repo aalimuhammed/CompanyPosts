@@ -21,7 +21,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 						 post => post.Publisher,
 						 post => post.Projects,
 						 post => post.WorkType,
-						 post => post.OriginalPublisher,
+						// post => post.OriginalPublisher,
 						 post => post.IncomingAttachments,
 					 };
 
@@ -51,7 +51,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 				p.DocumentDate.ToString("dd-MM-yyyy"),
 				p.DeliveryDate.ToString("dd-MM-yyyy"),
 				p.IncomingAttachments != null && p.IncomingAttachments.Any()
-					? p.IncomingAttachments.Select(a => $"/incoming/{a.FileName}").ToList()
+					? p.IncomingAttachments.Select(a => $"/incomings/{a.FileName}").ToList()
 					 : new List<string>(),
 				p.Subject,
 				p.Summary,
@@ -61,7 +61,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				null,
 				p.WorkType.Name,
-				p.OriginalPublisher.Name,
+				"",
                 p.CreatedAt.ToString("yyyy-MM-dd") 
 				));
 			return inComingDto;

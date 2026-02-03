@@ -24,7 +24,6 @@
                 inComing.Summary,
                 inComing.Notes,
                 inComing.PublishedId,
-                inComing.OriginalPublisherId,
                 inComing.WorkTypeId,
                 inComing.DocumentDate,
                 inComing.DeliveryDate,
