@@ -72,12 +72,24 @@ internal sealed class CreateContractCommandHandler
 
             try
 			{
-                var maxSerialNumber = await
-                       contractRefRepository.FindAllAsync(cancellationToken: cancellationToken);
+				var contractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!);
 
-                var SerialNum = maxSerialNumber.Any() ? maxSerialNumber.Max(x => x.SerialNumber) + 1 : 1;
+				// Check base contract exists
+				var contractBaseExists = await contractRepository.FindAsync(
+					x => x.Id == contractId,
+					cancellationToken);
 
-                var newContract = CreateContractRef(request , SerialNum);
+				// Get ContractRefs ONLY for this contract
+				var contractRefs = await contractRefRepository.FindAllAsync(
+					x => x.ContractId == contractId,
+					cancellationToken);
+
+				// Serial logic
+				var serialNum = contractRefs.Any()
+					? contractRefs.Max(x => x.SerialNumber) + 1
+					: 1;
+
+				var newContract = CreateContractRef(request , serialNum);
 				newContract.CreatedById = admin.Id;
 
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);
