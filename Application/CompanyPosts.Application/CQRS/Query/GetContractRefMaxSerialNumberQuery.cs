@@ -1,4 +1,4 @@
 ﻿namespace CompanyPost.Application.CQRS.Query
 {
-	public record GetContractRefMaxSerialNumberQuery : IRequest<int>;
+	public record GetContractRefMaxSerialNumberQuery(Guid contractId) : IRequest<int>;
 }
