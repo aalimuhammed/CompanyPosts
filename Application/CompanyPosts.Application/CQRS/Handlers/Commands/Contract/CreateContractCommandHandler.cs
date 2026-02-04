@@ -74,11 +74,6 @@ internal sealed class CreateContractCommandHandler
 			{
 				var contractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!);
 
-				// Check base contract exists
-				var contractBaseExists = await contractRepository.FindAsync(
-					x => x.Id == contractId,
-					cancellationToken);
-
 				// Get ContractRefs ONLY for this contract
 				var contractRefs = await contractRefRepository.FindAllAsync(
 					x => x.ContractId == contractId,
