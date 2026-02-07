@@ -21,7 +21,7 @@ internal sealed class CreatePostTransformerHandler
         if (await postTransofrmerRepository.FindAnyAsync(
             x => x.DocumentNumber == request.CreatePostTransofrmerDTO.DocumentNumber, cancellationToken))
         {
-            throw new Exception("Cannot have duplicated Document Number");
+            throw new Exception("لا يمكن تكرير رقم المستند");
         }
 
         var systUserRepository = _unitOfWork.Repository<SysUsers>();

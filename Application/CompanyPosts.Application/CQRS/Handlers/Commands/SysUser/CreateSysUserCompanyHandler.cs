@@ -53,7 +53,7 @@ internal sealed class CreateSysUserCompanyHandler
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-			 _jwTGenerator.CreateToken(sysUser.Id);
+			 _jwTGenerator.CreateToken(sysUser);
             _ = SendWelcomeEmailAsync(sysUser.Email, cancellationToken);
         }
         catch (InvalidOperationException)

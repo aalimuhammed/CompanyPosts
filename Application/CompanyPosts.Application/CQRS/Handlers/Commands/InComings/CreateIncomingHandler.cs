@@ -22,7 +22,7 @@ internal sealed class CreateIncomingHandler
 
         if (await incomingRepository.FindAnyAsync(x => x.DocumentNumber == request.createIncomingDTO.DocumentNumber))
         {
-            throw new Exception("Cannot have duplicated Document Number");
+            throw new Exception("لا يمكن تكرير رقم المستند");
         }
 
         var sysUserRepository = _unitOfWork.Repository<SysUsers>();

@@ -22,7 +22,7 @@ internal sealed class CreatePostInternalHandler
 
         if (await postInternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostInternalDTO.DocumentNumber))
         {
-            throw new Exception("Cannot have duplicated Document Number");
+            throw new Exception("لا يمكن تكرير رقم المستند");
         }
         var maxSerial = await postInternalRepository.MaxSerialNumber<PostInternal>(cancellationToken);
 		var postInternal = new PostInternal

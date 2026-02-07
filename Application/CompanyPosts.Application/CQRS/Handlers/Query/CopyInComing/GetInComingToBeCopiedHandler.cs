@@ -15,7 +15,7 @@
 
             var response = new InComingCopiedFromDTO(
                 Id: inComingEntity.Id,
-                ProjectId: inComingEntity.ProjectId,
+               // ProjectId: inComingEntity.ProjectId,
                 PublishedId: inComingEntity.PublishedId,
                 WorkTypeId: inComingEntity.WorkTypeId,
                 PostDocumentTypes: (int)inComingEntity.PostDocumentTypes,

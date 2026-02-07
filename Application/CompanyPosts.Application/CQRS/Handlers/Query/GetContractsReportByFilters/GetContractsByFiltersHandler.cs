@@ -21,13 +21,13 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 			IEnumerable<ContractReportResponseDTO> contractsResponse;
 
 			var includes = new List<Expression<Func<Contracts, object>>>
-	{
-		contract => contract.CreatedBy,
-		contract => contract.PersonOrgs,
-		contract => contract.Projects,
-		contract => contract.WorkType,
-		contract => contract.ContractAttachments
-	};
+				{
+					contract => contract.CreatedBy,
+					contract => contract.PersonOrgs,
+					contract => contract.Projects,
+					contract => contract.WorkType,
+					contract => contract.ContractAttachments
+				};
 
 			var predicate = PredicateBuilder.New<Contracts>(true);
 
@@ -76,7 +76,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 					c.purchase_order_ref,
 					c.Currency.GetDisplayName(),
 					c.PersonOrgs.Name,
-					c.HasReference ? "Attached" : "Original",
+					c.HasReference ? "ملحق" : "أساسي",
 					c.CreatedBy.UserName,
 					c.CreatedAt.ToString("yyyy-MM-dd"),
 					c.Value,
@@ -91,7 +91,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 				var Refincludes = new List<Expression<Func<ContractRef, object>>>
 						{
 							contract => contract.CreatedBy,
-							contract => contract.ContractAttachments
+							contract => contract.ContractAttachments,
+							contract => contract.Contract.Projects,
+							contract => contract.Contract.WorkType,
 						};
 				var predicateRef = PredicateBuilder.New<ContractRef>(true);
 
@@ -111,16 +113,16 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 
 				contractsResponse = contractRefs.Select(c => new ContractReportResponseDTO(
 					c.Id,
-					"",
+					c.Contract.Projects.Name,
 					c.ContractNumber,
-					$"{c.ContractNumber}-{c.SerialNumber}",
-					"",
+					$"{c.Contract.ContractNumber}-{c.SerialNumber}",
+					c.Contract.WorkType.Name,
 					c.Contract_Date.ToString("yyyy-MM-dd"),
-					"",
+					c.Contract.Department.GetDisplayName(),
 					"",
 					c.Currency.GetDisplayName(),
 					"",
-					"Attached",
+					"ملحق",
 					c.CreatedBy.UserName,
 					c.CreatedAt.ToString("yyyy-MM-dd"),
 					c.Value,

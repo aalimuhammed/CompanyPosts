@@ -19,7 +19,7 @@ internal sealed class CreatePostExternalHandler :
 		var postExternalRepository = _unitOfWork.Repository<PostExternal>();
         if (await postExternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostExternalDTO.DocumentNumber))
         {
-            throw new Exception("Cannot have duplicated Document Number");
+            throw new Exception("لا يمكن تكرير رقم المستند");
         }
 
         var sysUserRepo = _unitOfWork.Repository<SysUsers>();

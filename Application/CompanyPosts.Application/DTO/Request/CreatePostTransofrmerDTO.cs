@@ -12,7 +12,7 @@ public record CreatePostTransofrmerDTO(
 	string Summary,
 	string? Notes,
 	int DeliveryMethod,
-	string IncomingNumber,
+	string? IncomingNumber,
 	int DocumentType,
 	string RecivedName,
 	string? FollowingPerson,

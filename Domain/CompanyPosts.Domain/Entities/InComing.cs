@@ -10,7 +10,7 @@ public class InComing : BaseEntity, IDocumentEntity
 	public string? Notes { get; set; }
 	public DeliveryMethods DeliveryMethods { get; set; }
 	public DocumentType DocumentType { get; set; }
-	public Guid ProjectId { get; set; }
+	public Guid? ProjectId { get; set; }
 	public Publisher Projects { get; set; }  = null!;
 	//public Guid OriginalPublisherId { get; set; }
 	//public Publisher OriginalPublisher { get; set; } = null!;

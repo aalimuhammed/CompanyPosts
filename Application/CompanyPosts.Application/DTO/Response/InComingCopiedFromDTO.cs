@@ -2,7 +2,7 @@
 {
     public record InComingCopiedFromDTO(
         Guid Id ,
-        Guid ProjectId,
+        //Guid ProjectId,
         Guid PublishedId ,
         Guid WorkTypeId,
         int PostDocumentTypes , 

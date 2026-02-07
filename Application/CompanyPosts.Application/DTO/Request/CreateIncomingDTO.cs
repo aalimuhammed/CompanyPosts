@@ -4,7 +4,7 @@ public record CreateIncomingDTO(
 	string DocumentNumber,
 	Guid PublishedId,
 	Guid OriginalPublisherId,
-	Guid ProjectId,
+	Guid? ProjectId,
 	Guid WorkTypeId,
 	string? Subject,
 	DateTime DocumentDate,

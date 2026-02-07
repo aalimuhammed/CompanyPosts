@@ -22,11 +22,15 @@ namespace CompanyPost.Infrastructure.Services
 			IEnumerable<string> recipients, 
 			CancellationToken cancellationToken = default)
         {
-            var sendEmails = recipients.Select(
+			var recipientsList = recipients.ToList();
+			_logger.LogInformation("Sending bulk email to {Count} recipients", recipientsList.Count);
+
+			var sendEmails = recipients.Select(
 				recipient => SendEmailAsync(recipient, subject, htmlMessage, cancellationToken));
 
             await Task.WhenAll(sendEmails);
-        }
+			_logger.LogInformation("Email sent successfully to {Recipients}", recipients);
+		}
 
         public async Task<bool> SendEmailAsync(
 			string toEmail, 
