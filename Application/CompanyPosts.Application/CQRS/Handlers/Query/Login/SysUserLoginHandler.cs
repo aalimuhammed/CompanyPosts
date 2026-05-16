@@ -35,6 +35,6 @@ internal class SysUserLoginHandler : IRequestHandler<SysUserLoginQuery, AuthResu
 		}
 
 		var token = _jwtGenerator.CreateToken(user);
-		return new AuthResultDTO(true , "Success" , token);
+		return new AuthResultDTO(true , "Success" , token , user.UserName);
 	}
 }
