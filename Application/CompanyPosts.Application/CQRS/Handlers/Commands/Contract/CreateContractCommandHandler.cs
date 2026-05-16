@@ -20,6 +20,7 @@ internal sealed class CreateContractCommandHandler
         var contractNumberExists = await contractRepository.FindAnyAsync(
                 x => x.ContractNumber == request.CreatrContractDTO.ContractNum,
                 cancellationToken);
+
         if (contractNumberExists)
         {
             throw new Exception("رقم العقد موجود");
@@ -176,6 +177,7 @@ internal sealed class CreateContractCommandHandler
 				item,
 				"contracts",
 				cancellationToken);
+
 			var attachment = new ContractAttachments
 			{
 				ContractRefId = contractId,

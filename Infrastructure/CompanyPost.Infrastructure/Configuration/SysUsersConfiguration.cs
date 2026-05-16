@@ -23,8 +23,8 @@ internal sealed class SysUsersConfiguration : IEntityTypeConfiguration<SysUsers>
 			.HasMaxLength(50)
 			.IsRequired();
 
-		builder.Property(builder => builder.IsPasswordDefault)
-			.HasDefaultValueSql("1");
+		//builder.Property(builder => builder.IsPasswordDefault)
+		//	.HasDefaultValueSql("1");
 
         builder.HasOne(builder => builder.Company)
             .WithMany(t => t.SysUsers)

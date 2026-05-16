@@ -6,7 +6,7 @@ public class SysUsers : BaseEntity , IHasName
 	public string Password { get; set; } = string.Empty;
 	public string Email { get; set; } = string.Empty;
 	public string HrCode { get; set; } = string.Empty;
-    public bool IsPasswordDefault { get; set; } = true;
+  //  public bool IsPasswordDefault { get; set; } = true;
 	public bool IsAdmin { get; set; } = false;
 	public bool IsVerified { get; set; } = false;
 	public Guid? CompanyId { get; set; }

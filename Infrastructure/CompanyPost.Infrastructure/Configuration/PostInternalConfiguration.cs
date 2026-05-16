@@ -10,9 +10,6 @@ internal sealed class PostInternalConfiguration : IEntityTypeConfiguration<PostI
 		builder.Property(x => x.SerialNumber)
 			.IsRequired();
 
-		builder.Property(x => x.Subject)
-			.HasMaxLength(100);
-
 		builder.Property(x => x.AboutWork)
 			.HasMaxLength(50);
 

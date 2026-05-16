@@ -4,32 +4,29 @@ internal sealed class PostExternalConfiguration : IEntityTypeConfiguration<PostE
 	public void Configure(EntityTypeBuilder<PostExternal> builder)
 	{
 		builder.Property(x => x.DocumentNumber)
-			.HasMaxLength(50)
-			.IsRequired();
+				.HasMaxLength(50)
+				.IsRequired();
 
 		builder.Property(x => x.SerialNumber)
-			.IsRequired();
-
-		builder.Property(x => x.Subject)
-			.HasMaxLength(100);
+				.IsRequired();
 
 		builder.Property(x => x.AboutWork)
-			.HasMaxLength(50);
+			   .HasMaxLength(50);
 
 		builder.Property(x => x.DocumentDate)
-			.IsRequired();
+			   .IsRequired();
 
 		builder.Property(x => x.DeliveryDate)
-			.IsRequired();
+			   .IsRequired();
 
 		//builder.Property(x => x.IncomingNumber)
 		//		.HasMaxLength(50)
 		//		.IsRequired();
 
 		builder.HasOne(builder => builder.Publisher)
-			.WithMany(t => t.PublishedPostExternals)
-			.HasForeignKey(builder => builder.PublishedId)
-			.OnDelete(DeleteBehavior.Restrict);
+				.WithMany(t => t.PublishedPostExternals)
+				.HasForeignKey(builder => builder.PublishedId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasOne(builder => builder.RecievedFrom)
 				.WithMany(t => t.RecievedPostExternals)
@@ -37,9 +34,9 @@ internal sealed class PostExternalConfiguration : IEntityTypeConfiguration<PostE
 				.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasOne(builder => builder.WorkType)
-		.WithMany(t => t.PostExternals)
-		.HasForeignKey(builder => builder.WorkTypeId)
-		.OnDelete(DeleteBehavior.Restrict);
+				.WithMany(t => t.PostExternals)
+				.HasForeignKey(builder => builder.WorkTypeId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasIndex(x => x.DocumentNumber)
 			   .IsUnique();

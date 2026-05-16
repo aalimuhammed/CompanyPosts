@@ -10,9 +10,6 @@ internal sealed class InComingConfiguration : IEntityTypeConfiguration<InComing>
 		builder.Property(x => x.SerialNumber)
 			.IsRequired();
 
-		builder.Property(x => x.Subject)
-			.HasMaxLength(100);
-
 		builder.Property(x => x.DocumentDate)
 			.IsRequired();
 

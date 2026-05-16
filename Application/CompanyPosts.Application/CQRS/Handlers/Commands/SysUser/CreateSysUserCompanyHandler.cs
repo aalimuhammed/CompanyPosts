@@ -1,4 +1,5 @@
 ﻿using CompanyPost.Application.CQRS.Commands.SysUser;
+using MediatR;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.SysUser;
 internal sealed class CreateSysUserCompanyHandler
@@ -52,9 +53,14 @@ internal sealed class CreateSysUserCompanyHandler
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 			await _unitOfWork.CommitTransactionAsync(cancellationToken);
+            await SendWelcomeEmailAsync(
+				sysUser.Name,
+				sysUser.UserName,
+				sysUser.HrCode,
+				sysUser.Email, 
+				cancellationToken);
 
-			 _jwTGenerator.CreateToken(sysUser.Id);
-            _ = SendWelcomeEmailAsync(sysUser.Email, cancellationToken);
+            _jwTGenerator.CreateToken(sysUser.Id);
         }
         catch (InvalidOperationException)
         {
@@ -68,17 +74,22 @@ internal sealed class CreateSysUserCompanyHandler
 
 		return Unit.Value;
 	}
-    private async Task SendWelcomeEmailAsync(string recipientEmail, CancellationToken cancellationToken)
+    private async Task SendWelcomeEmailAsync(
+		string name,
+		string userName,
+		string hrCode,
+		string recipientEmail, 
+		CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(recipientEmail)) return;
 
         var subject = "Welcome to Company Post";
-        var html = @"
-				<p>Dear User,</p>
-				<p>Your account has been successfully created.</p>
-				<p>Please use the link below to verify your account :</p>
-				<p><a href='http://192.168.121.29:3000/login' target='_blank'>Click here to verify your account</a></p>
-				<p>Best regards,<br/>The Support Team</p>";
+        var html = $@"
+				<p>Dear {name},</p>
+				<p>Please be informed that your account has been successfully created under the username {userName} with Hr Code {hrCode}</p>
+				<p>Kindly note that your account is currently pending approval. You will be notified once it has been reviewed and activated by the administrator.</p>
+				<p>Thank you for your patience.</p>
+				<p>Best regards,<br/>The Software Team</p>";
 
         try
         {
