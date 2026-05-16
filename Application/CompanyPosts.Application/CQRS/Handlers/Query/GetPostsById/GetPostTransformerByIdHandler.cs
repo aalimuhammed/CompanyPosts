@@ -28,14 +28,16 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.Notes,
                 post.CompanyId,
                 post.PublishedId,
-                post.RecievedFromId,
-                post.WorkTypeId,
+                post.RecievedFromId,   //received
+				post.WorkTypeId,
                 post.DocumentDate,
                 post.DeliveryDate,
                 (int)post.DeliveryMethods , 
                 post.IncomingNumber,
                 post.PostNumber,
-                post.RecivedByName);
+                post.RecivedByName,
+                (int)post.PostDocumentTypes ,
+                (int)post.DocumentType);
 
                 return selectedPostDto;
         }

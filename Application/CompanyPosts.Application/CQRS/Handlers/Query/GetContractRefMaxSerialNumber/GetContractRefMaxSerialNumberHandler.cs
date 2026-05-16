@@ -11,10 +11,14 @@
 		{
 			var contractRefRepository = _unitOfWork.Repository<ContractRef>();
 
-			var maxSerialNumber = await
-				contractRefRepository.FindAllAsync(cancellationToken: cancellationToken);
-
-			return maxSerialNumber.Any() ? maxSerialNumber.Max(x => x.SerialNumber) + 1 : 1;
+			var contractRefs = await contractRefRepository.FindAllAsync(
+					x => x.ContractId == request.contractId,
+					cancellationToken); 
+			
+			var serialNum = contractRefs.Any()
+					? contractRefs.Max(x => x.SerialNumber) + 1
+					: 1;
+			return serialNum;
 		}
 	}
 }

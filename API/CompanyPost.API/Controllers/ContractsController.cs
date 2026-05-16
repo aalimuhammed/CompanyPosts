@@ -19,10 +19,10 @@ public class ContractsController : ControllerBase
 		return Ok(result);
 	}
 
-	[HttpGet("GetContractRefMaxSerialNumber")]
-	public async Task<IActionResult> GetContractRefMaxSerialNumberAsync(CancellationToken cancellationToken)
+	[HttpGet("GetContractRefMaxSerialNumber/{id}")]
+	public async Task<IActionResult> GetContractRefMaxSerialNumberAsync(Guid id , CancellationToken cancellationToken)
 	{
-		var query = new GetContractRefMaxSerialNumberQuery();
+		var query = new GetContractRefMaxSerialNumberQuery(id);
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
@@ -48,7 +48,7 @@ public class ContractsController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return BadRequest(new ApiResponse { Success = false, Message = $"An error occurred while saving the data: {ex.Message}" });
+			return BadRequest(new ApiResponse { Success = false, Message = $"{ex.Message}" });
 		}
 	}
 

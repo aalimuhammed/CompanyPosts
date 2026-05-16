@@ -22,7 +22,7 @@ internal sealed class CreateIncomingHandler
 
         if (await incomingRepository.FindAnyAsync(x => x.DocumentNumber == request.createIncomingDTO.DocumentNumber))
         {
-            throw new Exception("Cannot have duplicated Document Number");
+            throw new Exception("لا يمكن تكرير رقم المستند");
         }
 
         var sysUserRepository = _unitOfWork.Repository<SysUsers>();
@@ -43,14 +43,15 @@ internal sealed class CreateIncomingHandler
 			SaveDate = request.createIncomingDTO.SaveDate,
 			DocumentType = (DocumentType)request.createIncomingDTO.DocumentType,
 			PostDocumentTypes = (PostDocumentTypes)request.createIncomingDTO.PostDocumentType,
-			OriginalPublisherId = request.createIncomingDTO.OriginalPublisherId,
+			//OriginalPublisherId = request.createIncomingDTO.OriginalPublisherId,
 			PublishedId = request.createIncomingDTO.PublishedId,
 			WorkTypeId = request.createIncomingDTO.WorkTypeId,
 			CreatedById = admin.Id,
 			InComingNumber = request.createIncomingDTO.InComingNumber,
 			Status = (Status) request.createIncomingDTO.StatusMethod,
-			OldReferenceNumber = request.createIncomingDTO.OldRef
-        };
+			OldReferenceNumber = request.createIncomingDTO.OldRef,
+			OriginalSender = request.createIncomingDTO.OriginalSender
+		};
 
 		var inComingId = incoming.Id;
 		await _unitOfWork.BeginTransactionAsync();

@@ -6,13 +6,16 @@ internal class JwtGenerator : IJwTGenerator
 	{
 		_jwtSettings = jwtSettings.Value;
 	}
-	public string CreateToken(Guid userId , int? expirationInMinutes = null)
+	public string CreateToken(SysUsers sysUsers , int? expirationInMinutes = null)
 	{
 		var claims = new List<Claim>
 		{
-			new(ClaimTypes.NameIdentifier, userId.ToString()),
-			new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-			new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+			  new Claim(JwtRegisteredClaimNames.Sub, sysUsers.Id.ToString()),
+			  new Claim(JwtRegisteredClaimNames.UniqueName, sysUsers.Name),
+			  new Claim(JwtRegisteredClaimNames.Email, sysUsers.Email),
+			  new Claim("username", sysUsers.Name),
+
+			  new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
 		};
 
 		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));

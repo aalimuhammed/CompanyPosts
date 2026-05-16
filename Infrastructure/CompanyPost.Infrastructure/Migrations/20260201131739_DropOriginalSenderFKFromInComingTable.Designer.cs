@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260201131739_DropOriginalSenderFKFromInComingTable")]
+    partial class DropOriginalSenderFKFromInComingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -401,16 +404,11 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("old_reference_number");
 
-                    b.Property<string>("OriginalSender")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("original_sender");
-
                     b.Property<int>("PostDocumentTypes")
                         .HasColumnType("int")
                         .HasColumnName("post_document_types");
 
-                    b.Property<Guid?>("ProjectId")
+                    b.Property<Guid>("ProjectId")
                         .HasColumnType("char(36)")
                         .HasColumnName("project_id");
 
@@ -435,7 +433,8 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("status");
 
                     b.Property<string>("Subject")
-                        .HasColumnType("longtext")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("subject");
 
                     b.Property<string>("Summary")
@@ -847,6 +846,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
 
+                    b.Property<int>("Department")
+                        .HasColumnType("int")
+                        .HasColumnName("department");
+
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("document_date");
@@ -857,10 +860,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("document_number");
 
-                    b.Property<int>("DocumentType")
-                        .HasColumnType("int")
-                        .HasColumnName("document_type");
-
                     b.Property<string>("FollowingPerson")
                         .HasColumnType("longtext")
                         .HasColumnName("following_person");
@@ -870,6 +869,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("in_coming_number");
 
                     b.Property<string>("IncomingNumber")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("incoming_number");
@@ -1193,6 +1193,12 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("is_admin");
 
+                    b.Property<bool>("IsPasswordDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_password_default")
+                        .HasDefaultValueSql("1");
+
                     b.Property<bool>("IsVerified")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("is_verified");
@@ -1359,6 +1365,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("IncomingProjects")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_in_coming_publishers_project_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "Publisher")

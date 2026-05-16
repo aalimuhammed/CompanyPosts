@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260207113140_MakeInComingNumberNullableInPostTransformerTable")]
+    partial class MakeInComingNumberNullableInPostTransformerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -435,7 +438,8 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("status");
 
                     b.Property<string>("Subject")
-                        .HasColumnType("longtext")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("subject");
 
                     b.Property<string>("Summary")
@@ -1192,6 +1196,12 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("is_admin");
+
+                    b.Property<bool>("IsPasswordDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_password_default")
+                        .HasDefaultValueSql("1");
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("tinyint(1)")

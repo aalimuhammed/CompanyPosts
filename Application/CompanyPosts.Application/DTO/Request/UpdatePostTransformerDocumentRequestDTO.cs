@@ -4,21 +4,22 @@ namespace CompanyPost.Application.DTO.Request
 {
     public record UpdatePostTransformerDocumentRequestDTO(
         string documentNumber,
-        string subject,
+        string? subject,
         DateTime documentDate,
         DateTime deliveryDate,
         Guid companyId,
         Guid publishedId,
         Guid receivedFromId,
         Guid workTypeId,
-        string notes,
-        string summary,
-        int department,
+        string? notes,
+        string? summary,
+        int? department,
         int deliveryMethod,
-        string recivedByName ,
-        string postNumber,
-        string inComingNumber,
-        int documentType)
+        string? recivedByName ,
+        string? postNumber,
+        string? inComingNumber,
+        int? documentType ,
+		List<IFormFile>? Attachments)
         : UpdatePostDocumentRequestDTO(
             documentNumber,
             subject,
@@ -31,5 +32,6 @@ namespace CompanyPost.Application.DTO.Request
             notes,
             summary,
             department,
-            deliveryMethod);
+            deliveryMethod , 
+            Attachments);
 }

@@ -65,6 +65,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPurchaseOrdersReportByF
                     p.Value,
                     p.PurchaseOrderAttachments?.Select(a => $"/purchaseorders/{a.FileName}").ToList() ?? new List<string>()
                 ));
+
             return purchaseOrderResponse;
         }
     }

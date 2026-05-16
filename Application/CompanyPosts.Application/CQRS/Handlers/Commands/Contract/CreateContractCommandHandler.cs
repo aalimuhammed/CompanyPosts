@@ -30,19 +30,9 @@ internal sealed class CreateContractCommandHandler
 
         if (request.CreatrContractDTO.HasReference == ContractTypes.Original)
 		{
-			var purchaseOrderRefExists = await contractRepository.FindAnyAsync(
-				x => x.purchase_order_ref == request.CreatrContractDTO.PurchaseOrdNumRef, 
-				cancellationToken);
-
-			if (purchaseOrderRefExists)
-			{
-				throw new Exception("Purchase Order Reference already exists.");
-            }
-
             try
 			{
-                var maxSerialNumber = await
-						contractRepository.FindAllAsync(cancellationToken: cancellationToken);
+                var maxSerialNumber = await contractRepository.FindAllAsync(cancellationToken: cancellationToken);
 
                 var SerialNum =  maxSerialNumber.Any() ? maxSerialNumber.Max(x => x.SerialNumber) + 1 : 1;
                 var newContract = CreateContract(request , SerialNum);
@@ -73,12 +63,19 @@ internal sealed class CreateContractCommandHandler
 
             try
 			{
-                var maxSerialNumber = await
-                       contractRefRepository.FindAllAsync(cancellationToken: cancellationToken);
+				var contractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!);
 
-                var SerialNum = maxSerialNumber.Any() ? maxSerialNumber.Max(x => x.SerialNumber) + 1 : 1;
+				// Get ContractRefs ONLY for this contract
+				var contractRefs = await contractRefRepository.FindAllAsync(
+					x => x.ContractId == contractId,
+					cancellationToken);
 
-                var newContract = CreateContractRef(request , SerialNum);
+				// Serial logic
+				var serialNum = contractRefs.Any()
+					? contractRefs.Max(x => x.SerialNumber) + 1
+					: 1;
+
+				var newContract = CreateContractRef(request , serialNum);
 				newContract.CreatedById = admin.Id;
 
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);

@@ -16,8 +16,10 @@ namespace CompanyPost.Application.DTO.Response
     int DeliveryMethod,
     string InComingNumber,  
     string PostNumber, 
-    string RecivedByName
-            ) : SelectedPostByIdDTO(
+    string RecivedByName ,
+    int PostDocumentType,
+    int DocumentType
+			) : SelectedPostByIdDTO(
                 DocumentNumber,
                 Subject,
                 Summary,
@@ -28,6 +30,7 @@ namespace CompanyPost.Application.DTO.Response
                 WorkTypeId,
                 DocumentDate,
                 DeliveryDate,
-                DeliveryMethod
-            );
+                DeliveryMethod,
+				PostDocumentType
+			);
 }

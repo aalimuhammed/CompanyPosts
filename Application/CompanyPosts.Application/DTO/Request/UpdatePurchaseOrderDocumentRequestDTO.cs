@@ -7,5 +7,6 @@
         Guid SupplierId,
         Guid ProjectId,
         DateTime PurchaseOrderDate,
-        int DepartmentId);
+        int DepartmentId,
+		List<IFormFile>? Attachments);
 }

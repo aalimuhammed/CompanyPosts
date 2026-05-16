@@ -25,7 +25,7 @@ namespace CompanyPost.API.Controllers
             => Ok(await _mediator.Send(new GetPostExternalByIdQuery(id), ct));
 
         [HttpPut("post-external/{id}")]
-        public async Task<IActionResult> UpdatePostExternalDocument(Guid id, [FromBody] UpdatePostExternalDocumentRequestDTO dto, CancellationToken ct)
+        public async Task<IActionResult> UpdatePostExternalDocument(Guid id, [FromForm] UpdatePostExternalDocumentRequestDTO dto, CancellationToken ct)
             => Ok(await _mediator.Send(new UpdatePostExternalDocumentCommand(id, dto), ct));
 
         [HttpDelete("post-external/{id}")]
@@ -44,7 +44,7 @@ namespace CompanyPost.API.Controllers
             => Ok(await _mediator.Send(new GetPostInternalByIdQuery(id), ct));
 
         [HttpPut("post-internal/{id}")]
-        public async Task<IActionResult> UpdatePostInternalDocument(Guid id, [FromBody] UpdatePostInternalDocumentRequestDTO dto, CancellationToken ct)
+        public async Task<IActionResult> UpdatePostInternalDocument(Guid id, [FromForm] UpdatePostInternalDocumentRequestDTO dto, CancellationToken ct)
             => Ok(await _mediator.Send(new UpdatePostInternalDocumentCommand(id, dto), ct));
         #endregion
 
@@ -59,7 +59,7 @@ namespace CompanyPost.API.Controllers
             => Ok(await _mediator.Send(new GetPostTransformerByIdQuery(id), ct));
 
         [HttpPut("post-transformer/{id}")]
-        public async Task<IActionResult> UpdatePostTransformerDocuments(Guid id, [FromBody] UpdatePostTransformerDocumentRequestDTO dto, CancellationToken ct)
+        public async Task<IActionResult> UpdatePostTransformerDocuments(Guid id, [FromForm] UpdatePostTransformerDocumentRequestDTO dto, CancellationToken ct)
             => Ok(await _mediator.Send(new UpdatePostTransformerDocumentCommand(id, dto), ct));
         #endregion
 
@@ -74,7 +74,7 @@ namespace CompanyPost.API.Controllers
             => Ok(await _mediator.Send(new GetInComingByIdQuery(id), ct));
 
         [HttpPut("incoming/{id}")]
-        public async Task<IActionResult> UpdateIncomingDocument(Guid id, [FromBody] UpdateInComingDocumentRequestDTO dto, CancellationToken ct)
+        public async Task<IActionResult> UpdateIncomingDocument(Guid id, [FromForm] UpdateInComingDocumentRequestDTO dto, CancellationToken ct)
             => Ok(await _mediator.Send(new UpdateInComingDocumentCommand(id, dto), ct));
         #endregion
 
@@ -96,7 +96,7 @@ namespace CompanyPost.API.Controllers
             => Ok(await _mediator.Send(new GetPurchaseOrderByIdQuery(id), ct));
 
         [HttpPut("purchase-orders/{id}")]
-        public async Task<IActionResult> UpdatePurchaseOrderDocument(Guid id, [FromBody] UpdatePurchaseOrderDocumentRequestDTO dto, CancellationToken ct)
+        public async Task<IActionResult> UpdatePurchaseOrderDocument(Guid id, [FromForm] UpdatePurchaseOrderDocumentRequestDTO dto, CancellationToken ct)
             => Ok(await _mediator.Send(new UpdatePurchaseOrderDocumentCommand(id, dto), ct));
 
         [HttpDelete("purchase-orders/{id}")]

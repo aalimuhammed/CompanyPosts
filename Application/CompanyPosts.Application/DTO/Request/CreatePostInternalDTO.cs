@@ -19,4 +19,4 @@ public record CreatePostInternalDTO(
     string? FollowingPerson,
     List<IFormFile>? Attachments,
 	int StatusMethod,
-	string OldRef);
+	string? OldRef);

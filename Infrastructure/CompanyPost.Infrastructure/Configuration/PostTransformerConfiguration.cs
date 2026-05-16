@@ -23,7 +23,7 @@ internal sealed class PostTransformerConfiguration :
 
 		builder.Property(x => x.IncomingNumber)
 			.HasMaxLength(50)
-			.IsRequired();
+			.IsRequired(false);
 
 		builder.Property(x => x.PostNumber)
 			.HasMaxLength(50)

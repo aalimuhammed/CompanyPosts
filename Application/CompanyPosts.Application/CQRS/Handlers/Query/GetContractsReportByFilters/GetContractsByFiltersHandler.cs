@@ -11,73 +11,128 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
         {
               _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<ContractReportResponseDTO>> Handle(
-            GetContractsByFiltersQuery request, 
-            CancellationToken cancellationToken)
-        {
-            var contractRepository = _unitOfWork.Repository<Contracts>();
+		public async Task<IEnumerable<ContractReportResponseDTO>> Handle(
+	GetContractsByFiltersQuery request,
+	CancellationToken cancellationToken)
+		{
+			var contractRepository = _unitOfWork.Repository<Contracts>();
+			var contractRefRepository = _unitOfWork.Repository<ContractRef>();
 
-            var includes = new List<Expression<Func<Contracts, object>>>
-                     {
-                         contract => contract.CreatedBy,
-                         contract => contract.PersonOrgs,
-                         contract => contract.Projects,
-                         contract => contract.WorkType,
-                         contract => contract.ContractAttachments
-                     };
+			IEnumerable<ContractReportResponseDTO> contractsResponse;
 
-            var predicate = PredicateBuilder.New<Contracts>(true);
+			var includes = new List<Expression<Func<Contracts, object>>>
+				{
+					contract => contract.CreatedBy,
+					contract => contract.PersonOrgs,
+					contract => contract.Projects,
+					contract => contract.WorkType,
+					contract => contract.ContractAttachments
+				};
 
-            if (request.DTO.ProjectId.HasValue)
-                predicate = predicate.And(c => c.ProjectId == request.DTO.ProjectId.Value);
+			var predicate = PredicateBuilder.New<Contracts>(true);
 
-            if (request.DTO.PublisherId.HasValue)
-                predicate = predicate.And(c => c.PersonOrgId == request.DTO.PublisherId.Value);
+			if (request.DTO.ProjectId.HasValue)
+				predicate = predicate.And(c => c.ProjectId == request.DTO.ProjectId.Value);
 
-            if (request.DTO.WorkTypeId.HasValue)
-                predicate = predicate.And(c => c.WorkTypeId == request.DTO.WorkTypeId.Value);
+			if (request.DTO.PublisherId.HasValue)
+				predicate = predicate.And(c => c.PersonOrgId == request.DTO.PublisherId.Value);
 
-            if (Enum.TryParse<Departments>(request.DTO.DepartmentId, out var department))
-                predicate = predicate.And(c => c.Department == department);
+			if (request.DTO.WorkTypeId.HasValue)
+				predicate = predicate.And(c => c.WorkTypeId == request.DTO.WorkTypeId.Value);
 
-            if (!string.IsNullOrEmpty(request.DTO.ContractRef))
-                predicate = predicate.And(c => c.ContractNumber == request.DTO.ContractRef);
+			if (Enum.TryParse<Departments>(request.DTO.DepartmentId, out var department))
+				predicate = predicate.And(c => c.Department == department);
 
-            if (!string.IsNullOrEmpty(request.DTO.PurchaseOrderRef))
-                predicate = predicate.And(c => c.purchase_order_ref == request.DTO.PurchaseOrderRef);
+			if (!string.IsNullOrEmpty(request.DTO.ContractRef))
+				predicate = predicate.And(c => c.ContractNumber == request.DTO.ContractRef);
 
-            if (request.DTO.StartDate.HasValue)
-                predicate = predicate.And(c => c.Contract_Date >= request.DTO.StartDate.Value);
+			if (!string.IsNullOrEmpty(request.DTO.PurchaseOrderRef))
+				predicate = predicate.And(c => c.purchase_order_ref == request.DTO.PurchaseOrderRef);
 
-            if (request.DTO.EndDate.HasValue)
-                predicate = predicate.And(c => c.Contract_Date <= request.DTO.EndDate.Value);
+			if (request.DTO.StartDate.HasValue)
+				predicate = predicate.And(c => c.Contract_Date >= request.DTO.StartDate.Value);
 
-            var contracts = await contractRepository.FindWithIncludeAsync(
-                predicate: predicate ,
-                includes: includes , 
-                cancellationToken);
+			if (request.DTO.EndDate.HasValue)
+				predicate = predicate.And(c => c.Contract_Date <= request.DTO.EndDate.Value);
 
-            var contractsResponse = contracts.Select(c => new ContractReportResponseDTO(
-                    c.Id,
-                    c.Projects.Name,
-                    c.ContractNumber,
-                   c.HasReference
-                    ? c.SerialNumber.ToString()
-                    : $"{c.ContractNumber}-{c.SerialNumber}",
-                    c.WorkType.Name,
-                    c.Contract_Date.ToString("yyyy-MM-dd"),
-                    c.Department.GetDisplayName(),
-                    c.purchase_order_ref,
-                    c.Currency.GetDisplayName(),
-                    c.PersonOrgs.Name,
-                    c.HasReference ? "Attached" : "Original",
-                    c.CreatedBy.UserName,
-                    c.CreatedAt.ToString("yyyy-MM-dd"),
-                    c.Value,
-                    c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList() ?? new List<string>()
-                ));
+			var contracts = await contractRepository.FindWithIncludeAsync(
+				predicate: predicate,
+				includes: includes,
+				cancellationToken);
 
-            return contractsResponse;
-        }
-    }
+			// ✅ CASE 1: Contracts found
+			if (contracts.Any())
+			{
+				contractsResponse = contracts.Select(c => new ContractReportResponseDTO(
+					c.Id,
+					c.Projects.Name,
+					c.ContractNumber,
+					c.HasReference
+						? c.SerialNumber.ToString()
+						: $"{c.ContractNumber}-{c.SerialNumber}",
+					c.WorkType.Name,
+					c.Contract_Date.ToString("yyyy-MM-dd"),
+					c.Department.GetDisplayName(),
+					c.purchase_order_ref,
+					c.Currency.GetDisplayName(),
+					c.PersonOrgs.Name,
+					c.HasReference ? "ملحق" : "أساسي",
+					c.CreatedBy.UserName,
+					c.CreatedAt.ToString("yyyy-MM-dd"),
+					c.Value,
+					c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
+						?? new List<string>()
+				));
+			}
+			// ✅ CASE 2: No contracts → fallback to ContractRef
+			else
+			{
+
+				var Refincludes = new List<Expression<Func<ContractRef, object>>>
+						{
+							contract => contract.CreatedBy,
+							contract => contract.ContractAttachments,
+							contract => contract.Contract.Projects,
+							contract => contract.Contract.WorkType,
+						};
+				var predicateRef = PredicateBuilder.New<ContractRef>(true);
+
+				if (!string.IsNullOrEmpty(request.DTO.ContractRef))
+					predicateRef = predicateRef.And(c => c.ContractNumber == request.DTO.ContractRef);
+
+				if (request.DTO.StartDate.HasValue)
+					predicateRef = predicateRef.And(c => c.Contract_Date >= request.DTO.StartDate.Value);
+
+				if (request.DTO.EndDate.HasValue)
+					predicateRef = predicateRef.And(c => c.Contract_Date <= request.DTO.EndDate.Value);
+
+				var contractRefs = await contractRefRepository.FindWithIncludeAsync(
+					predicate: predicateRef,
+					includes: Refincludes,
+					cancellationToken);
+
+				contractsResponse = contractRefs.Select(c => new ContractReportResponseDTO(
+					c.Id,
+					c.Contract.Projects.Name,
+					c.ContractNumber,
+					$"{c.Contract.ContractNumber}-{c.SerialNumber}",
+					c.Contract.WorkType.Name,
+					c.Contract_Date.ToString("yyyy-MM-dd"),
+					c.Contract.Department.GetDisplayName(),
+					"",
+					c.Currency.GetDisplayName(),
+					"",
+					"ملحق",
+					c.CreatedBy.UserName,
+					c.CreatedAt.ToString("yyyy-MM-dd"),
+					c.Value,
+					c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
+						?? new List<string>()
+				));
+			}
+
+			return contractsResponse;
+		}
+
+	}
 }

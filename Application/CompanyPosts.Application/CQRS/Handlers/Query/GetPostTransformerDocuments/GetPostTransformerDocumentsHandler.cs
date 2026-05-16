@@ -11,7 +11,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public async Task<IEnumerable<PostDocumentsDTO>> Handle(GetPostTransformerDocumentsQuery request, CancellationToken cancellationToken)
+		public async Task<IEnumerable<PostDocumentsDTO>> Handle(
+			GetPostTransformerDocumentsQuery request, 
+			CancellationToken cancellationToken)
 		{
 			var postRepository = _unitOfWork.Repository<PostTransformer>();
 
@@ -48,6 +50,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
 
             var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
 
+			posts.OrderBy(x => x.SerialNumber);
+
 			var postDTOs = posts.Select(p => new PostDocumentsDTO(
 				p.Id,
 				p.SerialNumber,
@@ -68,6 +72,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
 				p.RecievedFrom.Name,
                 p.CreatedAt.ToString("yyyy-MM-dd")
             ));
+
 			return postDTOs;
 		}
 	}

@@ -7,6 +7,6 @@
         Guid WorkTypeId,
         Guid SupplierId,
         Guid ProjectId,
-        string PurchaseOrderDate,
+        string? PurchaseOrderDate,
         int DepartmentId);
 }

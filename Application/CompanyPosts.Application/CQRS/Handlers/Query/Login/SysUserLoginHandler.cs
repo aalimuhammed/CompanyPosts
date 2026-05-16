@@ -34,7 +34,7 @@ internal class SysUserLoginHandler : IRequestHandler<SysUserLoginQuery, AuthResu
 			return new AuthResultDTO(false, "Invalid password or email");
 		}
 
-		var token = _jwtGenerator.CreateToken(user.Id);
-		return new AuthResultDTO(true , "Success" , token , user.UserName);
+		var token = _jwtGenerator.CreateToken(user);
+		return new AuthResultDTO(true , "Success" , token);
 	}
 }
