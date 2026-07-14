@@ -1,5 +1,4 @@
 ﻿using CompanyPost.Application.CQRS.Commands.SysUser;
-using MediatR;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.SysUser;
 internal sealed class CreateSysUserCompanyHandler
@@ -52,7 +51,9 @@ internal sealed class CreateSysUserCompanyHandler
 			await sysUserRepository.AddAsync(sysUser,cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
 			await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
             await SendWelcomeEmailAsync(
 				sysUser.Name,
 				sysUser.UserName,
@@ -60,7 +61,8 @@ internal sealed class CreateSysUserCompanyHandler
 				sysUser.Email, 
 				cancellationToken);
 
-            _jwTGenerator.CreateToken(sysUser);
+			 _jwTGenerator.CreateToken(sysUser);
+           // _ = SendWelcomeEmailAsync(sysUser.Name, sysUser.UserName, sysUser.HrCode, sysUser.Email, cancellationToken);
         }
         catch (InvalidOperationException)
         {
