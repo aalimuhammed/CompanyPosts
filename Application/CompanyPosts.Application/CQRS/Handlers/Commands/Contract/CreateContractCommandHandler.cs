@@ -4,21 +4,24 @@ internal sealed class CreateContractCommandHandler
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
-	public CreateContractCommandHandler(
+    private readonly IEmailServices _emailServices;
+    public CreateContractCommandHandler(
 		IUnitOfWork unitOfWork,
-		IFileService saveAttachment)
+		IFileService saveAttachment,
+        IEmailServices emailServices)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
+		_emailServices = emailServices;
 	}
 	public async Task<Unit> Handle(CreateContractCommand request, CancellationToken cancellationToken)
 	{
         var contractRepository = _unitOfWork.Repository<Contracts>();
 		
-		var adminRepository = _unitOfWork.Repository<SysUsers>();
+		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
 
         var contractNumberExists = await contractRepository.FindAnyAsync(
-                x => x.ContractNumber == request.CreatrContractDTO.ContractNum,
+                x => x.ContractNumber == request.CreateContractDTO.ContractNum,
                 cancellationToken);
 
         if (contractNumberExists)
@@ -26,9 +29,9 @@ internal sealed class CreateContractCommandHandler
             throw new Exception("رقم العقد موجود");
         }
 
-        var admin = await adminRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+        var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
-        if (request.CreatrContractDTO.HasReference == ContractTypes.Original)
+        if (request.CreateContractDTO.HasReference == ContractTypes.Original)
 		{
             try
 			{
@@ -42,15 +45,39 @@ internal sealed class CreateContractCommandHandler
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);
                 await contractRepository.AddAsync(newContract);
 
-				if (request.CreatrContractDTO.Attachments is not null && request.CreatrContractDTO.Attachments.Any())
+				if (request.CreateContractDTO.Attachments is not null && request.CreateContractDTO.Attachments.Any())
                 {
                     await AddAttachments(newContract.Id,
-                        request.CreatrContractDTO.Attachments, cancellationToken);
+                        request.CreateContractDTO.Attachments, cancellationToken);
                 }
 
-				await _unitOfWork.SaveChangesAsync();
+				await _unitOfWork.SaveChangesAsync(cancellationToken);
 				await _unitOfWork.CommitTransactionAsync(cancellationToken);
-			}
+
+                if (request.CreateContractDTO.EmailContent is not null &&
+                request.CreateContractDTO.SentEmailsTo is not null)
+                {
+					var sysUsers = await sysUserRepository.FindAllAsync(
+						x => request.CreateContractDTO.SentEmailsTo.Contains(x.Id),
+						cancellationToken);
+
+                    var createEmailDto = new CreateEmailContentDTO()
+                    {
+                        DocumentNumber = request.CreateContractDTO.ContractNum,
+                        EmailContent = request.CreateContractDTO.EmailContent,
+                        Subject =$"متابعة العقد رقم {request.CreateContractDTO.ContractNum}",
+                        EmailHeader = $"متابعة العقد رقم {request.CreateContractDTO.ContractNum}"
+                    };
+
+                    string emailContent = _emailServices.CreateEmailContent(createEmailDto);
+
+                    await _emailServices.SendBulkEmailAsync(
+                            $"متابعة المستند رقم {request.CreateContractDTO.ContractNum} في  العقد",
+                        emailContent,
+                        sysUsers.Select(u => u.Email!),
+                        cancellationToken);
+                }
+            }
 			catch (Exception ex)
 			{
 				await _unitOfWork.RollbackTransactionAsync();
@@ -63,7 +90,10 @@ internal sealed class CreateContractCommandHandler
 
             try
 			{
-				var contractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!);
+				var contractId = Guid.Parse(request.CreateContractDTO.BaseContractId!);
+
+				var originalContract = await contractRepository.FindWithIncludeFirstOrDefaultAsync
+					(x => x.Id == contractId);
 
 				// Get ContractRefs ONLY for this contract
 				var contractRefs = await contractRefRepository.FindAllAsync(
@@ -78,18 +108,46 @@ internal sealed class CreateContractCommandHandler
 				var newContract = CreateContractRef(request , serialNum);
 				newContract.CreatedById = admin.Id;
 
-                await _unitOfWork.BeginTransactionAsync(cancellationToken);
-                await contractRefRepository.AddAsync(newContract);
+				originalContract.HasReference = true;
 
-				if (request.CreatrContractDTO.Attachments is not null)
+                await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
+                await contractRefRepository.AddAsync(newContract);
+				contractRepository.Update(originalContract);
+
+				if (request.CreateContractDTO.Attachments is not null)
 				{
                     await AddContractRefAttachments(newContract.Id,
-                        request.CreatrContractDTO.Attachments, cancellationToken);
+                        request.CreateContractDTO.Attachments, cancellationToken);
                 }
 
-				await _unitOfWork.SaveChangesAsync();
+				await _unitOfWork.SaveChangesAsync(cancellationToken);
 				await _unitOfWork.CommitTransactionAsync(cancellationToken);
-			}
+
+                if (request.CreateContractDTO.EmailContent is not null &&
+              request.CreateContractDTO.SentEmailsTo is not null)
+                {
+                    var sysUsers = await sysUserRepository.FindAllAsync(
+                        x => request.CreateContractDTO.SentEmailsTo.Contains(x.Id),
+                        cancellationToken);
+
+                    var createEmailDto = new CreateEmailContentDTO()
+                    {
+                        DocumentNumber = request.CreateContractDTO.ContractNum,
+                        EmailContent = request.CreateContractDTO.EmailContent,
+                        Subject = $"متابعة ملحق العقد رقم {request.CreateContractDTO.ContractNum}",
+                        EmailHeader = $"متابعة ملحق العقد رقم {request.CreateContractDTO.ContractNum}"
+                    };
+
+                    string emailContent = _emailServices.CreateEmailContent(createEmailDto);
+
+                    await _emailServices.SendBulkEmailAsync(
+                            $"متابعة ملحق العقد رقم {request.CreateContractDTO.ContractNum}",
+                        emailContent,
+                        sysUsers.Select(u => u.Email!),
+                        cancellationToken);
+                }
+            }
 			catch (Exception ex)
 			{
 				await _unitOfWork.RollbackTransactionAsync();
@@ -103,40 +161,39 @@ internal sealed class CreateContractCommandHandler
 	{
 		return new Contracts
 		{
-			Value = request.CreatrContractDTO.Value,
+			Value = request.CreateContractDTO.Value,
 			SerialNumber = SerialNum,
-            ContractNumber = request.CreatrContractDTO.ContractNum,
-			Details = request.CreatrContractDTO.Details,
-			Notes = request.CreatrContractDTO.Notes,
-			Contract_Date = request.CreatrContractDTO.ContractDate,
-			WorkTypeId = request.CreatrContractDTO.WorkTypeId,
-			purchase_order_ref = request.CreatrContractDTO.PurchaseOrdNumRef,
-			ProjectId = request.CreatrContractDTO.ProjectId,
-			PersonOrgId = request.CreatrContractDTO.PersonOrgId,
-			Currency = (Currency)request.CreatrContractDTO.Currency,
-			Department = (Departments)request.CreatrContractDTO.Department,
-		    CommercialRegisterNumber = request.CreatrContractDTO.CommercialRegisterNumber,
-            OldReferenceNumber = request.CreatrContractDTO.OldRef
+            ContractNumber = request.CreateContractDTO.ContractNum,
+			Details = request.CreateContractDTO.Details,
+			Notes = request.CreateContractDTO.Notes,
+			Contract_Date = request.CreateContractDTO.ContractDate,
+			WorkTypeId = request.CreateContractDTO.WorkTypeId,
+			purchase_order_ref = request.CreateContractDTO.PurchaseOrdNumRef,
+			ProjectId = request.CreateContractDTO.ProjectId,
+			PersonOrgId = request.CreateContractDTO.PersonOrgId,
+			Currency = (Currency)request.CreateContractDTO.Currency,
+			Department = (Departments)request.CreateContractDTO.Department,
+		    CommercialRegisterNumber = request.CreateContractDTO.CommercialRegisterNumber,
+            OldReferenceNumber = request.CreateContractDTO.OldRef
         };
 	}
-
 	private ContractRef CreateContractRef(CreateContractCommand request, int SerialNum)
 	{
 		return new ContractRef
 		{
-			Value = request.CreatrContractDTO.Value,
+			Value = request.CreateContractDTO.Value,
             SerialNumber = SerialNum,
-            ContractNumber = request.CreatrContractDTO.ContractNum,
-			Details = request.CreatrContractDTO.Details,
-			Notes = request.CreatrContractDTO.Notes,
-			//Contract_Date = request.CreatrContractDTO.ContractDate,
+            ContractNumber = request.CreateContractDTO.ContractNum,
+			Details = request.CreateContractDTO.Details,
+			Notes = request.CreateContractDTO.Notes,
+			Contract_Date = request.CreateContractDTO.ContractDate,
 			//WorkTypeId = request.CreatrContractDTO.WorkTypeId,
 			//purchase_order_ref = request.CreatrContractDTO.PurchaseOrdNumRef,
 			//ProjectId = request.CreatrContractDTO.ProjectId,
 			//PersonOrgId = request.CreatrContractDTO.PersonOrgId,
-			Currency = (Currency)request.CreatrContractDTO.Currency,
+			Currency = (Currency)request.CreateContractDTO.Currency,
 			//Department = (Departments)request.CreatrContractDTO.Department,
-			ContractId = Guid.Parse(request.CreatrContractDTO.BaseContractId!),
+			ContractId = Guid.Parse(request.CreateContractDTO.BaseContractId!),
         };
 	}
 	private async Task AddAttachments(

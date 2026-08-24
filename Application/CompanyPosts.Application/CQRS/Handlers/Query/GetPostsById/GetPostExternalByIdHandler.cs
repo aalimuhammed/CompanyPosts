@@ -1,4 +1,5 @@
-﻿using CompanyPost.Application.DTO.Response.Base;
+﻿using CompanyPost.Application.DTO;
+using CompanyPost.Application.DTO.Response.Base;
 
 namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
 {
@@ -14,7 +15,13 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
         {
             var postRepository = _unitOfWork.Repository<PostExternal>();
 
-            var post = await postRepository.FindAsync(p => p.Id == request.Id, cancellationToken);
+            var includes = new List<Expression<Func<PostExternal, object>>>
+                    {
+                        post => post.Attachments
+                    };
+
+            var post = await postRepository.FindWithIncludeFirstOrDefaultAsync(
+                p => p.Id == request.Id, includes, cancellationToken);
 
             if (post == null)
             {
@@ -26,6 +33,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.Subject,
                 post.Summary,
                 post.Notes,
+                post.OldReferenceNumber,
+                post.InComingNumber,
                 post.CompanyId,
                 post.PublishedId,
                 post.RecievedFromId,
@@ -33,7 +42,11 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.DocumentDate,
                 post.DeliveryDate,
                 (int)post.DeliveryMethods,
-                (int)post.PostDocumentTypes);
+                (int)post.Status,
+                (int)post.PostDocumentTypes ,
+                post.Attachments != null && post.Attachments.Any()
+               ? post.Attachments.Select(a => new AttachmentDTO(a.Id, a.FileName!, $"/posts/{a.FileName}")).ToList()
+              : new List<AttachmentDTO>());
 
             return selectedPostDto;
         }

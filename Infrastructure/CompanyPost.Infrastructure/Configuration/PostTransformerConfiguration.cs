@@ -29,9 +29,9 @@ internal sealed class PostTransformerConfiguration :
 			.HasMaxLength(50)
 			.IsRequired();
 
-		builder.Property(x => x.RecivedByName)
-			.HasMaxLength(100)
-			.IsRequired();
+		//builder.Property(x => x.RecivedByName)
+		//	.HasMaxLength(100)
+		//	.IsRequired();
 
 		builder.Property(x => x.FollowingPerson)
 			.HasMaxLength(100)

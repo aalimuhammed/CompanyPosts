@@ -9,7 +9,6 @@ public record CreateIncomingDTO(
 	string? Subject,
 	DateTime DocumentDate,
 	DateTime DeliveryDate,
-	DateTime SaveDate,
 	string? Summary,
 	int? DeliveryMethod,
 	int DocumentType,
@@ -20,4 +19,6 @@ public record CreateIncomingDTO(
     List<IFormFile>? Attachments,
     int StatusMethod,
 	string? OldRef,
-	string? OriginalSender);
+	string? OriginalSender,
+	string? Notes,
+	string? AboutWork);

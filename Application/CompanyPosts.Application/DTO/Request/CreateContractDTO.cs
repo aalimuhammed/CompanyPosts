@@ -15,4 +15,6 @@ public record CreateContractDTO(
 	string? BaseContractId,
     string? CommercialRegisterNumber,
 	string? OldRef,
+    string? EmailContent,
+    IEnumerable<Guid>? SentEmailsTo,
     List<IFormFile>? Attachments);

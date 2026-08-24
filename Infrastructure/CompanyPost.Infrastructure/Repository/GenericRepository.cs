@@ -53,7 +53,10 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 			}
 		}
 
-		return await query.AsNoTracking().ToListAsync(cancellationToken);
+		return await query
+			.OrderByDescending(x => x.CreatedAt)
+			.AsNoTracking()
+			.ToListAsync(cancellationToken);
 	}
     public async Task<T> FindWithIncludeFirstOrDefaultAsync(
        Expression<Func<T, bool>> predicate = null,
@@ -85,7 +88,9 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 		if (predicate != null)
 			query = query.Where(predicate);
 
-		return await query.ToListAsync(cancellationToken);
+		return await query
+			.Distinct()
+			.ToListAsync(cancellationToken);
 	}
 	public async Task<PaginatedResult<T>> GetPagedAsync(
 		int pageNumber, 

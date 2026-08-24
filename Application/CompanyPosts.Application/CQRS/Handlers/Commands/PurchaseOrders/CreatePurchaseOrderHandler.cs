@@ -51,16 +51,28 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
+                if (request.CreatePurchaseOrderDTO.EmailContent is not null
+                        && request.CreatePurchaseOrderDTO.SentEmailsTo is not null)
+                {
+                    var sysUsers = await systUserRepository.FindAllAsync(
+                            x => request.CreatePurchaseOrderDTO.SentEmailsTo.Contains(x.Id),
+                            cancellationToken);
 
-                var sysUsers = await systUserRepository.FindAllAsync(
-                    x => request.CreatePurchaseOrderDTO.SentEmailsTo.Contains(x.Id),
-                    cancellationToken);
+                    var emailContent = request.CreatePurchaseOrderDTO.EmailContent
+                             .Replace("\r\n", "<br>")
+                             .Replace("\n", "<br>");
 
-                _ = _emailServices.SendBulkEmailAsync(
-                    $"متابعة المستند رقم {request.CreatePurchaseOrderDTO.PurchaseOrderNumber} في  امر التوريد",
-                request.CreatePurchaseOrderDTO.EmailContent,
-                sysUsers.Select(u => u.Email!),
-                cancellationToken);
+                    emailContent = $@"
+		                    <div dir=""rtl"" style=""text-align: right; font-family: Tahoma, Arial, sans-serif; line-height: 1.8;"">
+			                    {emailContent}
+		                    </div>";
+
+                    await _emailServices.SendBulkEmailAsync(
+                      $"متابعة المستند رقم {request.CreatePurchaseOrderDTO.PurchaseOrderNumber} في  امر التوريد",
+                             emailContent,
+                              sysUsers.Select(u => u.Email!),
+                              cancellationToken);
+                }
             }
             catch (Exception ex)
             {

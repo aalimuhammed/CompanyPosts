@@ -45,7 +45,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
 
 				if (hasAttachments)
 				{
-					await _attachmentsHelper.ReplaceAsync(
+					await _attachmentsHelper.AppendAsync(
 						purchaseOrder.PurchaseOrderAttachments,
 						request.UpdateRequestDTO.Attachments!,
 						"purchaseorders",

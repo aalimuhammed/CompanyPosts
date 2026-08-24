@@ -7,23 +7,27 @@ namespace CompanyPost.Application.DTO.Response
     string Subject,
     string Summary,
     string Notes,
+    string? oldReferenceNumber,
+    string? inComingNumber,
     Guid CompanyId,
     Guid PublisherId,
     Guid DeliveredId,
-    Guid WorkTypeId,
+    Guid? WorkTypeId,
     DateTime DocumentDate,
     DateTime DeliveryDate,
     int DeliveryMethod,
-    string InComingNumber,  
+    int? Status,
     string PostNumber, 
-    string RecivedByName ,
     int PostDocumentType,
-    int DocumentType
-			) : SelectedPostByIdDTO(
+    int DocumentType,
+    List<AttachmentDTO> Attachments
+            ) : SelectedPostByIdDTO(
                 DocumentNumber,
                 Subject,
                 Summary,
                 Notes,
+                oldReferenceNumber,
+                inComingNumber,
                 CompanyId,
                 PublisherId,
                 DeliveredId,
@@ -31,6 +35,8 @@ namespace CompanyPost.Application.DTO.Response
                 DocumentDate,
                 DeliveryDate,
                 DeliveryMethod,
-				PostDocumentType
+                Status,
+				PostDocumentType,
+                Attachments
 			);
 }

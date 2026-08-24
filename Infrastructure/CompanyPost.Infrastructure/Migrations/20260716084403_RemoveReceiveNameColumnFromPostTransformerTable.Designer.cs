@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260716084403_RemoveReceiveNameColumnFromPostTransformerTable")]
+    partial class RemoveReceiveNameColumnFromPostTransformerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -359,10 +362,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.Property<string>("AboutWork")
-                        .HasColumnType("longtext")
-                        .HasColumnName("about_work");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
@@ -426,6 +425,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("publisher_id");
 
+                    b.Property<DateTime>("SaveDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("save_date");
+
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
@@ -442,7 +445,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid?>("WorkTypeId")
+                    b.Property<Guid>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -613,7 +616,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid?>("WorkTypeId")
+                    b.Property<Guid>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -757,7 +760,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid?>("WorkTypeId")
+                    b.Property<Guid>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -916,7 +919,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid?>("WorkTypeId")
+                    b.Property<Guid>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -1371,6 +1374,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("InComings")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_in_coming_work_types_work_type_id");
 
                     b.Navigation("CreatedBy");
@@ -1449,6 +1453,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("PostExternals")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_post_externals_work_types_work_type_id");
 
                     b.Navigation("Company");
@@ -1508,6 +1513,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("PostInternals")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_post_internals_work_types_work_type_id");
 
                     b.Navigation("Company");
@@ -1567,6 +1573,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("PostTransformers")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_post_transformers_work_types_work_type_id");
 
                     b.Navigation("Company");

@@ -5,7 +5,6 @@ public record CreatePostInternalDTO(
 	Guid CompanyId ,
 	Guid PublishedId,
 	Guid RecivedFromId,
-	Guid WorkTypeId,
 	string Subject,
 	DateTime DocumentDate,
 	DateTime DeliveryDate ,
@@ -19,4 +18,5 @@ public record CreatePostInternalDTO(
     string? FollowingPerson,
     List<IFormFile>? Attachments,
 	int StatusMethod,
-	string? OldRef);
+	string? OldRef,
+	string? AboutWork);

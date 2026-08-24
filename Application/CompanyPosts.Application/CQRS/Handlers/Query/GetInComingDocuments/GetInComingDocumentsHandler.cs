@@ -20,7 +20,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 						 post => post.CreatedBy,
 						 post => post.Publisher,
 						 post => post.Projects,
-						 post => post.WorkType,
+						// post => post.WorkType,
 						// post => post.OriginalPublisher,
 						 post => post.IncomingAttachments,
 					 };
@@ -60,7 +60,6 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 				p.Publisher.Name,
 				p.DeliveryMethods.GetDisplayName(),
 				null,
-				p.WorkType.Name,
 				"",
                 p.CreatedAt.ToString("yyyy-MM-dd") 
 				));

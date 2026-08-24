@@ -4,7 +4,7 @@
         Guid Id ,
         //Guid ProjectId,
         Guid PublishedId ,
-        Guid WorkTypeId,
+        Guid? WorkTypeId,
         int PostDocumentTypes , 
         string? Subject ,
         string? Notes , 

@@ -20,7 +20,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 					 post => post.CreatedBy,
 					 post => post.Publisher,
 					 post => post.RecievedFrom,
-					 post => post.WorkType,
+					// post => post.WorkType,
 					 post => post.Company,
 					 post => post.Attachments,
 				 };
@@ -75,7 +75,6 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 				p.Publisher.Name,
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
-				p.WorkType.Name,
 				p.RecievedFrom.Name,
                 p.CreatedAt.ToString("yyyy-MM-dd")
             ));

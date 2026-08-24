@@ -5,7 +5,6 @@ public record CreatePostTransofrmerDTO(
 	Guid CompanyId,
 	Guid PublishedId,
 	Guid RecivedFromId,
-	Guid WorkTypeId,
 	string Subject,
 	DateTime DocumentDate,
 	DateTime DeliveryDate,
@@ -14,7 +13,7 @@ public record CreatePostTransofrmerDTO(
 	int DeliveryMethod,
 	string? IncomingNumber,
 	int DocumentType,
-	string RecivedName,
+	string? RecivedName,
 	string? FollowingPerson,
 	string PostNumber,
 	int PostDocumentType,
@@ -23,4 +22,5 @@ public record CreatePostTransofrmerDTO(
 	string? InComingNumber,
     List<IFormFile>? Attachments,
     int StatusMethod,
-	string? OldRef);
+	string? OldRef,
+	string? AboutWork);

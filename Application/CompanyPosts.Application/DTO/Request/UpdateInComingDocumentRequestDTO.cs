@@ -5,15 +5,18 @@
         string? subject,
         DateTime documentDate,
         DateTime deliveryDate,
-        Guid publishedId,
+        Guid publishedArea,
         Guid? receivedFromId,
-        Guid workTypeId,
         string? notes,
         string? summary,
         int department,
         int deliveryMethod,
         Guid projectId,
         string? originalsender,
+        string? oldReferenceNumber,
+        string? inComingNumber,
         int documentType,
-		List<IFormFile>? Attachments);
+        int status,
+		List<IFormFile>? Attachments,
+        List<Guid>? AttachmentIdsToDelete);
 }

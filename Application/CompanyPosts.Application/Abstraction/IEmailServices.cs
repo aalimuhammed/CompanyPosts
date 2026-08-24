@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Application.Abstraction
+﻿using CompanyPost.Application.CQRS.Commands.InComing;
+
+namespace CompanyPost.Application.Abstraction
 {
 	public interface IEmailServices
 	{
@@ -11,5 +13,9 @@
            string htmlMessage,
            IEnumerable<string> recipients,
            CancellationToken cancellationToken = default);
+
+         string CreateEmailContent(
+            CreateEmailContentDTO EmailContentDTO
+            );
     }
 }

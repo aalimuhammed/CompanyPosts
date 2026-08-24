@@ -13,5 +13,6 @@
         Guid WorkTypeId,
         string? OldReferenceNumber,
         int Department,
-        List<IFormFile>? Attachments);
+        List<IFormFile>? Attachments ,
+        List<Guid>? AttachmentIdsToDelete);
 }

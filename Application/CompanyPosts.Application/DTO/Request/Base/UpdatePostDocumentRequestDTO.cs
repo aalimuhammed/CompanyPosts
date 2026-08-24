@@ -2,16 +2,18 @@
 {
     public record UpdatePostDocumentRequestDTO(
         string documentNumber,
-        string subject,
+        string? subject,
         DateTime documentDate,
         DateTime deliveryDate,
         Guid companyId,
         Guid publishedId,
         Guid receivedFromId,
         Guid workTypeId,
-        string notes,
-        string summary,
+        string? notes,
+        string? summary,
         int? department,
         int deliveryMethod,
-	    List<IFormFile>? Attachments);
+        int status,
+	    List<IFormFile>? Attachments ,
+        List<Guid>? AttachmentIdsToDelete);
 }

@@ -1,4 +1,5 @@
 ﻿using CompanyPost.Application.Helpers;
+using CompanyPost.Domain.Entities;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.PostTransformers
 {
@@ -20,12 +21,16 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostTransformers
 			await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
             {
-				var hasAttachments =
-					request.UpdatePostTransformerDocumentRequestDTO.Attachments?.Any() == true;
+                var dto = request.UpdatePostTransformerDocumentRequestDTO;
+
+                var hasNewFiles = dto.Attachments?.Any() == true;
+                var idsToDelete = dto.AttachmentIdsToDelete ?? new List<Guid>();
+                var hasDeletions = idsToDelete.Any();
+                var needsAttachmentsLoaded = hasNewFiles || hasDeletions;
 
                 var postTransformer = await repository.GetByIdAsyncWithAttachmentIncluded(
                          request.Id,
-                         hasAttachments,
+                         needsAttachmentsLoaded,
                          x => x.Attachments,
                          cancellationToken);
 
@@ -45,29 +50,45 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostTransformers
 				postTransformer.DeliveryDate = request.UpdatePostTransformerDocumentRequestDTO.deliveryDate;
 				postTransformer.PublishedId = request.UpdatePostTransformerDocumentRequestDTO.publishedId;
 				postTransformer.CompanyId = request.UpdatePostTransformerDocumentRequestDTO.companyId;
-				postTransformer.RecivedByName = request.UpdatePostTransformerDocumentRequestDTO.recivedByName;
+				//postTransformer.RecivedByName = request.UpdatePostTransformerDocumentRequestDTO.recivedByName;
 				postTransformer.IncomingNumber = request.UpdatePostTransformerDocumentRequestDTO.inComingNumber;
 				postTransformer.PostNumber = request.UpdatePostTransformerDocumentRequestDTO.postNumber;
 				postTransformer.DocumentType = (DocumentType)request.UpdatePostTransformerDocumentRequestDTO.documentType;
+                postTransformer.Status = (Status)request.UpdatePostTransformerDocumentRequestDTO.status;
+				postTransformer.OldReferenceNumber = request.UpdatePostTransformerDocumentRequestDTO.oldReferenceNumber;
 
-				if (hasAttachments)
-				{
-					await _attachmentsHelper.ReplaceAsync(
-						postTransformer.Attachments,
-						request.UpdatePostTransformerDocumentRequestDTO.Attachments!,
-						"posts",
-						a => a.FileName,
-						a => _unitOfWork
-							.Repository<PostTransformerAttachment>()
-							.Delete(a),
-						fileName => new PostTransformerAttachment
-						{
-							PostTransformerId = postTransformer.Id,
-							FileName = fileName
-						},
-						cancellationToken);
-				}
-				repository.Update(postTransformer);
+                if (hasDeletions)
+                {
+                    var toRemove = postTransformer.Attachments
+                        .Where(a => idsToDelete.Contains(a.Id))
+                        .ToList();
+
+                    foreach (var att in toRemove)
+                    {
+                        _unitOfWork.Repository<PostTransformerAttachment>().Delete(att);
+                        postTransformer.Attachments.Remove(att);
+                    }
+                }
+
+                if (hasNewFiles)
+                {
+                    await _attachmentsHelper.AppendAsync(
+                        postTransformer.Attachments,
+                        request.UpdatePostTransformerDocumentRequestDTO.Attachments!,
+                        "posts",
+                        a => a.FileName,
+                        a => _unitOfWork
+                            .Repository<PostTransformerAttachment>()
+                            .Delete(a),
+                        fileName => new PostTransformerAttachment
+                        {
+                            PostTransformerId = postTransformer.Id,
+                            FileName = fileName
+                        },
+                        cancellationToken);
+                }
+
+                repository.Update(postTransformer);
 
 				await _unitOfWork.SaveChangesAsync(cancellationToken);
 				await _unitOfWork.CommitTransactionAsync(cancellationToken);

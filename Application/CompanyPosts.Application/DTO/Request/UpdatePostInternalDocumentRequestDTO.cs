@@ -4,18 +4,22 @@ namespace CompanyPost.Application.DTO.Request
 {
     public record UpdatePostInternalDocumentRequestDTO(
         string documentNumber,
-        string subject,
+        string? subject,
         DateTime documentDate,
         DateTime deliveryDate,
         Guid companyId,
         Guid publishedId,
         Guid receivedFromId,
         Guid workTypeId,
-        string notes,
-        string summary,
+        string? notes,
+        string? summary,
+        string? oldReferenceNumber,
+        string? inComingNumber,
         int? department,
         int deliveryMethod ,
-		List<IFormFile>? Attachments)
+        int status,
+		List<IFormFile>? Attachments,
+        List<Guid>? AttachmentIdsToDelete)
         : UpdatePostDocumentRequestDTO(
             documentNumber,
             subject,
@@ -29,5 +33,7 @@ namespace CompanyPost.Application.DTO.Request
             summary,
             department,
             deliveryMethod ,
-            Attachments);
+            status,
+            Attachments,
+            AttachmentIdsToDelete);
 }

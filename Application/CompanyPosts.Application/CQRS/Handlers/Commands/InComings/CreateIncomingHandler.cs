@@ -1,4 +1,6 @@
-﻿using CompanyPost.Application.CQRS.Commands.InComing;
+﻿using CompanyPost.Application.Abstraction;
+using CompanyPost.Application.CQRS.Commands.InComing;
+using System.Net;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.InComings;
 internal sealed class CreateIncomingHandler
@@ -22,7 +24,7 @@ internal sealed class CreateIncomingHandler
 
         if (await incomingRepository.FindAnyAsync(x => x.DocumentNumber == request.createIncomingDTO.DocumentNumber))
         {
-            throw new Exception("لا يمكن تكرير رقم المستند");
+            throw new Exception("لا يمكن تكرار رقم المستند");
         }
 
         var sysUserRepository = _unitOfWork.Repository<SysUsers>();
@@ -30,7 +32,8 @@ internal sealed class CreateIncomingHandler
 		var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
 		var maxSerial = await incomingRepository.MaxSerialNumber<InComing>(cancellationToken);
-        var incoming = new InComing
+        
+		var incoming = new InComing
 		{
 			SerialNumber = maxSerial,
 			DocumentNumber = request.createIncomingDTO.DocumentNumber,
@@ -40,21 +43,23 @@ internal sealed class CreateIncomingHandler
 			Summary = request.createIncomingDTO.Summary,
 			DeliveryMethods = (DeliveryMethods)request.createIncomingDTO.DeliveryMethod,
 			ProjectId = request.createIncomingDTO.ProjectId,
-			SaveDate = request.createIncomingDTO.SaveDate,
+			//SaveDate = request.createIncomingDTO.SaveDate,
 			DocumentType = (DocumentType)request.createIncomingDTO.DocumentType,
 			PostDocumentTypes = (PostDocumentTypes)request.createIncomingDTO.PostDocumentType,
 			//OriginalPublisherId = request.createIncomingDTO.OriginalPublisherId,
 			PublishedId = request.createIncomingDTO.PublishedId,
-			WorkTypeId = request.createIncomingDTO.WorkTypeId,
+		//	WorkTypeId = request.createIncomingDTO.WorkTypeId,
 			CreatedById = admin.Id,
 			InComingNumber = request.createIncomingDTO.InComingNumber,
 			Status = (Status) request.createIncomingDTO.StatusMethod,
 			OldReferenceNumber = request.createIncomingDTO.OldRef,
-			OriginalSender = request.createIncomingDTO.OriginalSender
+			OriginalSender = request.createIncomingDTO.OriginalSender,
+			Notes = request.createIncomingDTO.Notes,
+			AboutWork = request.createIncomingDTO.AboutWork
 		};
 
 		var inComingId = incoming.Id;
-		await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.BeginTransactionAsync(cancellationToken);
 		try
 		{
 			await incomingRepository.AddAsync(incoming);
@@ -65,20 +70,32 @@ internal sealed class CreateIncomingHandler
                     request.createIncomingDTO.Attachments, cancellationToken);
             }
 
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
+            if (request.createIncomingDTO.EmailContent is not null && 
+				request.createIncomingDTO.SentEmailsTo is not null)
+			{
+				var sysUsers = await sysUserRepository.FindAllAsync(
+					x => request.createIncomingDTO.SentEmailsTo.Contains(x.Id),
+					cancellationToken);
 
-            var sysUsers = await sysUserRepository.FindAllAsync(
-                x => request.createIncomingDTO.SentEmailsTo.Contains(x.Id),
-                cancellationToken);
+                var createEmailDto = new CreateEmailContentDTO()
+                {
+                    DocumentNumber = request.createIncomingDTO.DocumentNumber,
+                    EmailContent = request.createIncomingDTO.EmailContent,
+                    Subject = request.createIncomingDTO.Subject,
+                    EmailHeader = $"متابعة المستند رقم {request.createIncomingDTO.DocumentNumber} في  الوارد"
+                };
+                   
+                string emailContent = _emailServices.CreateEmailContent(createEmailDto);
 
-            _ = _emailServices.SendBulkEmailAsync(
-					$"متابعة المستند رقم {request.createIncomingDTO.DocumentNumber} في  الوارد",
-				request.createIncomingDTO.EmailContent,
-				sysUsers.Select(u => u.Email!),
-				cancellationToken);
-
-            await _unitOfWork.CommitTransactionAsync();
+                await _emailServices.SendBulkEmailAsync(
+						$"متابعة المستند رقم {request.createIncomingDTO.DocumentNumber} في  الوارد",
+                    emailContent,
+					sysUsers.Select(u => u.Email!),
+					cancellationToken);
+			}
 
             return Unit.Value;
 		}

@@ -18,11 +18,13 @@ internal sealed class CreatePostInternalHandler
 	{
 		var postInternalRepository = _unitOfWork.Repository<PostInternal>();
 		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
+
 		var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
-        if (await postInternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostInternalDTO.DocumentNumber))
+        if (await postInternalRepository.FindAnyAsync(
+			x => x.DocumentNumber == request.CreatePostInternalDTO.DocumentNumber))
         {
-            throw new Exception("لا يمكن تكرير رقم المستند");
+            throw new Exception("لا يمكن تكرار رقم المستند");
         }
         var maxSerial = await postInternalRepository.MaxSerialNumber<PostInternal>(cancellationToken);
 		var postInternal = new PostInternal
@@ -33,7 +35,7 @@ internal sealed class CreatePostInternalHandler
 			PublishedId = request.CreatePostInternalDTO.PublishedId,
 			RecievedFromId = request.CreatePostInternalDTO.RecivedFromId,
 			Subject = request.CreatePostInternalDTO.Subject,
-			WorkTypeId = request.CreatePostInternalDTO.WorkTypeId,
+			//WorkTypeId = request.CreatePostInternalDTO.WorkTypeId,
 			DocumentDate = request.CreatePostInternalDTO.DocumentDate,
 			DeliveryDate = request.CreatePostInternalDTO.DeliveryDate,
 			Summary = request.CreatePostInternalDTO.Summary,
@@ -44,8 +46,9 @@ internal sealed class CreatePostInternalHandler
 			InComingNumber = request.CreatePostInternalDTO.InComingNumber,
 			FollowingPerson = request.CreatePostInternalDTO.FollowingPerson,
 			Status = (Status)request.CreatePostInternalDTO.StatusMethod,
-			OldReferenceNumber = request.CreatePostInternalDTO.OldRef
-		};
+			OldReferenceNumber = request.CreatePostInternalDTO.OldRef,
+            AboutWork = request.CreatePostInternalDTO.AboutWork
+        };
 		var postInternalID = postInternal.Id;
 		await _unitOfWork.BeginTransactionAsync();
 		try
@@ -58,18 +61,32 @@ internal sealed class CreatePostInternalHandler
 				await AddAttachments(postInternalID, request.CreatePostInternalDTO.Attachments, cancellationToken);
             }
 
-			await _unitOfWork.SaveChangesAsync();
-			await _unitOfWork.CommitTransactionAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-            var sysUsers = await sysUserRepository.FindAllAsync(
+            if (request.CreatePostInternalDTO.EmailContent is not null
+                     && request.CreatePostInternalDTO.SentEmailsTo is not null)
+			{
+                var sysUsers = await sysUserRepository.FindAllAsync(
                 x => request.CreatePostInternalDTO.SentEmailsTo.Contains(x.Id),
                 cancellationToken);
 
-            _ = _emailServices.SendBulkEmailAsync(
-					$"متابعة المستند رقم {request.CreatePostInternalDTO.DocumentNumber} في الصادر داخلي",
-				request.CreatePostInternalDTO.EmailContent,
-				sysUsers.Select(u => u.Email!),
-				cancellationToken);
+                var createEmailDto = new CreateEmailContentDTO()
+                {
+                    DocumentNumber = request.CreatePostInternalDTO.DocumentNumber,
+                    EmailContent = request.CreatePostInternalDTO.EmailContent,
+                    Subject = request.CreatePostInternalDTO.Subject,
+                    EmailHeader = $"متابعة المستند رقم {request.CreatePostInternalDTO.DocumentNumber} في  الصادر داخلي"
+                };
+
+                string emailContent = _emailServices.CreateEmailContent(createEmailDto);
+
+                await _emailServices.SendBulkEmailAsync(
+                        $"متابعة المستند رقم {request.CreatePostInternalDTO.DocumentNumber} في الصادر داخلي",
+                    emailContent,
+                    sysUsers.Select(u => u.Email!),
+                    cancellationToken);
+            }
 
             return Unit.Value;
 		}

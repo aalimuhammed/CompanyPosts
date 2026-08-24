@@ -17,17 +17,20 @@ internal sealed class CreatePostExternalHandler :
 	public async Task<Unit> Handle(CreatePostExternalCommand request, CancellationToken cancellationToken)
 	{
 		var postExternalRepository = _unitOfWork.Repository<PostExternal>();
-        if (await postExternalRepository.FindAnyAsync(x => x.DocumentNumber == request.CreatePostExternalDTO.DocumentNumber))
+
+        if (await postExternalRepository.FindAnyAsync(
+			x => x.DocumentNumber == request.CreatePostExternalDTO.DocumentNumber))
         {
-            throw new Exception("لا يمكن تكرير رقم المستند");
+            throw new Exception("لا يمكن تكرار رقم المستند");
         }
 
         var sysUserRepo = _unitOfWork.Repository<SysUsers>();
 		var admin = await sysUserRepo.FindAsync(x => x.IsAdmin, cancellationToken);
 
-		
-        var maxSerial = await postExternalRepository.MaxSerialNumber<PostExternal>(cancellationToken);
-        var postExternal = new PostExternal
+        var maxSerial = await postExternalRepository.MaxSerialNumber<PostExternal>
+			(cancellationToken);
+
+		var postExternal = new PostExternal
 		{
 			SerialNumber = maxSerial,
 			DocumentNumber = request.CreatePostExternalDTO.DocumentNumber,
@@ -35,7 +38,7 @@ internal sealed class CreatePostExternalHandler :
 			PublishedId = request.CreatePostExternalDTO.PublishedId,
 			RecievedFromId = request.CreatePostExternalDTO.RecivedFromId,
 			Subject = request.CreatePostExternalDTO.Subject,
-			WorkTypeId = request.CreatePostExternalDTO.WorkTypeId,
+			//WorkTypeId = request.CreatePostExternalDTO.WorkTypeId,
 			DocumentDate = request.CreatePostExternalDTO.DocumentDate,
 			DeliveryDate = request.CreatePostExternalDTO.DeliveryDate,
 			Summary = request.CreatePostExternalDTO.Summary,
@@ -44,32 +47,50 @@ internal sealed class CreatePostExternalHandler :
 			PostDocumentTypes = (PostDocumentTypes)request.CreatePostExternalDTO.PostDocumentType,
 			InComingNumber = request.CreatePostExternalDTO.IncomingNumber,
 			FollowingPerson = request.CreatePostExternalDTO.FollowingPerson,
-			Status = (Status) request.CreatePostExternalDTO.StatusMethod,
+			Status = (Status)request.CreatePostExternalDTO.StatusMethod,
 			CreatedById = admin.Id,
+			OldReferenceNumber = request.CreatePostExternalDTO.OldRef,
+			AboutWork = request.CreatePostExternalDTO.AboutWork
 		};
 		var postExternalID = postExternal.Id;
-		await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.BeginTransactionAsync(cancellationToken);
 		try
 		{
 			await postExternalRepository.AddAsync(postExternal);
+
 			if (request.CreatePostExternalDTO.Attachments is not null)
 			{
-                await AddAttachments(postExternalID, request.CreatePostExternalDTO.Attachments, cancellationToken);
+                await AddAttachments(
+					postExternalID, request.CreatePostExternalDTO.Attachments, 
+					cancellationToken);
             }
 
-			await _unitOfWork.SaveChangesAsync();
-			await _unitOfWork.CommitTransactionAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
+			await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-            var sysUsers = await sysUserRepo.FindAllAsync(
-					x => request.CreatePostExternalDTO.SentEmailsTo.Contains(x.Id),
+			if (request.CreatePostExternalDTO.EmailContent is not null
+				&& request.CreatePostExternalDTO.SentEmailsTo is not null)
+			{
+				var sysUsers = await sysUserRepo.FindAllAsync(
+						x => request.CreatePostExternalDTO.SentEmailsTo.Contains(x.Id),
+						cancellationToken);
+
+                var createEmailDto = new CreateEmailContentDTO()
+                {
+                    DocumentNumber = request.CreatePostExternalDTO.DocumentNumber,
+                    EmailContent = request.CreatePostExternalDTO.EmailContent,
+                    Subject = request.CreatePostExternalDTO.Subject,
+                    EmailHeader = $"متابعة المستند رقم {request.CreatePostExternalDTO.DocumentNumber} في  الصادر خارجي"
+                };
+
+                string emailContent = _emailServices.CreateEmailContent(createEmailDto);
+
+                await _emailServices.SendBulkEmailAsync(
+						$"متابعة المستند رقم {request.CreatePostExternalDTO.DocumentNumber} في الصادر خارجي",
+                    emailContent,
+					sysUsers.Select(u => u.Email!),
 					cancellationToken);
-
-            _ = _emailServices.SendBulkEmailAsync(
-					$"متابعة المستند رقم {request.CreatePostExternalDTO.DocumentNumber} في الصادر خارجي",
-				request.CreatePostExternalDTO.EmailContent,
-                sysUsers.Select(u => u.Email!),
-				cancellationToken);
-
+			}
             return Unit.Value;
 		}
 		catch (Exception ex)

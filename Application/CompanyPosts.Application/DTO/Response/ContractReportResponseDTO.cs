@@ -15,5 +15,17 @@
         string CreatedBy,
         string CreatedAt,
         double Value,
-        List<string> AttachmentPaths);
+        List<string> AttachmentPaths ,
+        List<ContractRefResponseDTO> References);
+
+    public record ContractRefResponseDTO(
+                Guid Id,
+                string ContractNumber,
+                string DisplayNumber,
+                string ContractDate,
+                double Value,
+                string CreatedBy,
+                string Currency,
+                List<string> Attachments
+ );
 }

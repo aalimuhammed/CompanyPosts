@@ -5,7 +5,7 @@
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFileService _fileService;
         public UpdateContractDocumentHandler(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             IFileService fileService)
         {
             _unitOfWork = unitOfWork;
@@ -14,31 +14,50 @@
         public async Task<bool> Handle(UpdateContractDocumentCommand request, CancellationToken cancellationToken)
         {
             var contractRepo = _unitOfWork.Repository<Contracts>();
-
+            var contractRefRepo = _unitOfWork.Repository<ContractRef>();
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
-
             try
             {
-                var contract = await GetContractAsync(
-                    contractRepo,
-                    request.Id,
-                    request.UpdateContractDocumentDTO.Attachments?.Any() == true,
-                    cancellationToken);
+                var dto = request.UpdateContractDocumentDTO;
 
-                if (contract is null)
-                    throw new Exception("Contract Record not found");
+                var hasNewFiles = dto.Attachments?.Any() == true;
+                var idsToDelete = dto.AttachmentIdsToDelete ?? new List<Guid>();
+                var hasDeletions = idsToDelete.Any();
+                var needsAttachmentsLoaded = hasNewFiles || hasDeletions;
 
-                MapContract(contract, request.UpdateContractDocumentDTO);
+                var contract = await contractRepo.GetByIdAsyncWithAttachmentIncluded(
+                    request.Id, needsAttachmentsLoaded, x => x.ContractAttachments, cancellationToken);
 
-                if (request.UpdateContractDocumentDTO.Attachments?.Any() == true)
+                if (contract != null)
                 {
-                    await ReplaceAttachmentsAsync(
-                        contract,
-                        request.UpdateContractDocumentDTO.Attachments!,
-                        cancellationToken);
-                }
+                    MapContract(contract, dto);
 
-                contractRepo.Update(contract);
+                    if (hasDeletions)
+                        DeleteSelectedAttachments(contract.ContractAttachments, idsToDelete);
+
+                    if (hasNewFiles)
+                        await AddAttachmentsAsync(contract.Id, dto.Attachments!, cancellationToken);
+
+                    contractRepo.Update(contract);
+                }
+                else
+                {
+                    var contractRef = await contractRefRepo.GetByIdAsyncWithAttachmentIncluded(
+                        request.Id, needsAttachmentsLoaded, x => x.ContractAttachments, cancellationToken);
+
+                    if (contractRef is null)
+                        throw new Exception("Contract Record not found");
+
+                    MapContractRef(contractRef, dto);
+
+                    if (hasDeletions)
+                        DeleteSelectedAttachments(contractRef.ContractAttachments, idsToDelete);
+
+                    if (hasNewFiles)
+                        await AddContractRefAttachmentsAsync(contractRef.Id, dto.Attachments!, cancellationToken);
+
+                    contractRefRepo.Update(contractRef);
+                }
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
@@ -52,30 +71,6 @@
         }
 
         #region Private Helpers
-        private static async Task<Contracts?> GetContractAsync(
-            IGenericRepository<Contracts> contractRepo,
-            Guid contractId,
-            bool includeAttachments,
-            CancellationToken cancellationToken)
-        {
-            if (!includeAttachments)
-            {
-                return await contractRepo.FindAsync(
-                    x => x.Id == contractId,
-                    cancellationToken);
-            }
-
-            Expression<Func<Contracts, object>>[] includes =
-            {
-                c => c.ContractAttachments
-            };
-
-            return (await contractRepo.FindWithIncludeAsync(
-                    x => x.Id == contractId,
-                    includes,
-                    cancellationToken))
-                .FirstOrDefault();
-        }
         private static void MapContract(
             Contracts contract,
             UpdateContractDocumentRequestDTO dto)
@@ -91,33 +86,37 @@
             contract.PersonOrgId = dto.SupplierId;
             contract.WorkTypeId = dto.WorkTypeId;
 
-            contract.Currency = (Currency) dto.Currency;
+            contract.Currency = (Currency)dto.Currency;
+            contract.Department = (Departments)dto.Department;
         }
-        private async Task ReplaceAttachmentsAsync(
-            Contracts contract,
-            List<IFormFile> newAttachments,
-            CancellationToken cancellationToken)
+
+        // Deletes only the attachments whose Id is in idsToDelete — everything
+        // else in the collection is left untouched. Works for both Contracts
+        // and ContractRef since ContractAttachments is the shared entity type.
+        private void DeleteSelectedAttachments(
+            ICollection<ContractAttachments> attachments,
+            List<Guid> idsToDelete)
         {
-            DeleteExistingAttachments(contract);
-            await AddAttachmentsAsync(contract.Id, newAttachments, cancellationToken);
-        }
-        private void DeleteExistingAttachments(Contracts contract)
-        {
-            if (!contract.ContractAttachments.Any())
+            if (!attachments.Any())
                 return;
 
             var attachmentRepo = _unitOfWork.Repository<ContractAttachments>();
 
-            foreach (var attachment in contract.ContractAttachments)
+            var toRemove = attachments
+                .Where(a => idsToDelete.Contains(a.Id))
+                .ToList();
+
+            foreach (var attachment in toRemove)
             {
                 if (!string.IsNullOrWhiteSpace(attachment.FileName))
-                {
                     _fileService.DeleteFile("contracts", attachment.FileName);
-                    attachmentRepo.Delete(attachment);
-                }
+
+                attachmentRepo.Delete(attachment);
+                attachments.Remove(attachment);
             }
-            contract.ContractAttachments.Clear();
         }
+
+        // Appends new files without touching existing attachments.
         private async Task AddAttachmentsAsync(
             Guid contractId,
             List<IFormFile> attachments,
@@ -135,6 +134,36 @@
                 await attachmentRepo.AddAsync(new ContractAttachments
                 {
                     ContractID = contractId,
+                    FileName = fileName
+                }, cancellationToken);
+            }
+        }
+
+        private static void MapContractRef(
+            ContractRef contractRef,
+            UpdateContractDocumentRequestDTO dto)
+        {
+            contractRef.Value = dto.ContractValue;
+            contractRef.ContractNumber = dto.ContractNumber;
+            contractRef.Details = dto.Details;
+            contractRef.Notes = dto.Notes;
+            contractRef.Contract_Date = dto.ContractDate;
+            contractRef.Currency = (Currency)dto.Currency;
+        }
+
+        // Appends new files to a ContractRef without touching existing attachments.
+        private async Task AddContractRefAttachmentsAsync(
+            Guid contractRefId,
+            List<IFormFile> newAttachments,
+            CancellationToken cancellationToken)
+        {
+            var repo = _unitOfWork.Repository<ContractAttachments>(); // or your ContractRef attachment repo
+            foreach (var file in newAttachments)
+            {
+                var fileName = await _fileService.SaveAttachmentAsync(file, "contracts", cancellationToken);
+                await repo.AddAsync(new ContractAttachments // adjust entity/type + FK name for ContractRef
+                {
+                    ContractRefId = contractRefId,
                     FileName = fileName
                 }, cancellationToken);
             }

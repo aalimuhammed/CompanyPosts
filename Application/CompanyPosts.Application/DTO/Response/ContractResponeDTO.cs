@@ -10,4 +10,5 @@ public record ContractResponeDTO(
 	string created_by,
 	string currency ,
 	string purchase_order_ref,
-	string contractor);
+	string contractor,
+	List<AttachmentDTO> Attachments);

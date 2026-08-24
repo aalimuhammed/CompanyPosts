@@ -1,4 +1,5 @@
 ﻿using CompanyPost.Application.Helpers;
+using CompanyPost.Domain.Entities;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.PostInernals
 {
@@ -20,12 +21,16 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostInernals
 			await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
-				var hasAttachments =
-						request.UpdatePostInternalDocumentRequestDTO.Attachments?.Any() == true;
+                var dto = request.UpdatePostInternalDocumentRequestDTO;
 
-				var postInternal = await repository.GetByIdAsyncWithAttachmentIncluded(
+                var hasNewFiles = dto.Attachments?.Any() == true;
+                var idsToDelete = dto.AttachmentIdsToDelete ?? new List<Guid>();
+                var hasDeletions = idsToDelete.Any();
+                var needsAttachmentsLoaded = hasNewFiles || hasDeletions;
+
+                var postInternal = await repository.GetByIdAsyncWithAttachmentIncluded(
 							 request.Id,
-							 hasAttachments,
+                             needsAttachmentsLoaded,
 							 x => x.Attachments,
 							 cancellationToken);
 
@@ -37,7 +42,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostInernals
 				postInternal.DeliveryMethods = (DeliveryMethods)request.UpdatePostInternalDocumentRequestDTO.deliveryMethod;
 				postInternal.DocumentNumber = request.UpdatePostInternalDocumentRequestDTO.documentNumber;
 				postInternal.DocumentDate = request.UpdatePostInternalDocumentRequestDTO.documentDate;
-				// postInternal.Department = (Departments)request.UpdatePostInternalDocumentRequestDTO.department;
+				postInternal.PostDocumentTypes = (PostDocumentTypes)request.UpdatePostInternalDocumentRequestDTO.department;
 				postInternal.RecievedFromId = request.UpdatePostInternalDocumentRequestDTO.receivedFromId;
 				postInternal.WorkTypeId = request.UpdatePostInternalDocumentRequestDTO.workTypeId;
 				postInternal.Subject = request.UpdatePostInternalDocumentRequestDTO.subject;
@@ -46,26 +51,42 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostInernals
 				postInternal.DeliveryDate = request.UpdatePostInternalDocumentRequestDTO.deliveryDate;
 				postInternal.PublishedId = request.UpdatePostInternalDocumentRequestDTO.publishedId;
 				postInternal.CompanyId = request.UpdatePostInternalDocumentRequestDTO.companyId;
+				postInternal.Status = (Status)request.UpdatePostInternalDocumentRequestDTO.status;
+                postInternal.OldReferenceNumber = request.UpdatePostInternalDocumentRequestDTO.oldReferenceNumber;
+				postInternal.InComingNumber = request.UpdatePostInternalDocumentRequestDTO.inComingNumber;
 
-				if (hasAttachments)
-				{
-					await _attachmentsHelper.ReplaceAsync(
-						postInternal.Attachments,
-						request.UpdatePostInternalDocumentRequestDTO.Attachments!,
-						"posts",
-						a => a.FileName,
-						a => _unitOfWork
-							.Repository<PostInternalAttachment>()
-							.Delete(a),
-						fileName => new PostInternalAttachment
-						{
-							PostInternalId = postInternal.Id,
-							FileName = fileName
-						},
-						cancellationToken);
-				}
+                if (hasDeletions)
+                {
+                    var toRemove = postInternal.Attachments
+                        .Where(a => idsToDelete.Contains(a.Id))
+                        .ToList();
 
-				repository.Update(postInternal);
+                    foreach (var att in toRemove)
+                    {
+                        _unitOfWork.Repository<PostInternalAttachment>().Delete(att);
+                        postInternal.Attachments.Remove(att);
+                    }
+                }
+
+                if (hasNewFiles)
+                {
+                    await _attachmentsHelper.AppendAsync(
+                        postInternal.Attachments,
+                        request.UpdatePostInternalDocumentRequestDTO.Attachments!,
+                        "posts",
+                        a => a.FileName,
+                        a => _unitOfWork
+                            .Repository<PostInternalAttachment>()
+                            .Delete(a),
+                        fileName => new PostInternalAttachment
+                        {
+                            PostInternalId = postInternal.Id,
+                            FileName = fileName
+                        },
+                        cancellationToken);
+                }
+
+                repository.Update(postInternal);
 				await _unitOfWork.SaveChangesAsync(cancellationToken);
 				await _unitOfWork.CommitTransactionAsync(cancellationToken);
 				return true;

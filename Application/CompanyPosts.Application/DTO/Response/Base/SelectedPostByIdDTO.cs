@@ -5,12 +5,16 @@
         string Subject, 
         string Summary,
         string Notes,
+        string oldReferenceNumber,
+        string inComingNumber,
         Guid CompanyId, 
         Guid PublisherId ,
         Guid RecievedFromId, 
-        Guid WorkTypeId,
+        Guid? WorkTypeId,
 		DateTime DocumentDate,
         DateTime DeliveryDate,
         int DeliveryMethod,
-        int PostDocumentType);
+        int? Status,
+        int PostDocumentType,
+        List<AttachmentDTO> Attachments);
 }

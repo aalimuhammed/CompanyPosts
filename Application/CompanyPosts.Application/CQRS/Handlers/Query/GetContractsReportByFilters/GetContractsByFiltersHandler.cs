@@ -1,6 +1,5 @@
 ﻿using CompanyPost.Application.Extension;
 
-
 namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilters
 {
     internal sealed class GetContractsByFiltersHandler
@@ -12,8 +11,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
               _unitOfWork = unitOfWork;
         }
 		public async Task<IEnumerable<ContractReportResponseDTO>> Handle(
-	GetContractsByFiltersQuery request,
-	CancellationToken cancellationToken)
+					GetContractsByFiltersQuery request,
+					CancellationToken cancellationToken)
 		{
 			var contractRepository = _unitOfWork.Repository<Contracts>();
 			var contractRefRepository = _unitOfWork.Repository<ContractRef>();
@@ -49,45 +48,81 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 			if (!string.IsNullOrEmpty(request.DTO.PurchaseOrderRef))
 				predicate = predicate.And(c => c.purchase_order_ref == request.DTO.PurchaseOrderRef);
 
-			if (request.DTO.StartDate.HasValue)
+            if (request.DTO.StartDate.HasValue)
 				predicate = predicate.And(c => c.Contract_Date >= request.DTO.StartDate.Value);
 
 			if (request.DTO.EndDate.HasValue)
 				predicate = predicate.And(c => c.Contract_Date <= request.DTO.EndDate.Value);
+
 
 			var contracts = await contractRepository.FindWithIncludeAsync(
 				predicate: predicate,
 				includes: includes,
 				cancellationToken);
 
-			// ✅ CASE 1: Contracts found
-			if (contracts.Any())
-			{
-				contractsResponse = contracts.Select(c => new ContractReportResponseDTO(
-					c.Id,
-					c.Projects.Name,
-					c.ContractNumber,
-					c.HasReference
-						? c.SerialNumber.ToString()
-						: $"{c.ContractNumber}-{c.SerialNumber}",
-					c.WorkType.Name,
-					c.Contract_Date.ToString("yyyy-MM-dd"),
-					c.Department.GetDisplayName(),
-					c.purchase_order_ref,
-					c.Currency.GetDisplayName(),
-					c.PersonOrgs.Name,
-					c.HasReference ? "ملحق" : "أساسي",
-					c.CreatedBy.UserName,
-					c.CreatedAt.ToString("yyyy-MM-dd"),
-					c.Value,
-					c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
-						?? new List<string>()
-				));
-			}
-			// ✅ CASE 2: No contracts → fallback to ContractRef
-			else
-			{
+            if (contracts.Any())
+            {
+                var contractIdsWithRef = contracts
+                    .Where(c => c.HasReference)
+                    .Select(c => c.Id)
+                    .ToList();
 
+                var refsByContractId = new Dictionary<Guid, List<ContractRef>>();
+
+                if (contractIdsWithRef.Any())
+                {
+                    var refIncludes = new List<Expression<Func<ContractRef, object>>>
+								{
+									r => r.CreatedBy,
+									r => r.ContractAttachments
+								};
+
+                    var refPredicate = PredicateBuilder.New<ContractRef>(r => contractIdsWithRef.Contains(r.ContractId));
+
+                    var allRefs = await contractRefRepository.FindWithIncludeAsync(
+                        predicate: refPredicate,
+                        includes: refIncludes,
+                        cancellationToken);
+
+                    refsByContractId = allRefs
+                        .GroupBy(r => r.ContractId)
+                        .ToDictionary(g => g.Key, g => g.ToList());
+                }
+
+                contractsResponse = contracts.Select(c => new ContractReportResponseDTO(
+                    c.Id,
+                    c.Projects.Name,
+                    c.ContractNumber,
+                    c.SerialNumber.ToString(),
+                    c.WorkType.Name,
+                    c.Contract_Date.ToString("yyyy-MM-dd"),
+                    c.Department.GetDisplayName(),
+                    c.purchase_order_ref,
+                    c.Currency.GetDisplayName(),
+                    c.PersonOrgs.Name,
+                    "أساسي",
+                    c.CreatedBy.UserName,
+                    c.CreatedAt.ToString("yyyy-MM-dd"),
+                    c.Value,
+                    c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
+                        ?? new List<string>(),
+                    c.HasReference && refsByContractId.TryGetValue(c.Id, out var refs)
+                        ? refs.Select(r => new ContractRefResponseDTO(
+                            r.Id,
+                            r.ContractNumber,
+                            $"{c.ContractNumber}-{r.SerialNumber}",
+                            r.Contract_Date.ToString("yyyy-MM-dd"),
+                            r.Value,
+                            r.CreatedBy.UserName,
+                            r.Currency.GetDisplayName(),
+                            r.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
+                                ?? new List<string>()
+                        )).ToList()
+                        : new List<ContractRefResponseDTO>()
+                ));
+            }
+            else
+			{
 				var Refincludes = new List<Expression<Func<ContractRef, object>>>
 						{
 							contract => contract.CreatedBy,
@@ -95,6 +130,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 							contract => contract.Contract.Projects,
 							contract => contract.Contract.WorkType,
 						};
+
 				var predicateRef = PredicateBuilder.New<ContractRef>(true);
 
 				if (!string.IsNullOrEmpty(request.DTO.ContractRef))
@@ -111,28 +147,28 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 					includes: Refincludes,
 					cancellationToken);
 
-				contractsResponse = contractRefs.Select(c => new ContractReportResponseDTO(
-					c.Id,
-					c.Contract.Projects.Name,
-					c.ContractNumber,
-					$"{c.Contract.ContractNumber}-{c.SerialNumber}",
-					c.Contract.WorkType.Name,
-					c.Contract_Date.ToString("yyyy-MM-dd"),
-					c.Contract.Department.GetDisplayName(),
-					"",
-					c.Currency.GetDisplayName(),
-					"",
-					"ملحق",
-					c.CreatedBy.UserName,
-					c.CreatedAt.ToString("yyyy-MM-dd"),
-					c.Value,
-					c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
-						?? new List<string>()
-				));
-			}
+                contractsResponse = contractRefs.Select(c => new ContractReportResponseDTO(
+                            c.Id,
+                            c.Contract.Projects.Name,
+                            c.ContractNumber,
+                            $"{c.Contract.ContractNumber}-{c.SerialNumber}",
+                            c.Contract.WorkType.Name,
+                            c.Contract_Date.ToString("yyyy-MM-dd"),
+                            c.Contract.Department.GetDisplayName(),
+                            "",
+                            c.Currency.GetDisplayName(),
+                            "",
+                            "ملحق",
+                            c.CreatedBy.UserName,
+                            c.CreatedAt.ToString("yyyy-MM-dd"),
+                            c.Value,
+                            c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
+                                ?? new List<string>(),
+                            new List<ContractRefResponseDTO>()
+                        ));
+            }
 
 			return contractsResponse;
 		}
-
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using CompanyPost.Application.Helpers;
-using System.Diagnostics.Contracts;
 
 namespace CompanyPost.Application.CQRS.Handlers.Commands.PostExternals
 {
@@ -18,14 +17,19 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostExternals
         {
             var repository = _unitOfWork.Repository<PostExternal>();
 			await _unitOfWork.BeginTransactionAsync(cancellationToken);
+
             try
             {
-				var hasAttachments =
-			            request.UpdatePostExternalDocumentRequestDTO.Attachments?.Any() == true;
+                var dto = request.UpdatePostExternalDocumentRequestDTO;
 
-				var postExternal = await repository.GetByIdAsyncWithAttachmentIncluded(
+                var hasNewFiles = dto.Attachments?.Any() == true;
+                var idsToDelete = dto.AttachmentIdsToDelete ?? new List<Guid>();
+                var hasDeletions = idsToDelete.Any();
+                var needsAttachmentsLoaded = hasNewFiles || hasDeletions;
+
+                var postExternal = await repository.GetByIdAsyncWithAttachmentIncluded(
 			                 request.Id,
-			                 hasAttachments,
+                             needsAttachmentsLoaded,
 			                 x => x.Attachments,
 			                 cancellationToken);
 
@@ -46,10 +50,26 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostExternals
 				postExternal.PublishedId = request.UpdatePostExternalDocumentRequestDTO.publishedId;
 				postExternal.CompanyId = request.UpdatePostExternalDocumentRequestDTO.companyId;
 				postExternal.PostDocumentTypes = (PostDocumentTypes)request.UpdatePostExternalDocumentRequestDTO.department;
+                postExternal.Status = (Status)request.UpdatePostExternalDocumentRequestDTO.status;
+				postExternal.OldReferenceNumber = request.UpdatePostExternalDocumentRequestDTO.oldReferenceNumber;
+				postExternal.InComingNumber = request.UpdatePostExternalDocumentRequestDTO.inComingNumber;
 
-				if (hasAttachments)
+                if (hasDeletions)
+                {
+                    var toRemove = postExternal.Attachments
+                        .Where(a => idsToDelete.Contains(a.Id))
+                        .ToList();
+
+                    foreach (var att in toRemove)
+                    {
+                        _unitOfWork.Repository<PostExternalAttachment>().Delete(att);
+                        postExternal.Attachments.Remove(att);
+                    }
+                }
+
+                if (hasNewFiles)
 				{
-					await _attachmentsHelper.ReplaceAsync(
+					await _attachmentsHelper.AppendAsync(
 						postExternal.Attachments,
 						request.UpdatePostExternalDocumentRequestDTO.Attachments!,
 						"posts",
@@ -63,7 +83,6 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostExternals
 							FileName = fileName
 						},
 						cancellationToken);
-
 				}
 
 				repository.Update(postExternal);
@@ -76,7 +95,6 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostExternals
 			}
 			catch (Exception)
             {
-
 				await _unitOfWork.RollbackTransactionAsync(cancellationToken);
 				return false;
 				throw;

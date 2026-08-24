@@ -18,5 +18,7 @@ string? InComingNumber,
 IEnumerable<Guid>? SentEmailsTo,
 string? EmailContent,
 string? FollowingPerson,
+string? OldRef,
+string? AboutWork,
 List<IFormFile>? Attachments,
 int StatusMethod);

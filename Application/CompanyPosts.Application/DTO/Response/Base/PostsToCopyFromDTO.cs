@@ -7,7 +7,7 @@
         Guid CompanyId,
         Guid PublisherId,
         Guid ReceivedFromId,
-        Guid WorkTypeId,
+        Guid? WorkTypeId,
         DateTime DocumentDate,
         DateTime DeliveryDate,
         string PublisherType ,

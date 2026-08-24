@@ -13,5 +13,6 @@
         Guid ProjectId,
         Guid WorkTypeId,
         string? OldReferenceNumber,
-        int Department);
+        int Department,
+        List<AttachmentDTO> Attachments);
 }

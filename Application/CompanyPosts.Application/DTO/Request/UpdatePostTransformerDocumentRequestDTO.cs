@@ -18,8 +18,11 @@ namespace CompanyPost.Application.DTO.Request
         string? recivedByName ,
         string? postNumber,
         string? inComingNumber,
+        string? oldReferenceNumber,
         int? documentType ,
-		List<IFormFile>? Attachments)
+        int status,
+		List<IFormFile>? Attachments,
+          List<Guid>? AttachmentIdsToDelete)
         : UpdatePostDocumentRequestDTO(
             documentNumber,
             subject,
@@ -33,5 +36,7 @@ namespace CompanyPost.Application.DTO.Request
             summary,
             department,
             deliveryMethod , 
-            Attachments);
+            status,
+            Attachments, 
+            AttachmentIdsToDelete);
 }
