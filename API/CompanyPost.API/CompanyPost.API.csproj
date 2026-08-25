@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\CompanyPost.Infrastructure\CompanyPost.Infrastructure.csproj" />
 	 <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>

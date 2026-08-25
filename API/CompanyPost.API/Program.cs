@@ -7,7 +7,6 @@ public class Program
 	{
 		var builder = WebApplication.CreateBuilder(args);
 
-		
 		builder.Services.AddControllers();
 		builder.Services
 			  .AddApplication()
@@ -29,7 +28,8 @@ public class Program
 			throw;
 		}
 
-		app.UseHttpsRedirection();
+        app.UseMiddleware<GlobalExceptionHandling>();
+        app.UseHttpsRedirection();
 
 		app.UseStaticFiles();
 
@@ -41,7 +41,6 @@ public class Program
 		app.UseAuthentication();
 		app.UseAuthorization();
 		app.MapControllers();
-		app.UseMiddleware<GlobalExceptionHandling>();
 		app.Run();
 	}
 }
