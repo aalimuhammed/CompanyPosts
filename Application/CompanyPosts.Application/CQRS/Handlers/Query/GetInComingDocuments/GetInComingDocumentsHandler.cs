@@ -1,4 +1,5 @@
-﻿using CompanyPost.Application.Extension;
+﻿using CompanyPost.Application.DTO.Response.Base;
+using CompanyPost.Application.Extension;
 
 namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 {
@@ -19,12 +20,30 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 						 post => post.CreatedBy,
 						 post => post.Publisher,
 						 post => post.Projects,
-						 post => post.WorkType,
-						 post => post.OriginalPublisher,
+						// post => post.WorkType,
+						// post => post.OriginalPublisher,
 						 post => post.IncomingAttachments,
 					 };
 
-			var inComing = await inComingRepository.FindWithIncludeAsync(predicate: null, includes, cancellationToken);
+            var predicate = PredicateBuilder.New<InComing>(true);
+
+            if (request.BaseDocumentFilterRequestDTO.StartDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate >= request.BaseDocumentFilterRequestDTO.StartDate.Value);
+            }
+
+            if (request.BaseDocumentFilterRequestDTO.EndDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate <= request.BaseDocumentFilterRequestDTO.EndDate.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.DocumentNumber))
+            {
+                predicate = predicate.And(p => p.DocumentNumber == request.BaseDocumentFilterRequestDTO.DocumentNumber);
+            }
+
+            var inComing = await inComingRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
+
 			var inComingDto = inComing.Select(p => new PostDocumentsDTO(
 				p.Id,
 				p.SerialNumber,
@@ -32,7 +51,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 				p.DocumentDate.ToString("dd-MM-yyyy"),
 				p.DeliveryDate.ToString("dd-MM-yyyy"),
 				p.IncomingAttachments != null && p.IncomingAttachments.Any()
-					? p.IncomingAttachments.Select(a => $"/incoming/{a.FileName}").ToList()
+					? p.IncomingAttachments.Select(a => $"/incomings/{a.FileName}").ToList()
 					 : new List<string>(),
 				p.Subject,
 				p.Summary,
@@ -41,10 +60,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 				p.Publisher.Name,
 				p.DeliveryMethods.GetDisplayName(),
 				null,
-				p.WorkType.Name,
-				p.OriginalPublisher.Name,
-				p.Department.GetDisplayName()
-			));
+				"",
+                p.CreatedAt.ToString("yyyy-MM-dd") 
+				));
 			return inComingDto;
 		}
 	}

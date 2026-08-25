@@ -11,6 +11,7 @@ public class PostExternalController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+
 	[HttpGet("GetPostExternalMaxSerialNumber")]
 	public async Task<IActionResult> GetPostExternalMaxSerialNumber(CancellationToken cancellationToken)
 	{
@@ -18,7 +19,24 @@ public class PostExternalController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
-	[HttpPost("CreatePostExternal")]
+
+	[HttpGet("GetDocumentNumbers")]
+	public async Task<IActionResult> GetPostExternalDocumentNumbers(CancellationToken cancellationToken)
+	{
+		var query = new GetPostExternalDocumentNumbersQuery();
+		var result = await _mediator.Send(query, cancellationToken);
+		return Ok(result);
+	}
+
+    [HttpGet("GetPostExternalToBeCopied/{id}")]
+	public async Task<IActionResult> GetPostExternalToBeCopied(Guid Id,CancellationToken cancellationToken)
+	{
+		var query = new GetPostExternalToBeCopiedQuery(Id);
+		var result = await _mediator.Send(query,cancellationToken);
+		return Ok(result);
+	}
+
+    [HttpPost("CreatePostExternal")]
 	public async Task<IActionResult> CreatePostExternal(
 		[FromForm] CreatePostExternalDTO createPostExternalDTO,
 		CancellationToken cancellationToken)
@@ -31,7 +49,7 @@ public class PostExternalController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return BadRequest(new ApiResponse { Success = false, Message = $"An error occurred while saving the data: {ex.Message}" });
+			return BadRequest(new ApiResponse { Success = false, Message = $"{ex.Message}" });
 		}
 	}
 }

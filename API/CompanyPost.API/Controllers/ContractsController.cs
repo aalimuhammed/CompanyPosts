@@ -18,7 +18,24 @@ public class ContractsController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
-	[HttpPost("create-contract")]
+
+	[HttpGet("GetContractRefMaxSerialNumber/{id}")]
+	public async Task<IActionResult> GetContractRefMaxSerialNumberAsync(Guid id , CancellationToken cancellationToken)
+	{
+		var query = new GetContractRefMaxSerialNumberQuery(id);
+		var result = await _mediator.Send(query, cancellationToken);
+		return Ok(result);
+	}
+
+	[HttpGet("GetAttachedContractData/{id}")]
+	public async Task<IActionResult> GetAttachedContractData(Guid id, CancellationToken cancellationToken)
+	{
+		var query = new GetContractAttachedDataQuery(id);
+		var result = await _mediator.Send(query, cancellationToken);
+		return Ok(result);
+    }
+
+    [HttpPost("create-contract")]
 	public async Task<IActionResult> CreateContract(
 		[FromForm] CreateContractDTO creatrContractDTO,
 		CancellationToken cancellationToken)
@@ -31,28 +48,38 @@ public class ContractsController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return BadRequest(new ApiResponse { Success = false, Message = $"An error occurred while saving the data: {ex.Message}" });
+			return BadRequest(new ApiResponse { Success = false, Message = $"{ex.Message}" });
 		}
 	}
 
-	[HttpGet("get-contracts")]
-	public async Task<IActionResult> GetContracts(CancellationToken cancellationToken)
+    [HttpGet("get-contracts-numbers")]
+	public async Task<IActionResult> GetContractsNumbers(CancellationToken cancellationToken)
 	{
-		var query = new GetContractsQuery();
+		var query = new GetContractsNumbersQuery();
 		var contracts = await _mediator.Send(query, cancellationToken);
 		return Ok(contracts);
 	}
-	[HttpPut("update-contract")]
-	public async Task<IActionResult> UpdateContract(
-		[FromForm] UpdateContractDTO updateContractDTO,
-		CancellationToken cancellationToken)
-	{
-		var command = new UpdateContractCommand(updateContractDTO);
-		await _mediator.Send(command, cancellationToken);
-		return StatusCode(204);
-	}
 
-	[HttpDelete("delete-contract")]
+	[HttpGet("get-contract/{id}")]
+	public async Task<IActionResult> GetContractDocumentById(Guid Id, CancellationToken cancellationToken)
+	{
+		var query = new GetContractDocumentByIdQuery(Id);
+		var contract = await _mediator.Send(query, cancellationToken);
+		return Ok(contract);
+    }
+
+    [HttpPut("update-contract/{id}")]
+    public async Task<IActionResult> UpdateContractDocumentById(
+		Guid Id,
+		[FromForm] UpdateContractDocumentRequestDTO updateContractDocumentDTO,
+        CancellationToken cancellationToken)
+    {
+        var query = new UpdateContractDocumentCommand(Id , updateContractDocumentDTO);
+        var contract = await _mediator.Send(query, cancellationToken);
+        return Ok(contract);
+    }
+
+    [HttpDelete("deletecontract")]
 	public async Task<IActionResult> DeleteContract([FromQuery]Guid Id, CancellationToken cancellationToken)
 	{
 		var command = new DeleteContractCommand(Id);

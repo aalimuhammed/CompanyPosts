@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.DTO.Response;
 public record ContractResponeDTO(
 	Guid id,
-	string value,
+	double value,
 	string contract_number,
 	string details,
 	string notes,
@@ -10,4 +10,5 @@ public record ContractResponeDTO(
 	string created_by,
 	string currency ,
 	string purchase_order_ref,
-	string contractor);
+	string contractor,
+	List<AttachmentDTO> Attachments);

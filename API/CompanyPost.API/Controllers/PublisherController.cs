@@ -9,6 +9,7 @@ public class PublisherController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+	
 	[HttpGet("get-projects")]
 	public async Task<IActionResult> GetProjects(CancellationToken cancellationToken)
 	{
@@ -24,11 +25,20 @@ public class PublisherController : ControllerBase
 		var projectAndDepartments = await _mediator.Send(query, cancellationToken);
 		return Ok(projectAndDepartments);
 	}
+
 	[HttpGet("get-suppliers")]
 	public async Task<IActionResult> GetSuppliers(CancellationToken cancellationToken)
 	{
 		var query = new GetSuppliersQuery();
 		var suppliers = await _mediator.Send(query,cancellationToken);
 		return Ok(suppliers);
+	}
+
+	[HttpGet("get-companies")]
+	public async Task<IActionResult> GetCompanies(CancellationToken cancellationToken)
+	{
+		var query = new GetPublisherCompaniesQuery();
+		var companies = await _mediator.Send(query, cancellationToken);
+		return Ok(companies);
 	}
 }

@@ -9,6 +9,7 @@ public class AuthController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+
 	[AllowAnonymous]
 	[HttpPost("login")]
 	public async Task<ActionResult<AuthResultDTO>> Login([FromBody] SysUserLoginQuery command)
@@ -17,12 +18,14 @@ public class AuthController : ControllerBase
 		return Ok(result);
 	}
 
-	[HttpGet("verify-token")]
-	//[Authorize]
-	public async Task<IActionResult> VerifyToken()
+    [AllowAnonymous]
+    [HttpGet("verify-token")]
+	public async Task<IActionResult> VerifyToken(CancellationToken cancellationToken)
 	{
 		var query = new VerifyTokenQuery();
-		var result = await _mediator.Send(query);
+
+		var result = await _mediator.Send(query , cancellationToken);
+
 		if (!result.IsValid)
 			return Unauthorized(result);
 

@@ -6,50 +6,100 @@ internal sealed class CreateSysUserCompanyHandler
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IPasswordService _passwordService;
+	private readonly IEmailServices _emailServices;
+	private readonly IJwTGenerator _jwTGenerator;
 	public CreateSysUserCompanyHandler(
 		IUnitOfWork unitOfWork, 
-		IPasswordService passwordService)
+		IPasswordService passwordService,
+		IEmailServices emailServices,
+		IJwTGenerator jwTGenerator)
 	{
 		_unitOfWork = unitOfWork;
 		_passwordService = passwordService;
+		_emailServices = emailServices;
+		_jwTGenerator = jwTGenerator;
 	}
 	public async Task<Unit> Handle(CreateSysUserCompanyCommand request, CancellationToken cancellationToken)
 	{
 		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
-		var sysUserComapnyRepository = _unitOfWork.Repository<SysUsersCompany>();
 		try
 		{
-			await _unitOfWork.BeginTransactionAsync();
-			var plainPassword = _passwordService.GenerateRandomPassword();
+            bool hrCodeExists  = await sysUserRepository.FindAnyAsync(
+				u => u.HrCode == request.CreateSysUserCompanyDTO.HrCode, cancellationToken);
+            if (hrCodeExists) throw new InvalidOperationException("Hr Code already exists.");
+
+            bool emailExists = await sysUserRepository.FindAnyAsync(
+				u => u.Email == request.CreateSysUserCompanyDTO.Email, cancellationToken);
+            if (emailExists) throw new InvalidOperationException("Email already exists.");
+
+            bool userNameExists = await sysUserRepository.FindAnyAsync(
+				u => u.UserName == request.CreateSysUserCompanyDTO.UserName, cancellationToken);
+            if (userNameExists) throw new InvalidOperationException("Username already exists.");
+
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
 			var sysUser = new SysUsers
 			{
 				Email = request.CreateSysUserCompanyDTO.Email,
 				UserName = request.CreateSysUserCompanyDTO.UserName,
 				Name = request.CreateSysUserCompanyDTO.Name,
-				Password = _passwordService.HashPassword(plainPassword)
-			};
+				Password = _passwordService.HashPassword(request.CreateSysUserCompanyDTO.Password),
+				HrCode = request.CreateSysUserCompanyDTO.HrCode,
+				CompanyId = request.CreateSysUserCompanyDTO.Company
+            };
 
-			await sysUserRepository.AddAsync(sysUser);
-			foreach (var item in request.CreateSysUserCompanyDTO.Companies)
-			{
-				var sysUserCompany = new SysUsersCompany
-				{
-					SysUserId = sysUser.Id,
-					CompanyId = Guid.Parse(item)
-				};
-				await sysUserComapnyRepository.AddAsync(sysUserCompany);
-			}
+			await sysUserRepository.AddAsync(sysUser,cancellationToken);
 
-			await _unitOfWork.SaveChangesAsync();
-			await _unitOfWork.CommitTransactionAsync();
-		}
-		catch (Exception)
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+			await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
+            await SendWelcomeEmailAsync(
+				sysUser.Name,
+				sysUser.UserName,
+				sysUser.HrCode,
+				sysUser.Email, 
+				cancellationToken);
+
+			 _jwTGenerator.CreateToken(sysUser);
+           // _ = SendWelcomeEmailAsync(sysUser.Name, sysUser.UserName, sysUser.HrCode, sysUser.Email, cancellationToken);
+        }
+        catch (InvalidOperationException)
+        {
+            throw; 
+        }
+        catch (Exception ex)
 		{
-			await _unitOfWork.RollbackTransactionAsync();
+			await _unitOfWork.RollbackTransactionAsync(cancellationToken);
 			throw;
 		}
 
 		return Unit.Value;
+	}
+    private async Task SendWelcomeEmailAsync(
+		string name,
+		string userName,
+		string hrCode,
+		string recipientEmail, 
+		CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(recipientEmail)) return;
+
+        var subject = "Welcome to Company Post";
+        var html = $@"
+				<p>Dear {name},</p>
+				<p>Please be informed that your account has been successfully created under the username {userName} with Hr Code {hrCode}</p>
+				<p>Kindly note that your account is currently pending approval. You will be notified once it has been reviewed and activated by the administrator.</p>
+				<p>Thank you for your patience.</p>
+				<p>Best regards,<br/>The Software Team</p>";
+
+        try
+        {
+            await _emailServices.SendEmailAsync(recipientEmail, subject, html, cancellationToken);
+        }
+		catch(Exception ex)
+		{
+			throw new InvalidOperationException("An Error occured while sending email for new users" , ex);
+		}
 	}
 }

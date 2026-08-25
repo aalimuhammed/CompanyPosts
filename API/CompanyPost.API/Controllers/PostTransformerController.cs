@@ -11,6 +11,7 @@ public class PostTransformerController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+
 	[HttpGet("GetPostTransformerMaxSerialNumber")]
 	public async Task<IActionResult> GetPostTransformerMaxSerialNumber(CancellationToken cancellationToken)
 	{
@@ -18,7 +19,24 @@ public class PostTransformerController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
-	[HttpPost("CreatePostTransformer")]
+
+    [HttpGet("GetDocumentNumbers")]
+    public async Task<IActionResult> GetPostTransformerDocumentNumbers(CancellationToken cancellationToken)
+    {
+        var query = new GetPostTransformerDocumentsNumbersQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("GetPostTransformerToBeCopied/{id}")]
+    public async Task<IActionResult> GetPostTransformerToBeCopied(Guid Id, CancellationToken cancellationToken)
+    {
+        var query = new GetPostTransformerToBeCopiedQuery(Id);
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPost("CreatePostTransformer")]
 	public async Task<IActionResult> CreatePostTransformer(
 		[FromForm] CreatePostTransofrmerDTO createPostTransofrmerDTO,
 		CancellationToken cancellationToken)
@@ -31,7 +49,7 @@ public class PostTransformerController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return BadRequest(new ApiResponse { Success = false, Message = $"An error occurred while saving the data: {ex.Message}" });
+			return BadRequest(new ApiResponse { Success = false, Message = $"{ex.Message}" });
 		}
 	}
 }

@@ -1,15 +1,20 @@
 ﻿namespace CompanyPost.Application.DTO.Request;
 public record CreateContractDTO(
-	string Value ,
+	double Value ,
 	string Details,
 	string ContractNum,
 	DateTime ContractDate,
-	int SerialNumber,
 	Guid PersonOrgId,
 	Guid WorkTypeId,
 	string? Notes,
 	Guid ProjectId,
 	int Currency,
-	int Department,
-	string PurchaseOrdNumRef , 
-	List<IFormFile> Attachments);
+	int? Department,
+	string? PurchaseOrdNumRef ,
+	ContractTypes HasReference,
+	string? BaseContractId,
+    string? CommercialRegisterNumber,
+	string? OldRef,
+    string? EmailContent,
+    IEnumerable<Guid>? SentEmailsTo,
+    List<IFormFile>? Attachments);

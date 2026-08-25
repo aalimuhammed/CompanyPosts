@@ -1,2 +1,4 @@
 ﻿namespace CompanyPost.Application.CQRS.Commands.Contract;
-public record UpdateContractCommand(UpdateContractDTO UpdateContractDTO) : IRequest<Unit>;
+public record UpdateContractCommand(
+    Guid Id,
+    UpdateContractDTO UpdateContractDTO) : IRequest<Unit>;

@@ -1,4 +1,5 @@
-﻿using CompanyPost.Application.Extension;
+﻿using CompanyPost.Application.DTO.Response.Base;
+using CompanyPost.Application.Extension;
 
 namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 {
@@ -19,12 +20,34 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 					 post => post.CreatedBy,
 					 post => post.Publisher,
 					 post => post.RecievedFrom,
-					 post => post.WorkType,
+					// post => post.WorkType,
 					 post => post.Company,
 					 post => post.Attachments,
 				 };
 
-			var posts = await postRepository.FindWithIncludeAsync(predicate: null, includes, cancellationToken);
+            var predicate = PredicateBuilder.New<PostInternal>(true);
+
+            if (request.BaseDocumentFilterRequestDTO.StartDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate >= request.BaseDocumentFilterRequestDTO.StartDate.Value);
+            }
+
+            if (request.BaseDocumentFilterRequestDTO.EndDate.HasValue)
+            {
+                predicate = predicate.And(p => p.DocumentDate <= request.BaseDocumentFilterRequestDTO.EndDate.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.DocumentNumber))
+            {
+                predicate = predicate.And(p => p.DocumentNumber == request.BaseDocumentFilterRequestDTO.DocumentNumber);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.BaseDocumentFilterRequestDTO.InComingNumber))
+            {
+                predicate = predicate.And(p => p.InComingNumber == request.BaseDocumentFilterRequestDTO.InComingNumber);
+            }
+
+            var posts = await postRepository.FindWithIncludeAsync(predicate, includes, cancellationToken);
 
 			var postDTOs = posts.Select(p => new PostDocumentsDTO(
 				p.Id,
@@ -42,10 +65,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 				p.Publisher.Name,
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
-				p.WorkType.Name,
 				p.RecievedFrom.Name,
-				p.Department.GetDisplayName()
-			));
+                p.CreatedAt.ToString("yyyy-MM-dd")
+            ));
 
 			return postDTOs;
 		}

@@ -3,11 +3,15 @@ internal sealed class ContractAttachmentsConfiguration : IEntityTypeConfiguratio
 {
 	public void Configure(EntityTypeBuilder<ContractAttachments> builder)
 	{
-		//builder.HasKey(e => e.Id);
-
 		builder.HasOne(builder => builder.Contracts)
 				.WithMany(t => t.ContractAttachments)
 				.HasForeignKey(builder => builder.ContractID)
-				.OnDelete(DeleteBehavior.Restrict);
+				.OnDelete(DeleteBehavior.Cascade);
+
+		builder.HasOne(builder => builder.ContractRef)
+				.WithMany(t => t.ContractAttachments)
+				.HasForeignKey(builder => builder.ContractRefId)
+				.OnDelete(DeleteBehavior.Cascade);
+
 	}
 }

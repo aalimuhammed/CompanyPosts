@@ -12,6 +12,7 @@ public class IncomingController : ControllerBase
 	{
 		_mediator = mediator;
 	}
+
 	[HttpGet("GetIncomingMaxSerialNumber")]
 	public async Task<IActionResult> GetMaxSerialNumberAsync(CancellationToken cancellationToken)
 	{
@@ -19,7 +20,24 @@ public class IncomingController : ControllerBase
 		var result = await _mediator.Send(query, cancellationToken);
 		return Ok(result);
 	}
-	[HttpPost("CreateIncoming")]
+
+    [HttpGet("GetDocumentNumbers")]
+    public async Task<IActionResult> GetInComingDocumentNumbers(CancellationToken cancellationToken)
+    {
+        var query = new GetInComingDocumentsNumbersQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("GetInComingToBeCopied/{id}")]
+    public async Task<IActionResult> GetInComingToBeCopied(Guid Id, CancellationToken cancellationToken)
+    {
+        var query = new GetInComingToBeCopiedQuery(Id);
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPost("CreateIncoming")]
 	public async Task<IActionResult> CreateIncomingAsync(
 		[FromForm] CreateIncomingDTO createIncomingDTO,
 		CancellationToken cancellationToken)
@@ -35,5 +53,4 @@ public class IncomingController : ControllerBase
 			return BadRequest(new ApiResponse { Success = false, Message = $"An error occurred while saving the data: {ex.Message}" });
 		}
 	}
-
 }

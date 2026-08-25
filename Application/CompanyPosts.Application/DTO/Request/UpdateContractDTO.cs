@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.DTO.Request;
 public record UpdateContractDTO(
 	Guid Id,
-	string Value,
+	double Value,
 	string Details,
 	string ContractNum,
 	DateTime ContractDate,
@@ -10,5 +10,9 @@ public record UpdateContractDTO(
 	string? Notes,
 	Guid ProjectId,
 	string Currency,
-	string PurchaseOrdeRef,
-	IFormFile? Attachments);
+	string department,
+    string PurchaseOrdeRef,
+	string oldReferenceNumber,
+    Guid WorkTypeId,
+	List<IFormFile>? Attachments ,
+    List<Guid>? AttachmentIdsToDelete);

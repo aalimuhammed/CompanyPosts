@@ -1,7 +1,21 @@
-﻿namespace CompanyPost.Application.Abstraction
+﻿using CompanyPost.Application.CQRS.Commands.InComing;
+
+namespace CompanyPost.Application.Abstraction
 {
 	public interface IEmailServices
 	{
-		Task<bool> SendEmailAsync(string toEmail, string subject, string body , CancellationToken cancellationToken = default);
-	}
+		Task<bool> SendEmailAsync(
+            string toEmail, 
+            string subject, string body , 
+            CancellationToken cancellationToken = default);
+        Task SendBulkEmailAsync(
+           string subject,
+           string htmlMessage,
+           IEnumerable<string> recipients,
+           CancellationToken cancellationToken = default);
+
+         string CreateEmailContent(
+            CreateEmailContentDTO EmailContentDTO
+            );
+    }
 }

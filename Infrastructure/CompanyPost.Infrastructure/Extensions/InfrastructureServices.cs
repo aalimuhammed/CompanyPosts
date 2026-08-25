@@ -1,4 +1,5 @@
 ﻿using CompanyPost.Infrastructure.Settings;
+using Microsoft.Extensions.Logging;
 
 namespace CompanyPost.Infrastructure.Extensions;
 public static class InfrastructureServices
@@ -12,11 +13,15 @@ public static class InfrastructureServices
 		services.AddDbContext<CompanyPostDbContext>(
 			options => options.UseMySql(defaultConnectionString,
 			ServerVersion.AutoDetect(defaultConnectionString))
-			.UseSnakeCaseNamingConvention());
+			.UseSnakeCaseNamingConvention()
+			.EnableSensitiveDataLogging()
+			.LogTo(Console.WriteLine , LogLevel.Information));
 
 		services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        //services.Configure<HostSettings>(configuration.GetSection("Hosts"));
 
 		services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+		services.AddScoped(typeof(ICurrencyRepository<>), typeof(CurrencyRepository<>));
 		services.AddScoped<IUnitOfWork , UnitOfWork>();
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IEmailServices, EmailServices>();
@@ -44,6 +49,9 @@ public static class InfrastructureServices
 			};
 		});
 		services.AddAuthorization();
-		return services;
+		//services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+  //          services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+  //          services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlingBehavior<,>));
+            return services;
 	}
 }

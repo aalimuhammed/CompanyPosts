@@ -12,9 +12,6 @@ internal sealed class PostTransformerConfiguration :
 		builder.Property(x => x.SerialNumber)
 			.IsRequired();
 
-		builder.Property(x => x.Subject)
-			.HasMaxLength(100);
-
 		builder.Property(x => x.AboutWork)
 			.HasMaxLength(50);
 
@@ -26,15 +23,15 @@ internal sealed class PostTransformerConfiguration :
 
 		builder.Property(x => x.IncomingNumber)
 			.HasMaxLength(50)
-			.IsRequired();
+			.IsRequired(false);
 
 		builder.Property(x => x.PostNumber)
 			.HasMaxLength(50)
 			.IsRequired();
 
-		builder.Property(x => x.RecivedByName)
-			.HasMaxLength(100)
-			.IsRequired();
+		//builder.Property(x => x.RecivedByName)
+		//	.HasMaxLength(100)
+		//	.IsRequired();
 
 		builder.Property(x => x.FollowingPerson)
 			.HasMaxLength(100)

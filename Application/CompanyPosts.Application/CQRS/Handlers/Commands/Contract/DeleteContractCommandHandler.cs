@@ -14,37 +14,47 @@ internal sealed class DeleteContractCommandHandler
 	public async Task<Unit> Handle(DeleteContractCommand request, CancellationToken cancellationToken)
 	{
 		var contractRepository = _unitOfWork.Repository<Contracts>();
-		var contractAttachmentRepository = _unitOfWork.Repository<ContractAttachments>();
 
-		var includes = new List<Expression<Func<Contracts, object>>>
-				 {
-						x => x.ContractAttachments,
-				 };
+        Expression<Func<Contracts, object>>[] includes = { c => c.ContractAttachments};
 
-		var contractToDelete = await contractRepository.FindWithIncludeAsync(
-			x => x.Id == request.Id, includes, cancellationToken);
-
-		if (contractToDelete == null || !contractToDelete.Any())
+        await _unitOfWork.BeginTransactionAsync(cancellationToken);
+		try
 		{
-			throw new Exception("Contract not found");
-		}
+            var contractsToDelete = await contractRepository.FindWithIncludeAsync(
+            x => x.Id == request.Id, includes ,cancellationToken);
 
-		var contract = contractToDelete.FirstOrDefault() 
-			?? throw new Exception("Not Found Row");
+            if (contractsToDelete == null)
+            {
+                throw new Exception("Not Found Row");
+            }
 
-		if (contract.ContractAttachments != null && contract.ContractAttachments.Any())
+            var contractToDelete = contractsToDelete.FirstOrDefault();
+
+            if (contractToDelete == null) {
+                throw new KeyNotFoundException($"Contract with Id {request.Id} not found.");
+            }
+
+            if (contractToDelete != null && contractToDelete.ContractAttachments.Any())
+            {
+                foreach (var attachment in contractToDelete.ContractAttachments)
+                {
+                    if (!string.IsNullOrEmpty(attachment.FileName))
+                    {
+                        _fileService.DeleteFile("contracts", attachment.FileName);
+                    }
+                }
+            }
+
+            contractRepository.Delete(contractToDelete!);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
+            return Unit.Value;
+        }
+		catch (Exception)
 		{
-			foreach (var attachment in contract.ContractAttachments)
-			{
-				if (!string.IsNullOrEmpty(attachment.FileName))
-				{
-					_fileService.DeleteFile("contracts" , attachment.FileName);
-					contractAttachmentRepository.Delete(attachment);
-				}
-			}
-		}
-		contractRepository.Delete(contract);
-		await _unitOfWork.SaveChangesAsync();
-		return Unit.Value;
+            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
+        
 	}
 }

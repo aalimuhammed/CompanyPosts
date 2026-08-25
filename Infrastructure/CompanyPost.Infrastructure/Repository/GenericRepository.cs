@@ -1,11 +1,10 @@
 ﻿using CompanyPost.Domain.Result;
-using Microsoft.EntityFrameworkCore;
 
 namespace CompanyPost.Infrastructure.Repository;
-internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity , IEntity
+internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity, IEntity
 {
 	private readonly CompanyPostDbContext _context;
-	private readonly DbSet<T> _dbSet;
+	protected readonly DbSet<T> _dbSet;
 	public GenericRepository(CompanyPostDbContext context)
 	{
 		_context = context;
@@ -19,19 +18,24 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 	{
 		return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
 	}
+	public async Task<bool> FindAnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+		return await _dbSet.Where(predicate).AnyAsync(cancellationToken);
+	}
 	public void Update(T entity) => _dbSet.Update(entity);
 	public void Delete(T entity) => _dbSet.Remove(entity);
-	public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate, 
+	public async Task<T?> FindAsync(
+		Expression<Func<T, bool>> predicate, 
 		CancellationToken cancellationToken = default)
 	{
 		if (predicate != null)
-		return await _dbSet.Where(predicate).FirstOrDefaultAsync(cancellationToken);
+		    return await _dbSet.Where(predicate).FirstOrDefaultAsync(cancellationToken);
 		
 		return await _dbSet.FirstOrDefaultAsync(cancellationToken);
 	}
 	public async Task<IEnumerable<T>> FindWithIncludeAsync(
 	   Expression<Func<T, bool>> predicate = null,
-	   List<Expression<Func<T, object>>> includes = null,
+	   IEnumerable<Expression<Func<T, object>>> includes = null,
 	   CancellationToken cancellationToken = default)
 	{
 		IQueryable<T> query = _context.Set<T>();
@@ -49,9 +53,34 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 			}
 		}
 
-		return await query.ToListAsync(cancellationToken);
+		return await query
+			.OrderByDescending(x => x.CreatedAt)
+			.AsNoTracking()
+			.ToListAsync(cancellationToken);
 	}
-	public async Task<IReadOnlyList<T>> FindAllAsync(
+    public async Task<T> FindWithIncludeFirstOrDefaultAsync(
+       Expression<Func<T, bool>> predicate = null,
+       IEnumerable<Expression<Func<T, object>>> includes = null,
+       CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _context.Set<T>();
+
+        if (predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query.FirstOrDefaultAsync(cancellationToken);
+    }
+    public async Task<IReadOnlyList<T>> FindAllAsync(
 		Expression<Func<T, bool>> predicate = null,
 		CancellationToken cancellationToken = default)
 	{
@@ -59,7 +88,9 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 		if (predicate != null)
 			query = query.Where(predicate);
 
-		return await query.ToListAsync(cancellationToken);
+		return await query
+			.Distinct()
+			.ToListAsync(cancellationToken);
 	}
 	public async Task<PaginatedResult<T>> GetPagedAsync(
 		int pageNumber, 
@@ -99,5 +130,35 @@ internal class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 			.ToListAsync(cancellationToken);
 
 		return new PaginatedResult<T>(items, totalCount, pageNumber, pageSize);
+	}
+    public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+    {
+		return await _dbSet.CountAsync(cancellationToken);
+    }
+    public async Task<int> MaxSerialNumber<TC>(CancellationToken cancellationToken = default) 
+		where TC : class, IDocumentEntity
+    {
+        var nextSerial = await _context.Set<TC>()
+          .MaxAsync(x => (int?)x.SerialNumber, cancellationToken);
+
+        return nextSerial == null ? 1 : nextSerial.Value + 1;
+    }
+	public async Task<T> GetByIdAsyncWithAttachmentIncluded(
+		Guid id, 
+		bool includeRelated, 
+		Expression<Func<T, object>> include, 
+		CancellationToken cancellationToken = default)
+	{
+		if (!includeRelated || include == null)
+		{
+			return await FindAsync(
+				x => EF.Property<Guid>(x, "Id") == id,
+				cancellationToken);
+		}
+
+		return await FindWithIncludeFirstOrDefaultAsync(
+			x => EF.Property<Guid>(x, "Id") == id,
+			new[] { include },
+			cancellationToken);
 	}
 }

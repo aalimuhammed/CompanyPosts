@@ -1,6 +1,8 @@
 ﻿namespace CompanyPost.Application.DTO.Request;
 public record CreateSysUserCompanyDTO(
-	string UserName ,
+	string UserName,
+	string Password,
 	string Name,
 	string Email ,
-	List<string> Companies);
+	string HrCode,
+	Guid Company);

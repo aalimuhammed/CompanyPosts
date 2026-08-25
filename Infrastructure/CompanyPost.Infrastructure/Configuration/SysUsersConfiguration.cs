@@ -15,11 +15,20 @@ internal sealed class SysUsersConfiguration : IEntityTypeConfiguration<SysUsers>
 			.HasMaxLength(100)
 			.IsRequired();
 
-		builder.Property(builder => builder.Name)
+        builder.Property(builder => builder.HrCode)
+            .HasMaxLength(20)
+            .IsRequired();
+
+        builder.Property(builder => builder.Name)
 			.HasMaxLength(50)
 			.IsRequired();
 
-		builder.Property(builder => builder.IsPasswordDefault)
-			.HasDefaultValueSql("1");
-	}
+		//builder.Property(builder => builder.IsPasswordDefault)
+		//	.HasDefaultValueSql("1");
+
+        builder.HasOne(builder => builder.Company)
+            .WithMany(t => t.SysUsers)
+            .HasForeignKey(builder => builder.CompanyId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }

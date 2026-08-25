@@ -1,4 +1,6 @@
-﻿namespace CompanyPost.Application.CQRS.Handlers.Query.GetContracts;
+﻿using CompanyPost.Application.DTO;
+
+namespace CompanyPost.Application.CQRS.Handlers.Query.GetContracts;
 internal sealed class GetContractsHandler
 	: IRequestHandler<GetContractsQuery, IEnumerable<ContractResponeDTO>>
 {
@@ -10,13 +12,17 @@ internal sealed class GetContractsHandler
 	public async Task<IEnumerable<ContractResponeDTO>> Handle(GetContractsQuery request, CancellationToken cancellationToken)
 	{
 		var contractRepository = _unitOfWork.Repository<Contracts>();
+
 		var includes = new List<Expression<Func<Contracts, object>>>
 			 {
 			      contract => contract.Projects,
 				  contract => contract.CreatedBy,
-				  contract => contract.PersonOrgs
+				  contract => contract.PersonOrgs,
+				  contract => contract.ContractAttachments
 			 };
+
 		var contracts = await contractRepository.FindWithIncludeAsync(null, includes, cancellationToken);
+
 		var contractDTOs = contracts.Select(c => new ContractResponeDTO(
 			c.Id,
 			c.Value,
@@ -27,11 +33,12 @@ internal sealed class GetContractsHandler
 			c.Projects.Name,
 			c.CreatedBy.UserName,
 			c.Currency.ToString(),
-			//c.working,
 			c.purchase_order_ref,
-			c.PersonOrgs.Name
-			//c.Attachments != null ? $"/contracts/{c.Attachments}" : null
-		));
+			c.PersonOrgs.Name,
+            c.ContractAttachments != null && c.ContractAttachments.Any()
+               ? c.ContractAttachments.Select(a => new AttachmentDTO(a.Id, a.FileName!, $"/contracts/{a.FileName}")).ToList()
+              : new List<AttachmentDTO>()));
+
 		return contractDTOs;
 	}
 }

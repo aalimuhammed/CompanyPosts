@@ -5,6 +5,7 @@ public class Publisher : BaseEntity , IHasName
 	public bool IsDepartment { get; set; } = false;
 	public bool IsProject { get; set; } = false;
 	public bool IsSupplierOrSubContractor { get; set; } = false;
+	public bool IsCompany { get; set; } = false;
 	public ICollection<PostInternal> PublishedPostInternals { get; set; } = new List<PostInternal>();
 	public ICollection<PostInternal> RecievedPostInternals { get; set; } = new List<PostInternal>();
 	public ICollection<PostExternal> PublishedPostExternals { get; set; } = new List<PostExternal>();
@@ -16,4 +17,8 @@ public class Publisher : BaseEntity , IHasName
 	public ICollection<InComing> IncomingProjects {  get; set; } = new List<InComing>();
 	public ICollection<Contracts> ContractsProjects { get; set; } = new List<Contracts>();
 	public ICollection<Contracts> ContractsPersonOrgs { get; set; } = new List<Contracts>();
+	public ICollection<ContractRef> ContractRefProjects { get; set; } = new List<ContractRef>();
+	public ICollection<ContractRef> ContractRefPersonOrgs { get; set; } = new List<ContractRef>();
+	public ICollection<PurchaseOrder> PurchaseOrderProjects { get;  set; } = new List<PurchaseOrder>();
+	public ICollection<PurchaseOrder> PurchaseOrdersPersonOrgs { get; set; } = new List<PurchaseOrder>();
 }

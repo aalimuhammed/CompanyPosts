@@ -1,2 +1,3 @@
 ﻿namespace CompanyPost.Application.CQRS.Commands;
-public record CreateContractCommand(CreateContractDTO CreatrContractDTO) : IRequest<Unit>;
+public record CreateContractCommand(CreateContractDTO CreateContractDTO) 
+    : IRequest<Unit>;

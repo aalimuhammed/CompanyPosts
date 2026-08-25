@@ -10,9 +10,6 @@ internal sealed class PostInternalConfiguration : IEntityTypeConfiguration<PostI
 		builder.Property(x => x.SerialNumber)
 			.IsRequired();
 
-		builder.Property(x => x.Subject)
-			.HasMaxLength(100);
-
 		builder.Property(x => x.AboutWork)
 			.HasMaxLength(50);
 
@@ -33,9 +30,9 @@ internal sealed class PostInternalConfiguration : IEntityTypeConfiguration<PostI
 				.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasOne(builder => builder.WorkType)
-		.WithMany(t => t.PostInternals)
-		.HasForeignKey(builder => builder.WorkTypeId)
-		.OnDelete(DeleteBehavior.Restrict);
+				.WithMany(t => t.PostInternals)
+				.HasForeignKey(builder => builder.WorkTypeId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 		builder.HasIndex(x => x.DocumentNumber)
 			   .IsUnique();

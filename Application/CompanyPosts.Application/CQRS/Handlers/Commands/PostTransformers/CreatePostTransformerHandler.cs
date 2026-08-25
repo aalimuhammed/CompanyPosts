@@ -17,50 +17,85 @@ internal sealed class CreatePostTransformerHandler
 	public async Task<Unit> Handle(CreatePostTransformerCommand request, CancellationToken cancellationToken)
 	{
 		var postTransofrmerRepository = _unitOfWork.Repository<PostTransformer>();
-		var systUserRepository = _unitOfWork.Repository<SysUsers>();
+
+        if (await postTransofrmerRepository.FindAnyAsync(
+            x => x.DocumentNumber == request.CreatePostTransofrmerDTO.DocumentNumber, 
+			cancellationToken))
+        {
+            throw new Exception("لا يمكن تكرار رقم المستند");
+        }
+
+        var systUserRepository = _unitOfWork.Repository<SysUsers>();
 		var admin = await systUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+		
+        var maxSerial = await postTransofrmerRepository.MaxSerialNumber<PostTransformer>(cancellationToken);
 
 		var postTransformer = new PostTransformer
 		{
-			SerialNumber = request.CreatePostTransofrmerDTO.SerialNumber,
+			SerialNumber = maxSerial,
 			PostNumber = request.CreatePostTransofrmerDTO.PostNumber,
 			DocumentNumber = request.CreatePostTransofrmerDTO.DocumentNumber,
 			CompanyId = request.CreatePostTransofrmerDTO.CompanyId,
 			PublishedId = request.CreatePostTransofrmerDTO.PublishedId,
 			RecievedFromId = request.CreatePostTransofrmerDTO.RecivedFromId,
 			Subject = request.CreatePostTransofrmerDTO.Subject,
-			WorkTypeId = request.CreatePostTransofrmerDTO.WorkTypeId,
+			//WorkTypeId = request.CreatePostTransofrmerDTO.WorkTypeId,
 			DocumentDate = request.CreatePostTransofrmerDTO.DocumentDate,
 			DeliveryDate = request.CreatePostTransofrmerDTO.DeliveryDate,
 			Summary = request.CreatePostTransofrmerDTO.Summary,
 			Notes = request.CreatePostTransofrmerDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostTransofrmerDTO.DeliveryMethod,
-			DocumentType = (DocumentType)request.CreatePostTransofrmerDTO.DocumentType,
-			Department = (Departments)request.CreatePostTransofrmerDTO.Department,
+			PostDocumentTypes = (PostDocumentTypes)request.CreatePostTransofrmerDTO.PostDocumentType,
 			IncomingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
-			RecivedByName = request.CreatePostTransofrmerDTO.RecivedName,
+			//RecivedByName = request.CreatePostTransofrmerDTO.RecivedName,
 			FollowingPerson = request.CreatePostTransofrmerDTO.FollowingPerson,
 			CreatedById = admin.Id,
+			InComingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
+			Status = (Status)request.CreatePostTransofrmerDTO.StatusMethod,
+            OldReferenceNumber = request.CreatePostTransofrmerDTO.OldRef,
+			DocumentType = (DocumentType)request.CreatePostTransofrmerDTO.DocumentType,
+			AboutWork = request.CreatePostTransofrmerDTO.AboutWork
 		};
 		var postExternalID = postTransformer.Id;
-		await _unitOfWork.BeginTransactionAsync();
+		await _unitOfWork.BeginTransactionAsync(cancellationToken);
 		try
 		{
 			await postTransofrmerRepository.AddAsync(postTransformer);
-			await AddAttachments(postExternalID, request.CreatePostTransofrmerDTO.Attachments, cancellationToken);
 
-			var sysUsers = await systUserRepository.FindAllAsync(
-				x => request.CreatePostTransofrmerDTO.SentEmailsTo.Contains(x.Id),
-				cancellationToken);
-
-			await SendBulkEmailAsync(
-					$"متابعة المستند رقم {request.CreatePostTransofrmerDTO.DocumentNumber} في الصادر المحول",
-				request.CreatePostTransofrmerDTO.EmailContent,
-				sysUsers.Select(u => u.Email!),
-				cancellationToken);
+			if (request.CreatePostTransofrmerDTO.Attachments != null &&
+				request.CreatePostTransofrmerDTO.Attachments.Any())
+						await AddAttachments(
+							postExternalID, 
+							request.CreatePostTransofrmerDTO.Attachments, 
+							cancellationToken);
 
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
-			await _unitOfWork.CommitTransactionAsync();
+			await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
+            if (request.CreatePostTransofrmerDTO.EmailContent is not null
+					&& request.CreatePostTransofrmerDTO.SentEmailsTo is not null)
+			{
+                var sysUsers = await systUserRepository.FindAllAsync(
+                    x => request.CreatePostTransofrmerDTO.SentEmailsTo.Contains(x.Id),
+                    cancellationToken);
+
+                var createEmailDto = new CreateEmailContentDTO()
+                {
+                    DocumentNumber = request.CreatePostTransofrmerDTO.DocumentNumber,
+                    EmailContent = request.CreatePostTransofrmerDTO.EmailContent,
+                    Subject = request.CreatePostTransofrmerDTO.Subject,
+                    EmailHeader = $"متابعة المستند رقم {request.CreatePostTransofrmerDTO.DocumentNumber} في  الصادر المحول"
+                };
+
+                string emailContent = _emailServices.CreateEmailContent(createEmailDto);
+
+                _ = _emailServices.SendBulkEmailAsync(
+                    $"متابعة المستند رقم {request.CreatePostTransofrmerDTO.DocumentNumber} في الصادر المحول",
+                emailContent,
+                sysUsers.Select(u => u.Email!),
+                cancellationToken);
+            }
+
 			return Unit.Value;
 		}
 		catch (Exception ex)
@@ -86,16 +121,5 @@ internal sealed class CreatePostTransformerHandler
 			};
 			await attachmentRepository.AddAsync(attachment, cancellationToken);
 		}
-	}
-	private async Task SendBulkEmailAsync(
-	   string subject,
-	   string htmlMessage,
-	   IEnumerable<string> recipients,
-	   CancellationToken cancellationToken = default)
-	{
-		var sendEmails = recipients.Select(recipient =>
-			_emailServices.SendEmailAsync(recipient, subject, htmlMessage, cancellationToken));
-
-		await Task.WhenAll(sendEmails);
 	}
 }

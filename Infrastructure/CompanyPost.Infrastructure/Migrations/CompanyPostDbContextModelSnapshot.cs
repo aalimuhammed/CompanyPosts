@@ -98,9 +98,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("ContractID")
+                    b.Property<Guid?>("ContractID")
                         .HasColumnType("char(36)")
                         .HasColumnName("contract_id");
+
+                    b.Property<Guid?>("ContractRefId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("contract_ref_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
@@ -117,7 +121,100 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasIndex("ContractID")
                         .HasDatabaseName("ix_contract_attachments_contract_id");
 
+                    b.HasIndex("ContractRefId")
+                        .HasDatabaseName("ix_contract_attachments_contract_ref_id");
+
                     b.ToTable("contract_attachments", (string)null);
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.ContractRef", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("contract_id");
+
+                    b.Property<string>("ContractNumber")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("contract_number");
+
+                    b.Property<DateTime>("Contract_Date")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("contract_date");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("created_by_id");
+
+                    b.Property<int>("Currency")
+                        .HasColumnType("int")
+                        .HasColumnName("currency");
+
+                    b.Property<string>("Details")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("details");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("notes");
+
+                    b.Property<Guid?>("PublisherId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("publisher_id");
+
+                    b.Property<Guid?>("PublisherId1")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("publisher_id1");
+
+                    b.Property<int>("SerialNumber")
+                        .HasColumnType("int")
+                        .HasColumnName("serial_number");
+
+                    b.Property<double>("Value")
+                        .HasMaxLength(100)
+                        .HasColumnType("double")
+                        .HasColumnName("value");
+
+                    b.Property<Guid?>("WorkTypeId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("work_type_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_contract_refs");
+
+                    b.HasIndex("ContractId")
+                        .HasDatabaseName("ix_contract_refs_contract_id");
+
+                    b.HasIndex("ContractNumber")
+                        .IsUnique()
+                        .HasDatabaseName("ix_contract_refs_contract_number");
+
+                    b.HasIndex("CreatedById")
+                        .HasDatabaseName("ix_contract_refs_created_by_id");
+
+                    b.HasIndex("PublisherId")
+                        .HasDatabaseName("ix_contract_refs_publisher_id");
+
+                    b.HasIndex("PublisherId1")
+                        .HasDatabaseName("ix_contract_refs_publisher_id1");
+
+                    b.HasIndex("WorkTypeId")
+                        .HasDatabaseName("ix_contract_refs_work_type_id");
+
+                    b.ToTable("contract_refs", (string)null);
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Contracts", b =>
@@ -126,6 +223,11 @@ namespace CompanyPost.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
+
+                    b.Property<string>("CommercialRegisterNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("commercial_register_number");
 
                     b.Property<string>("ContractNumber")
                         .IsRequired()
@@ -159,10 +261,18 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("details");
 
+                    b.Property<bool>("HasReference")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("has_reference");
+
                     b.Property<string>("Notes")
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("notes");
+
+                    b.Property<string>("OldReferenceNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("old_reference_number");
 
                     b.Property<Guid>("PersonOrgId")
                         .HasColumnType("char(36)")
@@ -176,10 +286,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
 
-                    b.Property<string>("Value")
-                        .IsRequired()
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.Property<double>("Value")
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("double")
                         .HasColumnName("value");
 
                     b.Property<Guid>("WorkTypeId")
@@ -187,7 +300,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("work_type_id");
 
                     b.Property<string>("purchase_order_ref")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("purchase_order_ref");
@@ -247,6 +359,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
+                    b.Property<string>("AboutWork")
+                        .HasColumnType("longtext")
+                        .HasColumnName("about_work");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
@@ -263,10 +379,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
 
-                    b.Property<int>("Department")
-                        .HasColumnType("int")
-                        .HasColumnName("department");
-
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("document_date");
@@ -281,15 +393,28 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("document_type");
 
+                    b.Property<string>("InComingNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("in_coming_number");
+
                     b.Property<string>("Notes")
                         .HasColumnType("longtext")
                         .HasColumnName("notes");
 
-                    b.Property<Guid>("OriginalPublisherId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("original_publisher_id");
+                    b.Property<string>("OldReferenceNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("old_reference_number");
 
-                    b.Property<Guid>("ProjectId")
+                    b.Property<string>("OriginalSender")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("original_sender");
+
+                    b.Property<int>("PostDocumentTypes")
+                        .HasColumnType("int")
+                        .HasColumnName("post_document_types");
+
+                    b.Property<Guid?>("ProjectId")
                         .HasColumnType("char(36)")
                         .HasColumnName("project_id");
 
@@ -297,24 +422,27 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("published_id");
 
-                    b.Property<DateTime>("SaveDate")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("save_date");
+                    b.Property<Guid?>("PublisherId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("publisher_id");
 
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
                     b.Property<string>("Subject")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("longtext")
                         .HasColumnName("subject");
 
                     b.Property<string>("Summary")
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid>("WorkTypeId")
+                    b.Property<Guid?>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -328,14 +456,14 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_in_coming_document_number");
 
-                    b.HasIndex("OriginalPublisherId")
-                        .HasDatabaseName("ix_in_coming_original_publisher_id");
-
                     b.HasIndex("ProjectId")
                         .HasDatabaseName("ix_in_coming_project_id");
 
                     b.HasIndex("PublishedId")
                         .HasDatabaseName("ix_in_coming_published_id");
+
+                    b.HasIndex("PublisherId")
+                        .HasDatabaseName("ix_in_coming_publisher_id");
 
                     b.HasIndex("WorkTypeId")
                         .HasDatabaseName("ix_in_coming_work_type_id");
@@ -431,10 +559,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
 
-                    b.Property<int>("Department")
-                        .HasColumnType("int")
-                        .HasColumnName("department");
-
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("document_date");
@@ -445,27 +569,41 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("document_number");
 
-                    b.Property<string>("IncomingNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("incoming_number");
+                    b.Property<string>("FollowingPerson")
+                        .HasColumnType("longtext")
+                        .HasColumnName("following_person");
+
+                    b.Property<string>("InComingNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("in_coming_number");
 
                     b.Property<string>("Notes")
                         .HasColumnType("longtext")
                         .HasColumnName("notes");
 
+                    b.Property<string>("OldReferenceNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("old_reference_number");
+
+                    b.Property<int>("PostDocumentTypes")
+                        .HasColumnType("int")
+                        .HasColumnName("post_document_types");
+
                     b.Property<Guid>("PublishedId")
                         .HasColumnType("char(36)")
                         .HasColumnName("published_id");
 
-                    b.Property<Guid>("ReceivedFromSupplierId")
+                    b.Property<Guid>("RecievedFromId")
                         .HasColumnType("char(36)")
-                        .HasColumnName("received_from_supplier_id");
+                        .HasColumnName("recieved_from_id");
 
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
 
                     b.Property<string>("Subject")
                         .HasColumnType("longtext")
@@ -475,7 +613,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid>("WorkTypeId")
+                    b.Property<Guid?>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -495,8 +633,8 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasIndex("PublishedId")
                         .HasDatabaseName("ix_post_externals_published_id");
 
-                    b.HasIndex("ReceivedFromSupplierId")
-                        .HasDatabaseName("ix_post_externals_received_from_supplier_id");
+                    b.HasIndex("RecievedFromId")
+                        .HasDatabaseName("ix_post_externals_recieved_from_id");
 
                     b.HasIndex("WorkTypeId")
                         .HasDatabaseName("ix_post_externals_work_type_id");
@@ -565,10 +703,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
 
-                    b.Property<int>("Department")
-                        .HasColumnType("int")
-                        .HasColumnName("department");
-
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("document_date");
@@ -579,9 +713,25 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("document_number");
 
+                    b.Property<string>("FollowingPerson")
+                        .HasColumnType("longtext")
+                        .HasColumnName("following_person");
+
+                    b.Property<string>("InComingNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("in_coming_number");
+
                     b.Property<string>("Notes")
                         .HasColumnType("longtext")
                         .HasColumnName("notes");
+
+                    b.Property<string>("OldReferenceNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("old_reference_number");
+
+                    b.Property<int>("PostDocumentTypes")
+                        .HasColumnType("int")
+                        .HasColumnName("post_document_types");
 
                     b.Property<Guid>("PublishedId")
                         .HasColumnType("char(36)")
@@ -595,6 +745,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
                     b.Property<string>("Subject")
                         .HasColumnType("longtext")
                         .HasColumnName("subject");
@@ -603,7 +757,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid>("WorkTypeId")
+                    b.Property<Guid?>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -693,10 +847,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasColumnName("delivery_methods");
 
-                    b.Property<int>("Department")
-                        .HasColumnType("int")
-                        .HasColumnName("department");
-
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("document_date");
@@ -712,13 +862,14 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnName("document_type");
 
                     b.Property<string>("FollowingPerson")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasColumnType("longtext")
                         .HasColumnName("following_person");
 
+                    b.Property<string>("InComingNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("in_coming_number");
+
                     b.Property<string>("IncomingNumber")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)")
                         .HasColumnName("incoming_number");
@@ -726,6 +877,14 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("longtext")
                         .HasColumnName("notes");
+
+                    b.Property<string>("OldReferenceNumber")
+                        .HasColumnType("longtext")
+                        .HasColumnName("old_reference_number");
+
+                    b.Property<int>("PostDocumentTypes")
+                        .HasColumnType("int")
+                        .HasColumnName("post_document_types");
 
                     b.Property<string>("PostNumber")
                         .IsRequired()
@@ -741,15 +900,13 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("recieved_from_id");
 
-                    b.Property<string>("RecivedByName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("recived_by_name");
-
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
 
                     b.Property<string>("Subject")
                         .HasColumnType("longtext")
@@ -759,7 +916,7 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("longtext")
                         .HasColumnName("summary");
 
-                    b.Property<Guid>("WorkTypeId")
+                    b.Property<Guid?>("WorkTypeId")
                         .HasColumnType("char(36)")
                         .HasColumnName("work_type_id");
 
@@ -829,6 +986,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
+                    b.Property<bool>("IsCompany")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_company");
+
                     b.Property<bool>("IsDepartment")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("is_department");
@@ -853,12 +1014,158 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.ToTable("publishers", (string)null);
                 });
 
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PurchaseOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<double?>("CheckValue")
+                        .HasColumnType("double")
+                        .HasColumnName("check_value");
+
+                    b.Property<string>("CommericalRegisterId")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("commerical_register_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("created_by_id");
+
+                    b.Property<int>("Currency")
+                        .HasColumnType("int")
+                        .HasColumnName("currency");
+
+                    b.Property<int>("Department")
+                        .HasColumnType("int")
+                        .HasColumnName("department");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("details");
+
+                    b.Property<int?>("ImportingStatus")
+                        .HasColumnType("int")
+                        .HasColumnName("importing_status");
+
+                    b.Property<int>("NatureOfWorks")
+                        .HasColumnType("int")
+                        .HasColumnName("nature_of_works");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("notes");
+
+                    b.Property<string>("OldReferenceNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("old_reference_number");
+
+                    b.Property<Guid>("PersonOrgId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("person_org_id");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("project_id");
+
+                    b.Property<string>("PurchaseOrderNumber")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("purchase_order_number");
+
+                    b.Property<DateTime?>("PurchaseOrder_Date")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("purchase_order_date");
+
+                    b.Property<int>("SerialNumber")
+                        .HasColumnType("int")
+                        .HasColumnName("serial_number");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.Property<double>("Value")
+                        .HasMaxLength(100)
+                        .HasColumnType("double")
+                        .HasColumnName("value");
+
+                    b.Property<Guid?>("WorkTypeId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("work_type_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_purchase_orders");
+
+                    b.HasIndex("CreatedById")
+                        .HasDatabaseName("ix_purchase_orders_created_by_id");
+
+                    b.HasIndex("PersonOrgId")
+                        .HasDatabaseName("ix_purchase_orders_person_org_id");
+
+                    b.HasIndex("ProjectId")
+                        .HasDatabaseName("ix_purchase_orders_project_id");
+
+                    b.HasIndex("PurchaseOrderNumber")
+                        .IsUnique()
+                        .HasDatabaseName("ix_purchase_orders_purchase_order_number");
+
+                    b.HasIndex("WorkTypeId")
+                        .HasDatabaseName("ix_purchase_orders_work_type_id");
+
+                    b.ToTable("purchase_orders", (string)null);
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PurchaseOrderAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("file_name");
+
+                    b.Property<Guid>("PurchaseOrderId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("purchase_order_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_purchase_order_attachments");
+
+                    b.HasIndex("PurchaseOrderId")
+                        .HasDatabaseName("ix_purchase_order_attachments_purchase_order_id");
+
+                    b.ToTable("purchase_order_attachments", (string)null);
+                });
+
             modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsers", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
+
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("company_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)")
@@ -870,15 +1177,19 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("email");
 
+                    b.Property<string>("HrCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)")
+                        .HasColumnName("hr_code");
+
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("is_admin");
 
-                    b.Property<bool>("IsPasswordDefault")
-                        .ValueGeneratedOnAdd()
+                    b.Property<bool>("IsVerified")
                         .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_password_default")
-                        .HasDefaultValueSql("1");
+                        .HasColumnName("is_verified");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -901,34 +1212,10 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_sys_users");
 
-                    b.ToTable("sys_users", (string)null);
-                });
-
-            modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsersCompany", b =>
-                {
-                    b.Property<Guid>("SysUserId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("sys_user_id");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("company_id");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
-
-                    b.HasKey("SysUserId", "CompanyId", "Id")
-                        .HasName("pk_sys_users_companies");
-
                     b.HasIndex("CompanyId")
-                        .HasDatabaseName("ix_sys_users_companies_company_id");
+                        .HasDatabaseName("ix_sys_users_company_id");
 
-                    b.ToTable("sys_users_companies", (string)null);
+                    b.ToTable("sys_users", (string)null);
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.WorkType", b =>
@@ -964,11 +1251,54 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.HasOne("CompanyPost.Domain.Entities.Contracts", "Contracts")
                         .WithMany("ContractAttachments")
                         .HasForeignKey("ContractID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_contract_attachments_contracts_contract_id");
 
+                    b.HasOne("CompanyPost.Domain.Entities.ContractRef", "ContractRef")
+                        .WithMany("ContractAttachments")
+                        .HasForeignKey("ContractRefId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_contract_attachments_contract_refs_contract_ref_id");
+
+                    b.Navigation("ContractRef");
+
                     b.Navigation("Contracts");
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.ContractRef", b =>
+                {
+                    b.HasOne("CompanyPost.Domain.Entities.Contracts", "Contract")
+                        .WithMany("ContractRefs")
+                        .HasForeignKey("ContractId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_contract_refs_contracts_contract_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.SysUsers", "CreatedBy")
+                        .WithMany("ContractRefs")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_contract_refs_sys_users_created_by_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", null)
+                        .WithMany("ContractRefPersonOrgs")
+                        .HasForeignKey("PublisherId")
+                        .HasConstraintName("fk_contract_refs_publishers_publisher_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", null)
+                        .WithMany("ContractRefProjects")
+                        .HasForeignKey("PublisherId1")
+                        .HasConstraintName("fk_contract_refs_publishers_publisher_id1");
+
+                    b.HasOne("CompanyPost.Domain.Entities.WorkType", null)
+                        .WithMany("ContractRefs")
+                        .HasForeignKey("WorkTypeId")
+                        .HasConstraintName("fk_contract_refs_work_types_work_type_id");
+
+                    b.Navigation("Contract");
+
+                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Contracts", b =>
@@ -1019,18 +1349,10 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_in_coming_sys_users_created_by_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "OriginalPublisher")
-                        .WithMany("OriginalPublisherInComings")
-                        .HasForeignKey("OriginalPublisherId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_in_coming_publishers_original_publisher_id");
-
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "Projects")
                         .WithMany("IncomingProjects")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_in_coming_publishers_project_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.Publisher", "Publisher")
@@ -1040,16 +1362,18 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_in_coming_publishers_published_id");
 
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", null)
+                        .WithMany("OriginalPublisherInComings")
+                        .HasForeignKey("PublisherId")
+                        .HasConstraintName("fk_in_coming_publishers_publisher_id");
+
                     b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
                         .WithMany("InComings")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_in_coming_work_types_work_type_id");
 
                     b.Navigation("CreatedBy");
-
-                    b.Navigation("OriginalPublisher");
 
                     b.Navigation("Projects");
 
@@ -1114,18 +1438,17 @@ namespace CompanyPost.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_post_externals_publishers_published_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "ReceivedFromSupplier")
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "RecievedFrom")
                         .WithMany("RecievedPostExternals")
-                        .HasForeignKey("ReceivedFromSupplierId")
+                        .HasForeignKey("RecievedFromId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_post_externals_publishers_received_from_supplier_id");
+                        .HasConstraintName("fk_post_externals_publishers_recieved_from_id");
 
                     b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
                         .WithMany("PostExternals")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_post_externals_work_types_work_type_id");
 
                     b.Navigation("Company");
@@ -1134,7 +1457,7 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.Navigation("Publisher");
 
-                    b.Navigation("ReceivedFromSupplier");
+                    b.Navigation("RecievedFrom");
 
                     b.Navigation("WorkType");
                 });
@@ -1185,7 +1508,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("PostInternals")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_post_internals_work_types_work_type_id");
 
                     b.Navigation("Company");
@@ -1245,7 +1567,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .WithMany("PostTransformers")
                         .HasForeignKey("WorkTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_post_transformers_work_types_work_type_id");
 
                     b.Navigation("Company");
@@ -1271,35 +1592,82 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("PostTransformer");
                 });
 
-            modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsersCompany", b =>
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PurchaseOrder", b =>
+                {
+                    b.HasOne("CompanyPost.Domain.Entities.SysUsers", "CreatedBy")
+                        .WithMany("PurchaseOrdersCreatedBy")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_purchase_orders_sys_users_created_by_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "PersonOrgs")
+                        .WithMany("PurchaseOrdersPersonOrgs")
+                        .HasForeignKey("PersonOrgId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_purchase_orders_publishers_person_org_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "Projects")
+                        .WithMany("PurchaseOrderProjects")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_purchase_orders_publishers_project_id");
+
+                    b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
+                        .WithMany("PurchaseOrdersWorkTypes")
+                        .HasForeignKey("WorkTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_purchase_orders_work_types_work_type_id");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("PersonOrgs");
+
+                    b.Navigation("Projects");
+
+                    b.Navigation("WorkType");
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PurchaseOrderAttachment", b =>
+                {
+                    b.HasOne("CompanyPost.Domain.Entities.PurchaseOrder", "PurchaseOrder")
+                        .WithMany("PurchaseOrderAttachments")
+                        .HasForeignKey("PurchaseOrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_purchase_order_attachments_purchase_orders_purchase_order_id");
+
+                    b.Navigation("PurchaseOrder");
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsers", b =>
                 {
                     b.HasOne("CompanyPost.Domain.Entities.Company", "Company")
-                        .WithMany("SysUsersCompanies")
+                        .WithMany("SysUsers")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_sys_users_companies_companies_company_id");
-
-                    b.HasOne("CompanyPost.Domain.Entities.SysUsers", "SysUser")
-                        .WithMany("SysUsersCompanies")
-                        .HasForeignKey("SysUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_sys_users_companies_sys_users_sys_user_id");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_sys_users_companies_company_id");
 
                     b.Navigation("Company");
-
-                    b.Navigation("SysUser");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Company", b =>
                 {
-                    b.Navigation("SysUsersCompanies");
+                    b.Navigation("SysUsers");
+                });
+
+            modelBuilder.Entity("CompanyPost.Domain.Entities.ContractRef", b =>
+                {
+                    b.Navigation("ContractAttachments");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Contracts", b =>
                 {
                     b.Navigation("ContractAttachments");
+
+                    b.Navigation("ContractRefs");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Employees", b =>
@@ -1331,6 +1699,10 @@ namespace CompanyPost.Infrastructure.Migrations
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.Publisher", b =>
                 {
+                    b.Navigation("ContractRefPersonOrgs");
+
+                    b.Navigation("ContractRefProjects");
+
                     b.Navigation("ContractsPersonOrgs");
 
                     b.Navigation("ContractsProjects");
@@ -1347,6 +1719,10 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.Navigation("PublishedPostTransformers");
 
+                    b.Navigation("PurchaseOrderProjects");
+
+                    b.Navigation("PurchaseOrdersPersonOrgs");
+
                     b.Navigation("RecievedPostExternals");
 
                     b.Navigation("RecievedPostInternals");
@@ -1354,17 +1730,26 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("RecievedPostTransformers");
                 });
 
+            modelBuilder.Entity("CompanyPost.Domain.Entities.PurchaseOrder", b =>
+                {
+                    b.Navigation("PurchaseOrderAttachments");
+                });
+
             modelBuilder.Entity("CompanyPost.Domain.Entities.SysUsers", b =>
                 {
+                    b.Navigation("ContractRefs");
+
                     b.Navigation("Contracts");
 
                     b.Navigation("IncomingDocuments");
 
-                    b.Navigation("SysUsersCompanies");
+                    b.Navigation("PurchaseOrdersCreatedBy");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.WorkType", b =>
                 {
+                    b.Navigation("ContractRefs");
+
                     b.Navigation("Contracts");
 
                     b.Navigation("InComings");
@@ -1374,6 +1759,8 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("PostInternals");
 
                     b.Navigation("PostTransformers");
+
+                    b.Navigation("PurchaseOrdersWorkTypes");
                 });
 #pragma warning restore 612, 618
         }

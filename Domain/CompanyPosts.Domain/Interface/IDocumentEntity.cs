@@ -1,7 +1,8 @@
 ﻿namespace CompanyPost.Domain.Interface;
 public interface IDocumentEntity
 {
-	public string DocumentNumber { get; set; }
+    public int SerialNumber { get; set; }
+    public string DocumentNumber { get; set; }
 	public string? Subject { get; set; }
 	public DateTime DocumentDate { get; set; }
 	public DateTime DeliveryDate { get; set; }
@@ -12,4 +13,8 @@ public interface IDocumentEntity
 	public Publisher Publisher { get; set; }
 	public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; }
+	public string? OldReferenceNumber { get; set; }
+    public string? InComingNumber { get; set; }
+    public string? AboutWork { get; set; }
+    public Status Status { get; set; }
 }
