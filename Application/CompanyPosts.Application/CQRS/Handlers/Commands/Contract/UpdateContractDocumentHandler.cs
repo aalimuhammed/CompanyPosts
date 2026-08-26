@@ -85,7 +85,8 @@
             contract.OldReferenceNumber = dto.OldReferenceNumber;
             contract.PersonOrgId = dto.SupplierId;
             contract.WorkTypeId = dto.WorkTypeId;
-
+            contract.ApprovalDeliveryDate = dto.ApprovalDeliveryDate;
+            contract.DateOfReceipt = dto.DateOfReceipt;
             contract.Currency = (Currency)dto.Currency;
             contract.Department = (Departments)dto.Department;
         }

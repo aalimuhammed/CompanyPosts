@@ -54,8 +54,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 			if (request.DTO.EndDate.HasValue)
 				predicate = predicate.And(c => c.Contract_Date <= request.DTO.EndDate.Value);
 
-
-			var contracts = await contractRepository.FindWithIncludeAsync(
+            var contracts = await contractRepository.FindWithIncludeAsync(
 				predicate: predicate,
 				includes: includes,
 				cancellationToken);
@@ -104,6 +103,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                     c.CreatedBy.UserName,
                     c.CreatedAt.ToString("yyyy-MM-dd"),
                     c.Value,
+                    c.ApprovalDeliveryDate,
+                    c.DateOfReceipt,
                     c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
                         ?? new List<string>(),
                     c.HasReference && refsByContractId.TryGetValue(c.Id, out var refs)
@@ -162,6 +163,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                             c.CreatedBy.UserName,
                             c.CreatedAt.ToString("yyyy-MM-dd"),
                             c.Value,
+                            c.ApprovalDeliveryDate,
+                            c.DateOfReceipt,
                             c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
                                 ?? new List<string>(),
                             new List<ContractRefResponseDTO>()

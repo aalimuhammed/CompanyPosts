@@ -15,7 +15,9 @@
         string CreatedBy,
         string CreatedAt,
         double Value,
-        List<string> AttachmentPaths ,
+        DateTime? ApprovalDeliveryDate,
+        DateTime? DateOfReceipt,
+        List<string> AttachmentPaths,
         List<ContractRefResponseDTO> References);
 
     public record ContractRefResponseDTO(
