@@ -150,6 +150,8 @@
             contractRef.Notes = dto.Notes;
             contractRef.Contract_Date = dto.ContractDate;
             contractRef.Currency = (Currency)dto.Currency;
+            contractRef.ApprovalDeliveryDate = dto.ApprovalDeliveryDate;
+            contractRef.DateOfReceipt=dto.DateOfReceipt;
         }
 
         // Appends new files to a ContractRef without touching existing attachments.
