@@ -54,6 +54,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 			if (request.DTO.EndDate.HasValue)
 				predicate = predicate.And(c => c.Contract_Date <= request.DTO.EndDate.Value);
 
+
+          //  predicate = predicate.And(c => c.CreatedById == IJwTGenerator.DECODE.CurrentUSerID);
+
             var contracts = await contractRepository.FindWithIncludeAsync(
 				predicate: predicate,
 				includes: includes,

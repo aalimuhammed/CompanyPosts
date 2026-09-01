@@ -2,6 +2,7 @@
 
 namespace CompanyPost.API.Controllers;
 
+//[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ContractsController : ControllerBase
@@ -35,6 +36,7 @@ public class ContractsController : ControllerBase
 		return Ok(result);
     }
 
+	
     [HttpPost("create-contract")]
 	public async Task<IActionResult> CreateContract(
 		[FromForm] CreateContractDTO creatrContractDTO,

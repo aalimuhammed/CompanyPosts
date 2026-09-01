@@ -5,15 +5,20 @@ internal sealed class CreatePostTransformerHandler
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
 	private readonly IEmailServices _emailServices;
-	public CreatePostTransformerHandler(
+    private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+
+    public CreatePostTransformerHandler(
 		IUnitOfWork unitOfWork,
 		IFileService saveAttachment,
-		IEmailServices emailServices)
+		IEmailServices emailServices,
+		IGetCurrentUserTokenService getCurrentUserTokenService
+        )
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
 		_emailServices = emailServices;
-	}
+        _getCurrentUserTokenService = getCurrentUserTokenService;
+    }
 	public async Task<Unit> Handle(CreatePostTransformerCommand request, CancellationToken cancellationToken)
 	{
 		var postTransofrmerRepository = _unitOfWork.Repository<PostTransformer>();
@@ -26,8 +31,9 @@ internal sealed class CreatePostTransformerHandler
         }
 
         var systUserRepository = _unitOfWork.Repository<SysUsers>();
-		var admin = await systUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
-		
+
+		var adminId= _getCurrentUserTokenService.UserId;
+
         var maxSerial = await postTransofrmerRepository.MaxSerialNumber<PostTransformer>(cancellationToken);
 
 		var postTransformer = new PostTransformer
@@ -49,7 +55,7 @@ internal sealed class CreatePostTransformerHandler
 			IncomingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
 			//RecivedByName = request.CreatePostTransofrmerDTO.RecivedName,
 			FollowingPerson = request.CreatePostTransofrmerDTO.FollowingPerson,
-			CreatedById = admin.Id,
+			CreatedById = adminId,
 			InComingNumber = request.CreatePostTransofrmerDTO.IncomingNumber,
 			Status = (Status)request.CreatePostTransofrmerDTO.StatusMethod,
             OldReferenceNumber = request.CreatePostTransofrmerDTO.OldRef,

@@ -9,7 +9,6 @@ public static class ApplicationServices
 		  configuration.RegisterServicesFromAssembly(assembly));
 
 		services.AddHttpContextAccessor();
-
 		return services;
 	}
 }

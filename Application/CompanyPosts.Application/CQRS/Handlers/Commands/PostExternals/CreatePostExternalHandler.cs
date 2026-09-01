@@ -5,15 +5,20 @@ internal sealed class CreatePostExternalHandler :
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
 	private readonly IEmailServices _emailServices;
-	public CreatePostExternalHandler(
+    private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+
+    public CreatePostExternalHandler(
 		IUnitOfWork unitOfWork,
 		IFileService saveAttachment,
-		IEmailServices emailServices)
+		IEmailServices emailServices,
+		IGetCurrentUserTokenService getCurrentUserTokenService
+		)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
 		_emailServices = emailServices;
-	}
+        _getCurrentUserTokenService = getCurrentUserTokenService;
+    }
 	public async Task<Unit> Handle(CreatePostExternalCommand request, CancellationToken cancellationToken)
 	{
 		var postExternalRepository = _unitOfWork.Repository<PostExternal>();
@@ -25,7 +30,8 @@ internal sealed class CreatePostExternalHandler :
         }
 
         var sysUserRepo = _unitOfWork.Repository<SysUsers>();
-		var admin = await sysUserRepo.FindAsync(x => x.IsAdmin, cancellationToken);
+
+		var adminId = _getCurrentUserTokenService.UserId;
 
         var maxSerial = await postExternalRepository.MaxSerialNumber<PostExternal>
 			(cancellationToken);
@@ -48,7 +54,7 @@ internal sealed class CreatePostExternalHandler :
 			InComingNumber = request.CreatePostExternalDTO.IncomingNumber,
 			FollowingPerson = request.CreatePostExternalDTO.FollowingPerson,
 			Status = (Status)request.CreatePostExternalDTO.StatusMethod,
-			CreatedById = admin.Id,
+			CreatedById = adminId,
 			OldReferenceNumber = request.CreatePostExternalDTO.OldRef,
 			AboutWork = request.CreatePostExternalDTO.AboutWork
 		};

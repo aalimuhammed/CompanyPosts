@@ -1,19 +1,26 @@
-﻿namespace CompanyPost.Application.CQRS.Handlers.Commands.Contract;
+﻿using CompanyPost.Application.Abstraction;
+
+namespace CompanyPost.Application.CQRS.Handlers.Commands.Contract;
 internal sealed class CreateContractCommandHandler
 	: IRequestHandler<CreateContractCommand, Unit>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
     private readonly IEmailServices _emailServices;
+    private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+
     public CreateContractCommandHandler(
 		IUnitOfWork unitOfWork,
 		IFileService saveAttachment,
-        IEmailServices emailServices)
+        IEmailServices emailServices,
+		IGetCurrentUserTokenService getCurrentUserTokenService
+		)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
 		_emailServices = emailServices;
-	}
+        _getCurrentUserTokenService = getCurrentUserTokenService;
+    }
 	public async Task<Unit> Handle(CreateContractCommand request, CancellationToken cancellationToken)
 	{
         var contractRepository = _unitOfWork.Repository<Contracts>();
@@ -29,7 +36,7 @@ internal sealed class CreateContractCommandHandler
             throw new Exception("رقم العقد موجود");
         }
 
-        var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+		var adminId = _getCurrentUserTokenService.UserId;
 
         if (request.CreateContractDTO.HasReference == ContractTypes.Original)
 		{
@@ -40,7 +47,7 @@ internal sealed class CreateContractCommandHandler
                 var SerialNum =  maxSerialNumber.Any() ? maxSerialNumber.Max(x => x.SerialNumber) + 1 : 1;
                 var newContract = CreateContract(request , SerialNum);
 
-				newContract.CreatedById = admin.Id;
+				newContract.CreatedById = adminId;
 
                 await _unitOfWork.BeginTransactionAsync(cancellationToken);
                 await contractRepository.AddAsync(newContract);
@@ -106,7 +113,7 @@ internal sealed class CreateContractCommandHandler
 					: 1;
 
 				var newContract = CreateContractRef(request , serialNum);
-				newContract.CreatedById = admin.Id;
+				newContract.CreatedById = adminId;
 
 				originalContract.HasReference = true;
 

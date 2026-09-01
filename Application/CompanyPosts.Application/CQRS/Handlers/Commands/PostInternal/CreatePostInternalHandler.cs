@@ -5,23 +5,30 @@ internal sealed class CreatePostInternalHandler
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
 	private readonly IEmailServices _emailServices;
-	public CreatePostInternalHandler(
+    private readonly IGetCurrentUserTokenService _getCurrentUserService;
+
+    public CreatePostInternalHandler(
 		IUnitOfWork unitOfWork,
 		IFileService saveAttachment,
-		IEmailServices emailServices)
+		IEmailServices emailServices,
+		IGetCurrentUserTokenService getCurrentUserService
+		)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment =saveAttachment;
 		_emailServices = emailServices;
-	}
+        _getCurrentUserService = getCurrentUserService;
+    }
 	public async Task<Unit> Handle(CreatePostInternalCommand request, CancellationToken cancellationToken)
 	{
 		var postInternalRepository = _unitOfWork.Repository<PostInternal>();
 		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
 
-		var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+		//var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
 
-        if (await postInternalRepository.FindAnyAsync(
+		var adminId = _getCurrentUserService.UserId;
+
+		if (await postInternalRepository.FindAnyAsync(
 			x => x.DocumentNumber == request.CreatePostInternalDTO.DocumentNumber))
         {
             throw new Exception("لا يمكن تكرار رقم المستند");
@@ -42,7 +49,7 @@ internal sealed class CreatePostInternalHandler
 			Notes = request.CreatePostInternalDTO.Notes,
 			DeliveryMethods = (DeliveryMethods)request.CreatePostInternalDTO.DeliveryMethod,
 			PostDocumentTypes = (PostDocumentTypes)request.CreatePostInternalDTO.PostDocumentType,
-			CreatedById = admin.Id,
+			CreatedById = adminId,
 			InComingNumber = request.CreatePostInternalDTO.InComingNumber,
 			FollowingPerson = request.CreatePostInternalDTO.FollowingPerson,
 			Status = (Status)request.CreatePostInternalDTO.StatusMethod,
