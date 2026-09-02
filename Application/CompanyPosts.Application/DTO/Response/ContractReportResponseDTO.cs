@@ -15,6 +15,7 @@
         string CreatedBy,
         string CreatedAt,
         double Value,
+        bool canEdit,
         DateTime? ApprovalDeliveryDate,
         DateTime? DateOfReceipt,
         List<string> AttachmentPaths,
@@ -28,6 +29,7 @@
                 double Value,
                 string CreatedBy,
                 string Currency,
+                bool canEdit,
                 List<string> Attachments
  );
 }
