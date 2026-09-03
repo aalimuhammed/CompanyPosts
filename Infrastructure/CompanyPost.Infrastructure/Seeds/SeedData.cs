@@ -10,7 +10,7 @@ public static class SeedData
 	}
 	private static async Task SeedSysUser(CompanyPostDbContext context)
 	{
-		if (context.SysUsers.Any())
+		if (!context.SysUsers.Any())
 		{
 			await context.SysUsers.AddRangeAsync(
 				  new SysUsers

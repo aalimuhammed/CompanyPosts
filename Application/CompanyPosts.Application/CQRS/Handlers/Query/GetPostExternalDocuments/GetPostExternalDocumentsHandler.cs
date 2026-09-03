@@ -7,13 +7,20 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 		: IRequestHandler<GetPostExternalDocumentsQuery, IEnumerable<PostDocumentsDTO>>
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		public GetPostExternalDocumentsHandler(IUnitOfWork unitOfWork)
+        private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+
+        public GetPostExternalDocumentsHandler(
+			IUnitOfWork unitOfWork ,
+			IGetCurrentUserTokenService getCurrentUserTokenService)
 		{
 			_unitOfWork = unitOfWork;
-		}
+            _getCurrentUserTokenService = getCurrentUserTokenService;
+        }
 		public async Task<IEnumerable<PostDocumentsDTO>> Handle(GetPostExternalDocumentsQuery request, CancellationToken cancellationToken)
 		{
 			var postRepository = _unitOfWork.Repository<PostExternal>();
+
+			var adminId = _getCurrentUserTokenService.UserId;
 
 			var includes = new List<Expression<Func<PostExternal, object>>>
 				 {
@@ -76,7 +83,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
 				p.RecievedFrom.Name,
-                p.CreatedAt.ToString("yyyy-MM-dd")
+                p.CreatedAt.ToString("yyyy-MM-dd"),
+				p.CreatedById == adminId
             ));
 
 			return postDTOs;

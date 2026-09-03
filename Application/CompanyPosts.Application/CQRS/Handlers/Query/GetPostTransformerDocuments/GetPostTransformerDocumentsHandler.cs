@@ -7,17 +7,23 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
 		: IRequestHandler<GetPostTransformerDocumentsQuery, IEnumerable<PostDocumentsDTO>>
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		public GetPostTransformerDocumentsHandler(IUnitOfWork unitOfWork)
+        private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+        public GetPostTransformerDocumentsHandler(
+			IUnitOfWork unitOfWork,
+			IGetCurrentUserTokenService getCurrentUserTokenService)
 		{
 			_unitOfWork = unitOfWork;
-		}
+            _getCurrentUserTokenService = getCurrentUserTokenService;
+        }
 		public async Task<IEnumerable<PostDocumentsDTO>> Handle(
 			GetPostTransformerDocumentsQuery request, 
 			CancellationToken cancellationToken)
 		{
 			var postRepository = _unitOfWork.Repository<PostTransformer>();
 
-			var includes = new List<Expression<Func<PostTransformer, object>>>
+			var adminId = _getCurrentUserTokenService.UserId;
+
+            var includes = new List<Expression<Func<PostTransformer, object>>>
 				 {
 					 post => post.CreatedBy,
 					 post => post.Publisher,
@@ -69,7 +75,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerDocument
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
 				p.RecievedFrom.Name,
-                p.CreatedAt.ToString("yyyy-MM-dd")
+                p.CreatedAt.ToString("yyyy-MM-dd"),
+				p.CreatedById == adminId
             ));
 
 			return postDTOs;
