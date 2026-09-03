@@ -15,9 +15,9 @@ public static class SeedData
 			await context.SysUsers.AddRangeAsync(
 				  new SysUsers
 				  {
-					  UserName = "admin",
-					  Name = "Karim Mousa",
-                      Email = "karim.mousa@siac-construction.com",
+					  UserName = "Shada",
+					  Name = "Shada Adly",
+                      Email = "shada.adly@siac-construction.com",
 					  Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
 					  IsAdmin = true,
 				  }

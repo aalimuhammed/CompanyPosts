@@ -85,7 +85,8 @@
             contract.OldReferenceNumber = dto.OldReferenceNumber;
             contract.PersonOrgId = dto.SupplierId;
             contract.WorkTypeId = dto.WorkTypeId;
-
+            contract.ApprovalDeliveryDate = dto.ApprovalDeliveryDate;
+            contract.DateOfReceipt = dto.DateOfReceipt;
             contract.Currency = (Currency)dto.Currency;
             contract.Department = (Departments)dto.Department;
         }
@@ -149,6 +150,8 @@
             contractRef.Notes = dto.Notes;
             contractRef.Contract_Date = dto.ContractDate;
             contractRef.Currency = (Currency)dto.Currency;
+            contractRef.ApprovalDeliveryDate = dto.ApprovalDeliveryDate;
+            contractRef.DateOfReceipt=dto.DateOfReceipt;
         }
 
         // Appends new files to a ContractRef without touching existing attachments.

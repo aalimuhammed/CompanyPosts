@@ -8,7 +8,9 @@ public class Contracts : BaseEntity, ISharedContractProperty , IHasCurrencyAndVa
 	public string? Notes { get; set; }
 	public bool HasReference { get; set; }
 	public DateTime Contract_Date { get; set; }
-	public string? purchase_order_ref { get; set; } = string.Empty;
+	public DateTime DateOfReceipt { get; set; }
+	public DateTime ApprovalDeliveryDate { get; set; }
+    public string? purchase_order_ref { get; set; } = string.Empty;
 	public Guid ProjectId { get; set; }
 	public Publisher Projects { get; set; } = null!;
 	public Guid PersonOrgId { get; set; }

@@ -2,7 +2,8 @@
 
 namespace CompanyPost.API.Controllers
 {
-	[Route("api/[controller]")]
+    //[Authorize]
+    [Route("api/[controller]")]
 	[ApiController]
     public class SysUsersController : ControllerBase
 	{

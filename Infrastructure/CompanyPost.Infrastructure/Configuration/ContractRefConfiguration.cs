@@ -45,10 +45,10 @@
 				.HasForeignKey(builder => builder.CreatedById)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			//builder.HasOne(builder => builder.PersonOrgs)
-			//	.WithMany(t => t.ContractRefPersonOrgs)
-			//	.HasForeignKey(builder => builder.PersonOrgId)
-			//	.OnDelete(DeleteBehavior.Restrict);
+			builder.HasOne(builder => builder.PersonOrgs)
+				.WithMany(t => t.ContractRefPersonOrgs)
+				.HasForeignKey(builder => builder.PersonOrgId)
+				.OnDelete(DeleteBehavior.Restrict);
 
 			//builder.HasOne(builder => builder.WorkType)
 			//		.WithMany(t => t.ContractRefs)

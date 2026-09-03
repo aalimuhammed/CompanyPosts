@@ -20,7 +20,8 @@ public sealed class GlobalExceptionHandling(
 			httpContext.Response.StatusCode = ex switch
 			{
 				ApplicationException or ValidationException => StatusCodes.Status400BadRequest,
-				_ => StatusCodes.Status500InternalServerError
+				ExpiredTokenException => StatusCodes.Status403Forbidden,
+                _ => StatusCodes.Status500InternalServerError
 			};
 
 			await httpContext.Response.WriteAsJsonAsync(

@@ -7,15 +7,22 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 		IRequestHandler<GetPostInternalDocumentsQuery, IEnumerable<PostDocumentsDTO>>
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		public GetPostInternalDocumentsHandler(IUnitOfWork unitOfWork)
+        private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+
+        public GetPostInternalDocumentsHandler(
+			IUnitOfWork unitOfWork,
+			IGetCurrentUserTokenService getCurrentUserTokenService)
 		{
 			_unitOfWork = unitOfWork;
-		}
+            _getCurrentUserTokenService = getCurrentUserTokenService;
+        }
 		public async Task<IEnumerable<PostDocumentsDTO>> Handle(GetPostInternalDocumentsQuery request, CancellationToken cancellationToken)
 		{
 			var postRepository = _unitOfWork.Repository<PostInternal>();
 
-			var includes = new List<Expression<Func<PostInternal, object>>>
+			var adminId = _getCurrentUserTokenService.UserId;
+
+            var includes = new List<Expression<Func<PostInternal, object>>>
 				 {
 					 post => post.CreatedBy,
 					 post => post.Publisher,
@@ -66,7 +73,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				p.Company.Name,
 				p.RecievedFrom.Name,
-                p.CreatedAt.ToString("yyyy-MM-dd")
+                p.CreatedAt.ToString("yyyy-MM-dd"),
+				p.CreatedById== adminId
             ));
 
 			return postDTOs;

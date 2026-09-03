@@ -15,5 +15,6 @@
 		string DeliveryMethod,
 		string CompanyName,
 		string ReceivedFromName,
-		string CreatedAt);
+		string CreatedAt,
+		bool canEdit);
 }
