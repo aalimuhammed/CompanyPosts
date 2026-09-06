@@ -60,7 +60,9 @@ internal sealed class CreateIncomingHandler
 			OldReferenceNumber = request.createIncomingDTO.OldRef,
 			OriginalSender = request.createIncomingDTO.OriginalSender,
 			Notes = request.createIncomingDTO.Notes,
-			AboutWork = request.createIncomingDTO.AboutWork
+			AboutWork = request.createIncomingDTO.AboutWork,
+			
+			
 		};
 
 		var inComingId = incoming.Id;

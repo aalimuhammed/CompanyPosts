@@ -56,8 +56,10 @@ internal sealed class CreatePostExternalHandler :
 			Status = (Status)request.CreatePostExternalDTO.StatusMethod,
 			CreatedById = adminId,
 			OldReferenceNumber = request.CreatePostExternalDTO.OldRef,
-			AboutWork = request.CreatePostExternalDTO.AboutWork
-		};
+			AboutWork = request.CreatePostExternalDTO.AboutWork,
+			ProjectId= request.CreatePostExternalDTO.ProjectId,
+
+        };
 		var postExternalID = postExternal.Id;
 		await _unitOfWork.BeginTransactionAsync(cancellationToken);
 		try

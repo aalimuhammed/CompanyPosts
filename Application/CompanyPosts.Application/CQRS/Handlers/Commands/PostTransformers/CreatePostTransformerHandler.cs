@@ -11,8 +11,7 @@ internal sealed class CreatePostTransformerHandler
 		IUnitOfWork unitOfWork,
 		IFileService saveAttachment,
 		IEmailServices emailServices,
-		IGetCurrentUserTokenService getCurrentUserTokenService
-        )
+		IGetCurrentUserTokenService getCurrentUserTokenService)
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
@@ -60,7 +59,8 @@ internal sealed class CreatePostTransformerHandler
 			Status = (Status)request.CreatePostTransofrmerDTO.StatusMethod,
             OldReferenceNumber = request.CreatePostTransofrmerDTO.OldRef,
 			DocumentType = (DocumentType)request.CreatePostTransofrmerDTO.DocumentType,
-			AboutWork = request.CreatePostTransofrmerDTO.AboutWork
+			AboutWork = request.CreatePostTransofrmerDTO.AboutWork,
+			ProjectId=request.CreatePostTransofrmerDTO.ProjectId
 		};
 		var postExternalID = postTransformer.Id;
 		await _unitOfWork.BeginTransactionAsync(cancellationToken);

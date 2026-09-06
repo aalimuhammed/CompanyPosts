@@ -23,4 +23,5 @@ public record CreatePostTransofrmerDTO(
     List<IFormFile>? Attachments,
     int StatusMethod,
 	string? OldRef,
-	string? AboutWork);
+	string? AboutWork,
+	string? ProjectId);

@@ -25,4 +25,6 @@ public abstract class PostBaseEntity : BaseEntity, IDocumentEntity
 	public Status Status {  get; set; }
 	public string? FollowingPerson { get; set; }
     public string? AboutWork { get; set; }
+
+    public string ? ProjectId { get; set; }
 }

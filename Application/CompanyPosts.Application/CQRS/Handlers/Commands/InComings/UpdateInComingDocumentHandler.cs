@@ -43,8 +43,10 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.InComings
 				inComing.PostDocumentTypes = (PostDocumentTypes)request.UpdateInComingDocumentRequest.department;
 				inComing.DocumentNumber = request.UpdateInComingDocumentRequest.documentNumber;
 				inComing.DocumentDate = request.UpdateInComingDocumentRequest.documentDate;
-				//inComing.WorkTypeId = request.UpdateInComingDocumentRequest.workTypeId;
-				inComing.Subject = request.UpdateInComingDocumentRequest.subject;
+                inComing.AboutWork= request.UpdateInComingDocumentRequest.aboutWork;
+                inComing.ProjectId = request.UpdateInComingDocumentRequest.projectId;
+                //inComing.WorkTypeId = request.UpdateInComingDocumentRequest.workTypeId;
+                inComing.Subject = request.UpdateInComingDocumentRequest.subject;
 				inComing.Notes = request.UpdateInComingDocumentRequest.notes;
 				inComing.Summary = request.UpdateInComingDocumentRequest.summary;
 				inComing.DeliveryDate = request.UpdateInComingDocumentRequest.deliveryDate;

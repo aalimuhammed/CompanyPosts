@@ -7,6 +7,7 @@
         DateTime deliveryDate,
         Guid publishedArea,
         Guid? receivedFromId,
+        string ? aboutWork,
         string? notes,
         string? summary,
         int department,

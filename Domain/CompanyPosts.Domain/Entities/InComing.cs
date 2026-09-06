@@ -30,4 +30,6 @@ public class InComing : BaseEntity, IDocumentEntity
     public Status Status { get; set; }
 	public string? OriginalSender { get; set; } = string.Empty;
     public string? AboutWork { get ; set; }
+	
+
 }

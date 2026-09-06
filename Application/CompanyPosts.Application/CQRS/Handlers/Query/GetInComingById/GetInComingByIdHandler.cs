@@ -40,6 +40,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingById
                 inComing.InComingNumber,
                 inComing.PublishedId,
                 inComing.ProjectId,
+                inComing.AboutWork,
                 inComing.DocumentDate,
                 inComing.DeliveryDate,
                 (int)inComing.DeliveryMethods,
