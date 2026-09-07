@@ -5,7 +5,8 @@ using CompanyPost.Application.DTO.Request.Base;
 
 namespace CompanyPost.API.Controllers
 {
-	[Route("api/[controller]")]
+   // [Authorize]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class DocumentsController : ControllerBase
     {

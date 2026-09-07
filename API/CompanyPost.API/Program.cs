@@ -1,47 +1,64 @@
 using CompanyPost.Application.Exceptions;
 
 namespace CompanyPost.API;
+
 public class Program
 {
-	public static async Task Main(string[] args)
-	{
-		var builder = WebApplication.CreateBuilder(args);
+    public static async Task Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-		
-		builder.Services.AddControllers();
-		builder.Services
-			  .AddApplication()
-			  .AddInfrastructure(builder.Configuration);
+        builder.Services.AddControllers();
 
-		var app = builder.Build();
-		try
-		{
-			using (var scope = app.Services.CreateScope())
-			{
-				var context = scope.ServiceProvider.GetRequiredService<CompanyPostDbContext>();
-				context.Database.Migrate();
-				await SeedData.Initialize(context);
-			}
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"An error occurred during migration: {ex.Message}");
-			throw;
-		}
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-		app.UseHttpsRedirection();
+        builder.Services
+              .AddApplication()
+              .AddInfrastructure(builder.Configuration);
 
-		app.UseStaticFiles();
+        var app = builder.Build();
 
-		app.UseCors(policy => policy.AllowAnyHeader()
-										.AllowAnyMethod()
-										.SetIsOriginAllowed(origin => true)
-										.AllowCredentials());
-		
-		app.UseAuthentication();
-		app.UseAuthorization();
-		app.MapControllers();
-		app.UseMiddleware<GlobalExceptionHandling>();
-		app.Run();
-	}
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
+        try
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider
+                    .GetRequiredService<CompanyPostDbContext>();
+
+                context.Database.Migrate();
+
+                await SeedData.Initialize(context);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(
+                $"An error occurred during migration: {ex.Message}");
+
+            throw;
+        }
+
+        app.UseMiddleware<GlobalExceptionHandling>();
+
+        app.UseHttpsRedirection();
+
+        app.UseStaticFiles();
+
+        app.UseCors(policy => policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(origin => true)
+            .AllowCredentials());
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
+    }
 }

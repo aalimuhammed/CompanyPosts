@@ -9,15 +9,20 @@ internal sealed class CreateIncomingHandler
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFileService _saveAttachment;
 	private readonly IEmailServices _emailServices;
-	public CreateIncomingHandler(
+    private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+
+    public CreateIncomingHandler(
 		IUnitOfWork unitOfWork ,
 		IFileService saveAttachment,
-		IEmailServices emailServices)
+		IEmailServices emailServices,
+		IGetCurrentUserTokenService getCurrentUserTokenService
+        )
 	{
 		_unitOfWork = unitOfWork;
 		_saveAttachment = saveAttachment;
 		_emailServices = emailServices;
-	}
+        _getCurrentUserTokenService = getCurrentUserTokenService;
+    }
 	public async Task<Unit> Handle(CreateIncomingCommand request, CancellationToken cancellationToken)
 	{
 		var incomingRepository = _unitOfWork.Repository<InComing>();
@@ -29,9 +34,9 @@ internal sealed class CreateIncomingHandler
 
         var sysUserRepository = _unitOfWork.Repository<SysUsers>();
 
-		var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+		var adminId= _getCurrentUserTokenService.UserId;
 
-		var maxSerial = await incomingRepository.MaxSerialNumber<InComing>(cancellationToken);
+        var maxSerial = await incomingRepository.MaxSerialNumber<InComing>(cancellationToken);
         
 		var incoming = new InComing
 		{
@@ -42,20 +47,20 @@ internal sealed class CreateIncomingHandler
 			DeliveryDate = request.createIncomingDTO.DeliveryDate,
 			Summary = request.createIncomingDTO.Summary,
 			DeliveryMethods = (DeliveryMethods)request.createIncomingDTO.DeliveryMethod,
-			ProjectId = request.createIncomingDTO.ProjectId,
+			RelatedToId = request.createIncomingDTO.RelatedToId,
 			//SaveDate = request.createIncomingDTO.SaveDate,
 			DocumentType = (DocumentType)request.createIncomingDTO.DocumentType,
 			PostDocumentTypes = (PostDocumentTypes)request.createIncomingDTO.PostDocumentType,
 			//OriginalPublisherId = request.createIncomingDTO.OriginalPublisherId,
 			PublishedId = request.createIncomingDTO.PublishedId,
 		//	WorkTypeId = request.createIncomingDTO.WorkTypeId,
-			CreatedById = admin.Id,
+			CreatedById = adminId,
 			InComingNumber = request.createIncomingDTO.InComingNumber,
 			Status = (Status) request.createIncomingDTO.StatusMethod,
 			OldReferenceNumber = request.createIncomingDTO.OldRef,
 			OriginalSender = request.createIncomingDTO.OriginalSender,
 			Notes = request.createIncomingDTO.Notes,
-			AboutWork = request.createIncomingDTO.AboutWork
+			AboutWork = request.createIncomingDTO.AboutWork,
 		};
 
 		var inComingId = incoming.Id;

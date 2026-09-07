@@ -25,9 +25,11 @@ public static class InfrastructureServices
 		services.AddScoped<IUnitOfWork , UnitOfWork>();
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IEmailServices, EmailServices>();
+		services.AddScoped<IGetCurrentUserTokenService, GetCurrentUserTokenService>();
 
 		services.AddSingleton<IJwTGenerator, JwtGenerator>();
-		services.AddTransient<IPasswordService, PasswordServices>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddTransient<IPasswordService, PasswordServices>();
 
 		var jwtSection = configuration.GetSection("JwtSettings");
 		services.Configure<JwtSettings>(jwtSection);
@@ -36,9 +38,11 @@ public static class InfrastructureServices
 		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		.AddJwtBearer(options =>
 		{
+			options.MapInboundClaims = false;
 			options.TokenValidationParameters = new TokenValidationParameters
 			{
-				ValidateIssuerSigningKey = true,
+                
+                ValidateIssuerSigningKey = true,
 				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings!.Secret)),
 				ValidateIssuer = true,
 				ValidIssuer = jwtSettings.Issuer,

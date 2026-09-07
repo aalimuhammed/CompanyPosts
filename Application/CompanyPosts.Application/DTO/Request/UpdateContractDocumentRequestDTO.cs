@@ -13,6 +13,8 @@
         Guid WorkTypeId,
         string? OldReferenceNumber,
         int Department,
+        DateTime ApprovalDeliveryDate,
+        DateTime DateOfReceipt,
         List<IFormFile>? Attachments ,
         List<Guid>? AttachmentIdsToDelete);
 }

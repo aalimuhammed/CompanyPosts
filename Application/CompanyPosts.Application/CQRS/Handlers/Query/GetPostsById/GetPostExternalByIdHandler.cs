@@ -38,6 +38,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.CompanyId,
                 post.PublishedId,
                 post.RecievedFromId,
+                post.AboutWork,
+                post.RelatedToId,
                 post.WorkTypeId,
                 post.DocumentDate,
                 post.DeliveryDate,

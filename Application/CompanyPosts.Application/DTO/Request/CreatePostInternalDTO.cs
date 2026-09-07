@@ -19,4 +19,5 @@ public record CreatePostInternalDTO(
     List<IFormFile>? Attachments,
 	int StatusMethod,
 	string? OldRef,
-	string? AboutWork);
+	string? AboutWork,
+	Guid? RelatedToId);

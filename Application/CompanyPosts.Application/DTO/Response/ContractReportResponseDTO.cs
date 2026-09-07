@@ -15,7 +15,10 @@
         string CreatedBy,
         string CreatedAt,
         double Value,
-        List<string> AttachmentPaths ,
+        bool canEdit,
+        DateTime? ApprovalDeliveryDate,
+        DateTime? DateOfReceipt,
+        List<string> AttachmentPaths,
         List<ContractRefResponseDTO> References);
 
     public record ContractRefResponseDTO(
@@ -26,6 +29,7 @@
                 double Value,
                 string CreatedBy,
                 string Currency,
+                bool canEdit,
                 List<string> Attachments
  );
 }

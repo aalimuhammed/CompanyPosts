@@ -8,14 +8,19 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFileService _saveAttachment;
         private readonly IEmailServices _emailServices;
+        private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+
         public CreatePurchaseOrderHandler(
             IUnitOfWork unitOfWork, 
             IFileService saveAttachment,
-            IEmailServices emailServices)
+            IEmailServices emailServices,
+            IGetCurrentUserTokenService getCurrentUserTokenService
+            )
         {
             _unitOfWork = unitOfWork;
             _saveAttachment = saveAttachment;
             _emailServices = emailServices;
+            _getCurrentUserTokenService = getCurrentUserTokenService;
         }
         public async Task<Unit> Handle(CreatePurchaseOrderCommand request, CancellationToken cancellationToken)
         {
@@ -31,12 +36,12 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PurchaseOrders
             }
 
             var systUserRepository = _unitOfWork.Repository<SysUsers>();
-            var admin = await systUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
+            var adminId = _getCurrentUserTokenService.UserId;
            
             try
             {
                 var newPurchaseOrder = CreatePurchaseOrder(request);
-                newPurchaseOrder.CreatedById = admin.Id;
+                newPurchaseOrder.CreatedById = adminId;
 
                 await _unitOfWork.BeginTransactionAsync();
                 await purchaseOrderRepo.AddAsync(newPurchaseOrder,cancellationToken);

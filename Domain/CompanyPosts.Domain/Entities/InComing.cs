@@ -10,14 +10,15 @@ public class InComing : BaseEntity, IDocumentEntity
 	public string? Notes { get; set; }
 	public DeliveryMethods DeliveryMethods { get; set; }
 	public DocumentType DocumentType { get; set; }
-	public Guid? ProjectId { get; set; }
-	public Publisher Projects { get; set; }  = null!;
+
 	//public Guid OriginalPublisherId { get; set; }
 	//public Publisher OriginalPublisher { get; set; } = null!;
 	//public DateTime SaveDate { get; set; }
 	public Guid PublishedId { get; set; }
 	public Publisher Publisher { get; set; } = null!;
-	public Guid CreatedById { get; set; }
+    public Guid? RelatedToId { get; set; }
+    public Publisher? RelatedTo { get; set; }
+    public Guid CreatedById { get; set; }
 	public SysUsers CreatedBy { get; set; } = null!;
 	public Guid? WorkTypeId { get; set; }
 	public WorkType? WorkType { get; set; }
@@ -30,4 +31,6 @@ public class InComing : BaseEntity, IDocumentEntity
     public Status Status { get; set; }
 	public string? OriginalSender { get; set; } = string.Empty;
     public string? AboutWork { get ; set; }
+	
+
 }

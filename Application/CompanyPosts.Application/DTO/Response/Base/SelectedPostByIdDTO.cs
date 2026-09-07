@@ -10,6 +10,8 @@
         Guid CompanyId, 
         Guid PublisherId ,
         Guid RecievedFromId, 
+        string AboutWork,
+        Guid? RelatedToId,
         Guid? WorkTypeId,
 		DateTime DocumentDate,
         DateTime DeliveryDate,

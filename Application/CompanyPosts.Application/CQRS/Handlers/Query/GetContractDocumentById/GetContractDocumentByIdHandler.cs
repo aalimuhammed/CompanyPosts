@@ -60,7 +60,10 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractDocumentById
                     contract.WorkTypeId,
                     contract.OldReferenceNumber,
                     (int)contract.Department ,
-                    contract.ContractAttachments);
+                    contract.ApprovalDeliveryDate,
+                    contract.DateOfReceipt,
+                    contract.ContractAttachments
+                    );
             }
 
             if (contractRef != null)
@@ -79,6 +82,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractDocumentById
                     contractRef.Contract.WorkTypeId,
                     contractRef.Contract.OldReferenceNumber,
                     (int)contractRef.Contract.Department,
+                    contractRef.ApprovalDeliveryDate,
+                    contractRef.DateOfReceipt,
                     contractRef.ContractAttachments);
             }
 
@@ -99,6 +104,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractDocumentById
             Guid workTypeId,
             string oldReferenceNumber,
             int department , 
+            DateTime approvalDeliveryDate,
+            DateTime dateOfRecipet,
             ICollection<ContractAttachments> contractAttachments)
         {
             return new GetContractByIdResponseDTO(
@@ -115,6 +122,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractDocumentById
                 WorkTypeId: workTypeId,
                 OldReferenceNumber: oldReferenceNumber,
                 Department: department ,
+                ApprovalDeliveryDate:approvalDeliveryDate,
+                DateOfReceipt:dateOfRecipet,
                 Attachments: contractAttachments != null && contractAttachments.Any()
                ? contractAttachments.Select(a => new AttachmentDTO(a.Id, a.FileName!, $"/contracts/{a.FileName}")).ToList()
               : new List<AttachmentDTO>());

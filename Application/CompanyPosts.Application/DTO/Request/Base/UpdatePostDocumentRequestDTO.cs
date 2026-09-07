@@ -8,7 +8,6 @@
         Guid companyId,
         Guid publishedId,
         Guid receivedFromId,
-        Guid workTypeId,
         string? notes,
         string? summary,
         int? department,

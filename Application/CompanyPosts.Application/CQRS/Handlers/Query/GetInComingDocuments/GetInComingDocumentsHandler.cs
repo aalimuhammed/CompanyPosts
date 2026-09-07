@@ -7,19 +7,26 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 		: IRequestHandler<GetInComingDocumentsQuery, IEnumerable<PostDocumentsDTO>>
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		public GetInComingDocumentsHandler(IUnitOfWork unitOfWork)
+        private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
+
+        public GetInComingDocumentsHandler(
+			IUnitOfWork unitOfWork,
+			IGetCurrentUserTokenService getCurrentUserTokenService)
 		{
 			_unitOfWork = unitOfWork;
-		}
+            _getCurrentUserTokenService = getCurrentUserTokenService;
+        }
 		public async Task<IEnumerable<PostDocumentsDTO>> Handle(GetInComingDocumentsQuery request, CancellationToken cancellationToken)
 		{
 			var inComingRepository = _unitOfWork.Repository<InComing>();
 
-			var includes = new List<Expression<Func<InComing, object>>>
+			var adminId = _getCurrentUserTokenService.UserId;
+
+            var includes = new List<Expression<Func<InComing, object>>>
 					 {
 						 post => post.CreatedBy,
 						 post => post.Publisher,
-						 post => post.Projects,
+						 //post => post.Projects,
 						// post => post.WorkType,
 						// post => post.OriginalPublisher,
 						 post => post.IncomingAttachments,
@@ -61,8 +68,9 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 				p.DeliveryMethods.GetDisplayName(),
 				null,
 				"",
-                p.CreatedAt.ToString("yyyy-MM-dd") 
-				));
+                p.CreatedAt.ToString("yyyy-MM-dd"),
+				p.CreatedById == adminId
+                ));
 			return inComingDto;
 		}
 	}

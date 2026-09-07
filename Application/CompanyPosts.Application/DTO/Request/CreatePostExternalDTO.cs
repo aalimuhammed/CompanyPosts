@@ -20,5 +20,6 @@ string? EmailContent,
 string? FollowingPerson,
 string? OldRef,
 string? AboutWork,
+Guid? RelatedToId,
 List<IFormFile>? Attachments,
 int StatusMethod);

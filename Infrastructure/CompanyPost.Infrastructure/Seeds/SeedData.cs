@@ -15,13 +15,37 @@ public static class SeedData
 			await context.SysUsers.AddRangeAsync(
 				  new SysUsers
 				  {
-					  UserName = "admin",
-					  Name = "Karim Mousa",
-                      Email = "karim.mousa@siac-construction.com",
+					  UserName = "Shada",
+					  Name = "Shada Adly",
+                      Email = "shada.adly@siac-construction.com",
 					  Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
 					  IsAdmin = true,
-				  }
-			  );
+				  },
+                  new SysUsers
+                  {
+                      UserName = "Sandra",
+                      Name = "Sandra Walid",
+                      Email = "sandra.walid@siac-construction.com",
+                      Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
+                      IsAdmin = true,
+                  },
+				  new SysUsers
+				  {
+					  UserName = "karim",
+					  Name = "karim Mousa",
+					  Email = "karim.Mousa@siac-construction.com",
+					  Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
+					  IsAdmin = true,
+				  },
+				  new SysUsers
+                  {
+                      UserName = "Abdelrahman",
+                      Name = "Abdelrahman Ali",
+                      Email = "abdelrahman.ali@siac-construction.com",
+                      Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
+                      IsAdmin = true,
+                  }
+              );
 			await context.SaveChangesAsync();
 		}
 	}
