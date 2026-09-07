@@ -47,7 +47,7 @@ internal sealed class CreateIncomingHandler
 			DeliveryDate = request.createIncomingDTO.DeliveryDate,
 			Summary = request.createIncomingDTO.Summary,
 			DeliveryMethods = (DeliveryMethods)request.createIncomingDTO.DeliveryMethod,
-			ProjectId = request.createIncomingDTO.ProjectId,
+			RelatedToId = request.createIncomingDTO.RelatedToId,
 			//SaveDate = request.createIncomingDTO.SaveDate,
 			DocumentType = (DocumentType)request.createIncomingDTO.DocumentType,
 			PostDocumentTypes = (PostDocumentTypes)request.createIncomingDTO.PostDocumentType,
@@ -61,8 +61,6 @@ internal sealed class CreateIncomingHandler
 			OriginalSender = request.createIncomingDTO.OriginalSender,
 			Notes = request.createIncomingDTO.Notes,
 			AboutWork = request.createIncomingDTO.AboutWork,
-			
-			
 		};
 
 		var inComingId = incoming.Id;

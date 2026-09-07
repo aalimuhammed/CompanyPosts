@@ -7,6 +7,8 @@ public abstract class PostBaseEntity : BaseEntity, IDocumentEntity
 	public Company Company { get; set; } = null!;
 	public Guid PublishedId { get; set; }
 	public Publisher Publisher { get; set; } = null!;
+    public Guid? RelatedToId { get; set; }
+    public Publisher? RelatedTo { get; set; } = null!;
     public Guid RecievedFromId { get; set; }
     public Publisher RecievedFrom { get; set; } = null!;
     public Guid? WorkTypeId { get; set; }
@@ -25,6 +27,4 @@ public abstract class PostBaseEntity : BaseEntity, IDocumentEntity
 	public Status Status {  get; set; }
 	public string? FollowingPerson { get; set; }
     public string? AboutWork { get; set; }
-
-    public string ? ProjectId { get; set; }
 }

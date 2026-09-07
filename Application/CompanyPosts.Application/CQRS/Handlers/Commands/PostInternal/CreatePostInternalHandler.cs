@@ -55,8 +55,7 @@ internal sealed class CreatePostInternalHandler
 			Status = (Status)request.CreatePostInternalDTO.StatusMethod,
 			OldReferenceNumber = request.CreatePostInternalDTO.OldRef,
             AboutWork = request.CreatePostInternalDTO.AboutWork,
-			ProjectId=request.CreatePostInternalDTO.ProjectId
-			
+			RelatedToId=request.CreatePostInternalDTO.RelatedToId
         };
 		var postInternalID = postInternal.Id;
 		await _unitOfWork.BeginTransactionAsync();

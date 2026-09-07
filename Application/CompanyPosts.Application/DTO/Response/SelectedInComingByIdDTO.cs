@@ -8,7 +8,7 @@
         string OldReferenceNumber,
         string InComingNumber,
         Guid PublishedArea,
-        Guid? ProjectId,
+        Guid? RelatedToId,
         string AboutWork,
         // Guid RecivedId,
         DateTime DocumentDate,

@@ -20,4 +20,4 @@ public record CreatePostInternalDTO(
 	int StatusMethod,
 	string? OldRef,
 	string? AboutWork,
-	string? ProjectId);
+	Guid? RelatedToId);

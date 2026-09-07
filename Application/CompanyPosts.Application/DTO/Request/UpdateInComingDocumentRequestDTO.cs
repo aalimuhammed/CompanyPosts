@@ -12,7 +12,7 @@
         string? summary,
         int department,
         int deliveryMethod,
-        Guid projectId,
+        Guid? RelatedToId,
         string? originalsender,
         string? oldReferenceNumber,
         string? inComingNumber,

@@ -24,4 +24,4 @@ public record CreatePostTransofrmerDTO(
     int StatusMethod,
 	string? OldRef,
 	string? AboutWork,
-	string? ProjectId);
+	Guid? RelatedToId);

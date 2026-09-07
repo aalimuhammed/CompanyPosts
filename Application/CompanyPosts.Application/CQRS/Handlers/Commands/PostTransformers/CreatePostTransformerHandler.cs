@@ -60,7 +60,7 @@ internal sealed class CreatePostTransformerHandler
             OldReferenceNumber = request.CreatePostTransofrmerDTO.OldRef,
 			DocumentType = (DocumentType)request.CreatePostTransofrmerDTO.DocumentType,
 			AboutWork = request.CreatePostTransofrmerDTO.AboutWork,
-			ProjectId=request.CreatePostTransofrmerDTO.ProjectId
+			RelatedToId=request.CreatePostTransofrmerDTO.RelatedToId
 		};
 		var postExternalID = postTransformer.Id;
 		await _unitOfWork.BeginTransactionAsync(cancellationToken);

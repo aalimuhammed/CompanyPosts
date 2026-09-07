@@ -39,7 +39,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingById
                 inComing.OldReferenceNumber,
                 inComing.InComingNumber,
                 inComing.PublishedId,
-                inComing.ProjectId,
+                inComing.RelatedToId,
                 inComing.AboutWork,
                 inComing.DocumentDate,
                 inComing.DeliveryDate,

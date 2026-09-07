@@ -38,7 +38,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostsById
                 post.CompanyId,
                 post.PublishedId,
                 post.AboutWork,
-                post.ProjectId,
+                post.RelatedToId,
                 post.RecievedFromId, 
 				post.WorkTypeId,
                 post.DocumentDate,

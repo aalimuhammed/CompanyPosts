@@ -11,7 +11,7 @@ namespace CompanyPost.Application.DTO.Request
         Guid publishedId,
         Guid receivedFromId,
         string aboutWork,
-        string projectId,
+        Guid? relatedToId,
         string? notes,
         string? summary,
         string? oldReferenceNumber,

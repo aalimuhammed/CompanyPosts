@@ -11,7 +11,7 @@
         Guid PublisherId ,
         Guid RecievedFromId, 
         string AboutWork,
-        string projectId,
+        Guid? RelatedToId,
         Guid? WorkTypeId,
 		DateTime DocumentDate,
         DateTime DeliveryDate,

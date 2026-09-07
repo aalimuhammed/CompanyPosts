@@ -4,6 +4,7 @@ using CompanyPost.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanyPost.Infrastructure.Migrations
 {
     [DbContext(typeof(CompanyPostDbContext))]
-    partial class CompanyPostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260907111331_RemoveProjectIdColumnFromIncomingTable")]
+    partial class RemoveProjectIdColumnFromIncomingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -438,10 +441,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("publisher_id");
 
-                    b.Property<Guid?>("RelatedToId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("related_to_id");
-
                     b.Property<int>("SerialNumber")
                         .HasColumnType("int")
                         .HasColumnName("serial_number");
@@ -477,9 +476,6 @@ namespace CompanyPost.Infrastructure.Migrations
 
                     b.HasIndex("PublisherId")
                         .HasDatabaseName("ix_in_coming_publisher_id");
-
-                    b.HasIndex("RelatedToId")
-                        .HasDatabaseName("ix_in_coming_related_to_id");
 
                     b.HasIndex("WorkTypeId")
                         .HasDatabaseName("ix_in_coming_work_type_id");
@@ -1402,12 +1398,6 @@ namespace CompanyPost.Infrastructure.Migrations
                         .HasForeignKey("PublisherId")
                         .HasConstraintName("fk_in_coming_publishers_publisher_id");
 
-                    b.HasOne("CompanyPost.Domain.Entities.Publisher", "RelatedTo")
-                        .WithMany("RelatedToInComings")
-                        .HasForeignKey("RelatedToId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_in_coming_publishers_related_to_id");
-
                     b.HasOne("CompanyPost.Domain.Entities.WorkType", "WorkType")
                         .WithMany("InComings")
                         .HasForeignKey("WorkTypeId")
@@ -1417,8 +1407,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("Publisher");
-
-                    b.Navigation("RelatedTo");
 
                     b.Navigation("WorkType");
                 });
@@ -1788,8 +1776,6 @@ namespace CompanyPost.Infrastructure.Migrations
                     b.Navigation("RecievedPostInternals");
 
                     b.Navigation("RecievedPostTransformers");
-
-                    b.Navigation("RelatedToInComings");
                 });
 
             modelBuilder.Entity("CompanyPost.Domain.Entities.PurchaseOrder", b =>
