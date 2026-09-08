@@ -1,4 +1,5 @@
 ﻿using CompanyPost.Application.CQRS.Commands.SysUser;
+using CompanyPost.Application.DTO.Request;
 
 namespace CompanyPost.API.Controllers
 {
@@ -47,7 +48,48 @@ namespace CompanyPost.API.Controllers
             }
         }
 
-		[HttpGet("getfollowingpersons")]
+        [AllowAnonymous]
+        [HttpPost("forgotpassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto request, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new ForgotPasswordCommand(request);
+            try
+            {
+                var result = await _mediator.Send(command, cancellationToken);
+                return Ok(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("resetpassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto request, CancellationToken cancellationToken)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var command = new ResetPasswordCommand(request);
+            try
+            {
+                var result = await _mediator.Send(command, cancellationToken);
+                if (!result)
+                    return BadRequest(new { success = false, message = "Invalid or expired token." });
+
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet("getfollowingpersons")]
 		public async Task<IActionResult> GetFollowingPersons()
 		{
 			var query = new GetFollowingPersonsQuery();

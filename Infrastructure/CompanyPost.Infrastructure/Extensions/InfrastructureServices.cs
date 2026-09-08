@@ -25,7 +25,8 @@ public static class InfrastructureServices
 		services.AddScoped<IUnitOfWork , UnitOfWork>();
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IEmailServices, EmailServices>();
-		services.AddScoped<IGetCurrentUserTokenService, GetCurrentUserTokenService>();
+        services.AddScoped<IUrlService, UrlSevice>();
+        services.AddScoped<IGetCurrentUserTokenService, GetCurrentUserTokenService>();
 
 		services.AddSingleton<IJwTGenerator, JwtGenerator>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -35,7 +36,10 @@ public static class InfrastructureServices
 		services.Configure<JwtSettings>(jwtSection);
 		var jwtSettings = jwtSection.Get<JwtSettings>();
 
-		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.Configure<UrlSettings>(
+            configuration.GetSection("UrlSettings"));
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		.AddJwtBearer(options =>
 		{
 			options.MapInboundClaims = false;
