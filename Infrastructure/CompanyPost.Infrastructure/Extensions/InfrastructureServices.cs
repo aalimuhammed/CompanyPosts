@@ -25,7 +25,7 @@ public static class InfrastructureServices
 		services.AddScoped<IUnitOfWork , UnitOfWork>();
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IEmailServices, EmailServices>();
-        services.AddScoped<IUrlService, UrlSevice>();
+        services.AddSingleton<IUrlService, UrlSevice>();
         services.AddScoped<IGetCurrentUserTokenService, GetCurrentUserTokenService>();
 
 		services.AddSingleton<IJwTGenerator, JwtGenerator>();

@@ -1,6 +1,6 @@
 ﻿namespace CompanyPost.Application.CQRS.Handlers.Commands.SysUser
 {
-    public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, bool>
+    internal class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailServices _emailServices;
@@ -38,12 +38,12 @@
             user.ResetPasswordToken = token.Trim();
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
+             
             var resetLink = $"{_urlService.GetLocalUrl()}resetpassword?token={Uri.EscapeDataString(token.Trim())}";
 
             var body = $"<p>To reset your password, click the link below (valid for 10 minutes):</p><p><a href=\"{resetLink}\">Reset Password</a></p>";
 
-           _= _emailServices.SendEmailAsync(user.Email, "Reset your CompanyPost password", body, cancellationToken);
+            _ = _emailServices.SendEmailAsync(user.Email, "Reset your CompanyPost password", body, cancellationToken);
 
            return true;
         }
