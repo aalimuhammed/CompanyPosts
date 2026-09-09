@@ -2,6 +2,7 @@
 global using CompanyPost.Application.CQRS.Commands;
 global using CompanyPost.Application.CQRS.Commands.Contract;
 global using CompanyPost.Application.CQRS.Commands.Posts;
+global using CompanyPost.Application.CQRS.Commands.SysUser;
 global using CompanyPost.Application.CQRS.Query;
 global using CompanyPost.Application.DTO.Request;
 global using CompanyPost.Application.DTO.Response;
@@ -10,7 +11,6 @@ global using CompanyPost.Domain.Entities;
 global using CompanyPost.Domain.Enums;
 global using LinqKit;
 global using MediatR;
-global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.DependencyInjection;
 global using System.Linq.Expressions;
