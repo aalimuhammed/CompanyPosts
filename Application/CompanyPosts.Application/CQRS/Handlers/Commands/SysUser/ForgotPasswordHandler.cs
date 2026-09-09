@@ -43,7 +43,7 @@
 
             var body = $"<p>To reset your password, click the link below (valid for 10 minutes):</p><p><a href=\"{resetLink}\">Reset Password</a></p>";
 
-           await _emailServices.SendEmailAsync(user.Email, "Reset your Mastera password", body, cancellationToken);
+           _= _emailServices.SendEmailAsync(user.Email, "Reset your CompanyPost password", body, cancellationToken);
 
            return true;
         }
