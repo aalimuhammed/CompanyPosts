@@ -26,8 +26,9 @@ public static class InfrastructureServices
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IEmailServices, EmailServices>();
         services.AddScoped<IGetCurrentUserTokenService, GetCurrentUserTokenService>();
+        services.AddScoped<IExcelExportService, ExcelExportService>();
 
-		services.AddSingleton<IJwTGenerator, JwtGenerator>();
+        services.AddSingleton<IJwTGenerator, JwtGenerator>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<IUrlService, UrlSevice>();
 

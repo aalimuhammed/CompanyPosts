@@ -2,8 +2,10 @@
 
 namespace CompanyPost.Application.Abstraction
 {
-    public interface IExcelExportService<T> where T : IExcelExportModel
+    public interface IExcelExportService
     {
-        byte[] ExportToExcel(IEnumerable<T> data);
+        byte[] ExportToExcel<T>(
+        IEnumerable<T> data,
+        IEnumerable<ExcelColumn<T>> columns);
     }
 }
