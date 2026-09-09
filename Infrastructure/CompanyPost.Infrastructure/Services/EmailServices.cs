@@ -1,7 +1,5 @@
 ﻿using CompanyPost.Application.DTO.Request;
-using CompanyPost.Infrastructure.Settings;
 using MailKit.Net.Smtp;
-using Microsoft.Extensions.Logging;
 using MimeKit;
 using System.Net;
 

@@ -29,6 +29,11 @@ internal class SysUserLoginHandler : IRequestHandler<SysUserLoginQuery, AuthResu
 			u => u.UserName == request.usernameOrEmail.ToLowerInvariant() || 
 			u.Email == request.usernameOrEmail.ToLowerInvariant());
 
+		if(!user.IsVerified)
+		{
+			return new AuthResultDTO(false, "User is not activated yet");
+		}
+
 		if (user is null || !_passwordService.VerifyPassword(request.password, user.Password))
 		{
 			return new AuthResultDTO(false, "Invalid password or email");

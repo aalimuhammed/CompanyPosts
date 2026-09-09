@@ -24,8 +24,6 @@ internal sealed class CreatePostInternalHandler
 		var postInternalRepository = _unitOfWork.Repository<PostInternal>();
 		var sysUserRepository = _unitOfWork.Repository<SysUsers>();
 
-		//var admin = await sysUserRepository.FindAsync(x => x.IsAdmin, cancellationToken);
-
 		var adminId = _getCurrentUserService.UserId;
 
 		if (await postInternalRepository.FindAnyAsync(
@@ -55,7 +53,7 @@ internal sealed class CreatePostInternalHandler
 			Status = (Status)request.CreatePostInternalDTO.StatusMethod,
 			OldReferenceNumber = request.CreatePostInternalDTO.OldRef,
             AboutWork = request.CreatePostInternalDTO.AboutWork,
-			RelatedToId=request.CreatePostInternalDTO.RelatedToId
+			RelatedToId = request.CreatePostInternalDTO.RelatedToId
         };
 		var postInternalID = postInternal.Id;
 		await _unitOfWork.BeginTransactionAsync();
