@@ -25,11 +25,12 @@ public static class InfrastructureServices
 		services.AddScoped<IUnitOfWork , UnitOfWork>();
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IEmailServices, EmailServices>();
-        services.AddSingleton<IUrlService, UrlSevice>();
         services.AddScoped<IGetCurrentUserTokenService, GetCurrentUserTokenService>();
 
 		services.AddSingleton<IJwTGenerator, JwtGenerator>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddSingleton<IUrlService, UrlSevice>();
+
         services.AddTransient<IPasswordService, PasswordServices>();
 
 		var jwtSection = configuration.GetSection("JwtSettings");
