@@ -31,7 +31,7 @@ public static class InfrastructureServices
         services.AddScoped<IGetCurrentUserTokenService, GetCurrentUserTokenService>();
 
         services.AddScoped(typeof(IPostsExcelReportQueryService<>), typeof(PostsExcelReportQueryService<>));
-
+		services.AddScoped<IInComingPostsExcelReportQueryService, InComingPostsExcelReportQueryService>();
         services.AddSingleton<IJwTGenerator, JwtGenerator>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<IUrlService, UrlSevice>();

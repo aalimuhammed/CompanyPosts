@@ -1,34 +1,35 @@
 ﻿using CompanyPost.Application.CQRS.Services;
 
-namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
+namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostTransformerExcelReport
 {
-    internal sealed class GetPostInternalExcelReportHandler : IRequestHandler<GetPostInternalDocumentsExcelReportQuery, byte[]>
+    internal sealed class GetPostTransformerExcelReportHandler : IRequestHandler<GetPostTransformerDocumentsExcelReportQuery, byte[]>
     {
-        private readonly IPostsExcelReportQueryService<PostInternal> _postsExcelReportQueryService;
+        private readonly IPostsExcelReportQueryService<PostTransformer> _postsExcelReportQueryService;
         private readonly IExcelExportService<PostDocumentExcelDTO> _excelExportService;
-        public GetPostInternalExcelReportHandler(
-            IPostsExcelReportQueryService<PostInternal> postsExcelReportQueryService, 
+
+        public GetPostTransformerExcelReportHandler(
+            IPostsExcelReportQueryService<PostTransformer> postsExcelReportQueryService,
             IExcelExportService<PostDocumentExcelDTO> excelExportService)
         {
             _postsExcelReportQueryService = postsExcelReportQueryService;
             _excelExportService = excelExportService;
         }
-        public async Task<byte[]> Handle(
-            GetPostInternalDocumentsExcelReportQuery request, 
+
+        public async Task<byte[]> Handle(GetPostTransformerDocumentsExcelReportQuery request,
             CancellationToken cancellationToken)
         {
-            var includes = new List<Expression<Func<PostInternal, object>>>
+            var includes = new List<Expression<Func<PostTransformer, object>>>
                  {
                      post => post.CreatedBy,
                      post => post.Publisher,
                      post => post.RecievedFrom,
-					 post => post.Company,
+                     post => post.Company,
                  };
 
-            var predicate = PredicateBuilder.New<PostInternal>(true);
+            var predicate = PredicateBuilder.New<PostTransformer>(true);
 
             var result = await _postsExcelReportQueryService.GetPostDocumentsAsync(
-                request.BaseDocumentFilterRequestDTO, 
+                request.BaseDocumentFilterRequestDTO,
                 predicate,
                 includes,
                 cancellationToken);

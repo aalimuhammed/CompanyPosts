@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.DTO.Response
 {
-    public record PostDocumentExcelDTO 
-    (
+    public record InComingPostDocumentExcelDTO
+        (
         int SerialNumber,
         string DocumentNumber,
         string DocumentDate,
@@ -11,9 +11,6 @@
         string? Notes,
         string CreatedBy,
         string PublishedName,
-        string DeliveryMethod,
-        string CompanyName,
-        string ReceivedFromName,
         string CreatedAt
-     );
+        );
 }
