@@ -1,7 +1,7 @@
 ﻿namespace CompanyPost.Application.DTO.Response.Base
 {
 	public record PostDocumentsDTO(
-		Guid Id,
+		Guid? Id,
 		int SerialNumber,
 		string DocumentNumber,
 		string DocumentDate,

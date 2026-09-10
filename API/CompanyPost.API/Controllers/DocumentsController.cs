@@ -47,6 +47,7 @@ namespace CompanyPost.API.Controllers
         [HttpPut("post-internal/{id}")]
         public async Task<IActionResult> UpdatePostInternalDocument(Guid id, [FromForm] UpdatePostInternalDocumentRequestDTO dto, CancellationToken ct)
             => Ok(await _mediator.Send(new UpdatePostInternalDocumentCommand(id, dto), ct));
+
         #endregion
 
 

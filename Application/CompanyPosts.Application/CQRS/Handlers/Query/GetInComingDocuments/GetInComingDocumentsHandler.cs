@@ -26,9 +26,6 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
 					 {
 						 post => post.CreatedBy,
 						 post => post.Publisher,
-						 //post => post.Projects,
-						// post => post.WorkType,
-						// post => post.OriginalPublisher,
 						 post => post.IncomingAttachments,
 					 };
 
@@ -71,6 +68,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetInComingDocuments
                 p.CreatedAt.ToString("yyyy-MM-dd"),
 				p.CreatedById == adminId
                 ));
+
 			return inComingDto;
 		}
 	}

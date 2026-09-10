@@ -1,4 +1,8 @@
 ﻿using CompanyPost.API.Model;
+using CompanyPost.Application.Abstraction;
+using CompanyPost.Application.DTO.Request.Base;
+using CompanyPost.Application.DTO.Response.Base;
+using CompanyPost.Application.ExcelConfigurations;
 
 namespace CompanyPost.API.Controllers;
 
@@ -6,50 +10,71 @@ namespace CompanyPost.API.Controllers;
 [ApiController]
 public class PostExternalController : ControllerBase
 {
-	private readonly IMediator _mediator;
-	public PostExternalController(IMediator mediator)
-	{
-		_mediator = mediator;
-	}
+    private readonly IMediator _mediator;
 
-	[HttpGet("GetPostExternalMaxSerialNumber")]
-	public async Task<IActionResult> GetPostExternalMaxSerialNumber(CancellationToken cancellationToken)
-	{
-		var query = new GetPostExternalMaxSerialNumberQuery();
-		var result = await _mediator.Send(query, cancellationToken);
-		return Ok(result);
-	}
+    public PostExternalController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
-	[HttpGet("GetDocumentNumbers")]
-	public async Task<IActionResult> GetPostExternalDocumentNumbers(CancellationToken cancellationToken)
-	{
-		var query = new GetPostExternalDocumentNumbersQuery();
-		var result = await _mediator.Send(query, cancellationToken);
-		return Ok(result);
-	}
+    [HttpGet("GetPostExternalMaxSerialNumber")]
+    public async Task<IActionResult> GetPostExternalMaxSerialNumber(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetPostExternalMaxSerialNumberQuery();
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpGet("GetDocumentNumbers")]
+    public async Task<IActionResult> GetPostExternalDocumentNumbers(
+        CancellationToken cancellationToken)
+    {
+        var query = new GetPostExternalDocumentNumbersQuery();
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
 
     [HttpGet("GetPostExternalToBeCopied/{id}")]
-	public async Task<IActionResult> GetPostExternalToBeCopied(Guid Id,CancellationToken cancellationToken)
-	{
-		var query = new GetPostExternalToBeCopiedQuery(Id);
-		var result = await _mediator.Send(query,cancellationToken);
-		return Ok(result);
-	}
+    public async Task<IActionResult> GetPostExternalToBeCopied(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetPostExternalToBeCopiedQuery(id);
+
+        var result = await _mediator.Send(query, cancellationToken);
+
+        return Ok(result);
+    }
 
     [HttpPost("CreatePostExternal")]
-	public async Task<IActionResult> CreatePostExternal(
-		[FromForm] CreatePostExternalDTO createPostExternalDTO,
-		CancellationToken cancellationToken)
-	{
-		try
-		{
-			var command = new CreatePostExternalCommand(createPostExternalDTO);
-			await _mediator.Send(command, cancellationToken);
-			return Ok(new ApiResponse { Success = true, Message = "Data has been saved successfully ✅" });
-		}
-		catch (Exception ex)
-		{
-			return BadRequest(new ApiResponse { Success = false, Message = $"{ex.Message}" });
-		}
-	}
+    public async Task<IActionResult> CreatePostExternal(
+        [FromForm] CreatePostExternalDTO createPostExternalDTO,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var command = new CreatePostExternalCommand(createPostExternalDTO);
+
+            await _mediator.Send(command, cancellationToken);
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Data has been saved successfully ✅"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ApiResponse
+            {
+                Success = false,
+                Message = ex.Message
+            });
+        }
+    }
 }

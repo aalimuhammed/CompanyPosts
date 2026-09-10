@@ -20,7 +20,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 		{
 			var postRepository = _unitOfWork.Repository<PostExternal>();
 
-			var adminId = _getCurrentUserTokenService.UserId;
+			//var adminId = _getCurrentUserTokenService.UserId;
 
 			var includes = new List<Expression<Func<PostExternal, object>>>
 				 {
@@ -84,7 +84,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostExternalDocuments
 				p.Company.Name,
 				p.RecievedFrom.Name,
                 p.CreatedAt.ToString("yyyy-MM-dd"),
-				p.CreatedById == adminId
+				p.CreatedById == Guid.NewGuid()
             ));
 
 			return postDTOs;

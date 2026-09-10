@@ -74,7 +74,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetPostInternalDocuments
 				p.Company.Name,
 				p.RecievedFrom.Name,
                 p.CreatedAt.ToString("yyyy-MM-dd"),
-				p.CreatedById== adminId
+				p.CreatedById == adminId
             ));
 
 			return postDTOs;

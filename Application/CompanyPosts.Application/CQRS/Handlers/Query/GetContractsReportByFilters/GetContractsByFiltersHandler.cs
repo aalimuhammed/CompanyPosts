@@ -8,7 +8,8 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGetCurrentUserTokenService _getCurrentUserTokenService;
 
-        public GetContractsByFiltersHandler(IUnitOfWork unitOfWork ,
+        public GetContractsByFiltersHandler(
+            IUnitOfWork unitOfWork ,
             IGetCurrentUserTokenService getCurrentUserTokenService)
         {
               _unitOfWork = unitOfWork;
@@ -20,6 +21,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 		{
 			var contractRepository = _unitOfWork.Repository<Contracts>();
 			var contractRefRepository = _unitOfWork.Repository<ContractRef>();
+
             var currentUserId = _getCurrentUserTokenService.UserId;
 
             IEnumerable<ContractReportResponseDTO> contractsResponse;
@@ -58,9 +60,6 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
 
 			if (request.DTO.EndDate.HasValue)
 				predicate = predicate.And(c => c.Contract_Date <= request.DTO.EndDate.Value);
-
-
-          //  predicate = predicate.And(c => c.CreatedById == IJwTGenerator.DECODE.CurrentUSerID);
 
             var contracts = await contractRepository.FindWithIncludeAsync(
 				predicate: predicate,
@@ -111,7 +110,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                     c.CreatedBy.UserName,
                     c.CreatedAt.ToString("yyyy-MM-dd"),
                     c.Value,
-                    c.CreatedById==currentUserId,
+                    c.CreatedById == currentUserId,
                     c.ApprovalDeliveryDate,
                     c.DateOfReceipt,
                     c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
@@ -125,7 +124,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                             r.Value,
                             r.CreatedBy.UserName,
                             r.Currency.GetDisplayName(),
-                            r.CreatedById==currentUserId,
+                            r.CreatedById == currentUserId,
                             r.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
                                 ?? new List<string>()
                         )).ToList()
@@ -173,7 +172,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Query.GetContractsReportByFilter
                             c.CreatedBy.UserName,
                             c.CreatedAt.ToString("yyyy-MM-dd"),
                             c.Value,
-                            c.CreatedById==currentUserId,
+                            c.CreatedById == currentUserId,
                             c.ApprovalDeliveryDate,
                             c.DateOfReceipt,
                             c.ContractAttachments?.Select(a => $"/contracts/{a.FileName}").ToList()
