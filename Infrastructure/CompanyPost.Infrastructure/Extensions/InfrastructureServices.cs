@@ -1,4 +1,7 @@
-﻿using CompanyPost.Infrastructure.Settings;
+﻿using CompanyPost.Application.Abstraction;
+using CompanyPost.Application.CQRS.Services;
+using CompanyPost.Infrastructure.Services;
+using CompanyPost.Infrastructure.Settings;
 using Microsoft.Extensions.Logging;
 
 namespace CompanyPost.Infrastructure.Extensions;
@@ -26,11 +29,16 @@ public static class InfrastructureServices
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IEmailServices, EmailServices>();
         services.AddScoped<IGetCurrentUserTokenService, GetCurrentUserTokenService>();
+<<<<<<< Updated upstream
         services.AddScoped<IExcelExportService, ExcelExportService>();
+=======
+        services.AddScoped(typeof(IPostsExcelReportQueryService<>), typeof(PostsExcelReportQueryService<>));
+>>>>>>> Stashed changes
 
         services.AddSingleton<IJwTGenerator, JwtGenerator>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSingleton<IUrlService, UrlSevice>();
+        services.AddSingleton(typeof(IExcelExportService<>), typeof(ExcelExportService<>));
 
         services.AddTransient<IPasswordService, PasswordServices>();
 

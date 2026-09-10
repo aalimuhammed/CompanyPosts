@@ -2,9 +2,14 @@
 
 public class ExcelExportService : IExcelExportService
 {
+<<<<<<< Updated upstream
     public byte[] ExportToExcel<T>(
         IEnumerable<T> data,
         IEnumerable<ExcelColumn<T>> columns)
+=======
+    internal sealed class ExcelExportService<T> 
+        : IExcelExportService<T> where T : class
+>>>>>>> Stashed changes
     {
         using var workbook = new XLWorkbook();
 
