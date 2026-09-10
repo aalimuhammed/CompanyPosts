@@ -11,14 +11,10 @@ namespace CompanyPost.API.Controllers;
 public class PostExternalController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IExcelExportService _excelExportService;
 
-    public PostExternalController(
-        IMediator mediator,
-        IExcelExportService excelExportService)
+    public PostExternalController(IMediator mediator)
     {
         _mediator = mediator;
-        _excelExportService = excelExportService;
     }
 
     [HttpGet("GetPostExternalMaxSerialNumber")]
@@ -80,24 +76,5 @@ public class PostExternalController : ControllerBase
                 Message = ex.Message
             });
         }
-    }
-
-    [HttpGet("ExportExcel")]
-    public async Task<IActionResult> ExportExcel(
-        [FromQuery] BaseDocumentFilterRequestDTO filter,
-        CancellationToken cancellationToken)
-    {
-        var query = new GetPostExternalDocumentsQuery(filter);
-
-        var data = await _mediator.Send(query, cancellationToken);
-
-        var file = _excelExportService.ExportToExcel(
-            data,
-            PostExcelColumns.Columns);
-
-        return File(
-            file,
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "PostExternalReport.xlsx");
     }
 }
