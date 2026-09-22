@@ -3,6 +3,7 @@ using CompanyPost.Application.CQRS.Commands.InComing;
 
 namespace CompanyPost.API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class IncomingController : ControllerBase

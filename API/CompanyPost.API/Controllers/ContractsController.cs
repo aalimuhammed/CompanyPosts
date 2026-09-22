@@ -2,7 +2,7 @@
 
 namespace CompanyPost.API.Controllers;
 
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ContractsController : ControllerBase

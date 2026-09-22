@@ -4,6 +4,7 @@ using CompanyPost.Application.DTO.Request.Base;
 
 namespace CompanyPost.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ExcelController : ControllerBase
