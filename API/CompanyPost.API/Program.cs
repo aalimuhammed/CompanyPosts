@@ -42,17 +42,17 @@ public class Program
             throw;
         }
 
-        app.UseMiddleware<GlobalExceptionHandling>();
-
-        app.UseHttpsRedirection();
-
-        app.UseStaticFiles();
-
         app.UseCors(policy => policy
             .AllowAnyHeader()
             .AllowAnyMethod()
             .SetIsOriginAllowed(origin => true)
             .AllowCredentials());
+
+        app.UseMiddleware<GlobalExceptionHandling>();
+
+        //app.UseHttpsRedirection();
+
+        app.UseStaticFiles();
 
         app.UseAuthentication();
         app.UseAuthorization();

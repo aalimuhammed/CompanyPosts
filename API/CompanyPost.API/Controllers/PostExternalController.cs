@@ -1,11 +1,8 @@
 ﻿using CompanyPost.API.Model;
-using CompanyPost.Application.Abstraction;
-using CompanyPost.Application.DTO.Request.Base;
-using CompanyPost.Application.DTO.Response.Base;
-using CompanyPost.Application.ExcelConfigurations;
 
 namespace CompanyPost.API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class PostExternalController : ControllerBase

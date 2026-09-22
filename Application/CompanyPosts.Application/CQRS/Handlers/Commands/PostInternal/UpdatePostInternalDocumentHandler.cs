@@ -44,7 +44,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostInernals
 				postInternal.DocumentDate = request.UpdatePostInternalDocumentRequestDTO.documentDate;
 				postInternal.PostDocumentTypes = (PostDocumentTypes)request.UpdatePostInternalDocumentRequestDTO.department;
 				postInternal.RecievedFromId = request.UpdatePostInternalDocumentRequestDTO.receivedFromId;
-                postInternal.AboutWork=request.UpdatePostInternalDocumentRequestDTO.aboutWork;
+                postInternal.AboutWork = request.UpdatePostInternalDocumentRequestDTO.aboutWork;
                 postInternal.RelatedToId = request.UpdatePostInternalDocumentRequestDTO.relatedToId;
                 //postInternal.WorkTypeId = request.UpdatePostInternalDocumentRequestDTO.workTypeId;
                 postInternal.Subject = request.UpdatePostInternalDocumentRequestDTO.subject;

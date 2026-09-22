@@ -43,7 +43,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostTransformers
 				//postTransformer.Department = (Departments)request.UpdatePostTransformerDocumentRequestDTO.department;
 				postTransformer.PostDocumentTypes = (PostDocumentTypes)request.UpdatePostTransformerDocumentRequestDTO.department;
 				postTransformer.RecievedFromId = request.UpdatePostTransformerDocumentRequestDTO.receivedFromId;
-                postTransformer.AboutWork=request.UpdatePostTransformerDocumentRequestDTO.aboutWork;
+                postTransformer.AboutWork = request.UpdatePostTransformerDocumentRequestDTO.aboutWork;
                 postTransformer.RelatedToId = request.UpdatePostTransformerDocumentRequestDTO.relatedToId;
                 //postTransformer.WorkTypeId = request.UpdatePostTransformerDocumentRequestDTO.workTypeId;
                 postTransformer.Subject = request.UpdatePostTransformerDocumentRequestDTO.subject;
