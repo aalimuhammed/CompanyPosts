@@ -1,17 +1,16 @@
 ﻿using CompanyPost.Application.Abstraction;
 using CompanyPost.Application.DTO;
 using CompanyPost.Application.DTO.Request.Base;
-using CompanyPost.Infrastructure.Services;
 
 namespace CompanyPost.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ExcelController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly IExcelExportService<ContractExcelRowModel> _excelExportService;
-
         public ExcelController(
             IMediator mediator ,
             IExcelExportService<ContractExcelRowModel> excelExportServic)

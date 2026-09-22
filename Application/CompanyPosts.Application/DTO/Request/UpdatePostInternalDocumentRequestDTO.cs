@@ -10,7 +10,7 @@ namespace CompanyPost.Application.DTO.Request
         Guid companyId,
         Guid publishedId,
         Guid receivedFromId,
-        string aboutWork,
+        string? aboutWork,
         Guid? relatedToId,
         string? notes,
         string? summary,

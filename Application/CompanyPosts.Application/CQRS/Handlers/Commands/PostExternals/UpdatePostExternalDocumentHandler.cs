@@ -42,7 +42,7 @@ namespace CompanyPost.Application.CQRS.Handlers.Commands.PostExternals
 				postExternal.DocumentNumber = request.UpdatePostExternalDocumentRequestDTO.documentNumber;
 				postExternal.DocumentDate = request.UpdatePostExternalDocumentRequestDTO.documentDate;
 				postExternal.RecievedFromId = request.UpdatePostExternalDocumentRequestDTO.receivedFromId;
-				postExternal.AboutWork=request.UpdatePostExternalDocumentRequestDTO.aboutWork;
+				postExternal.AboutWork = request.UpdatePostExternalDocumentRequestDTO.aboutWork;
                 postExternal.RelatedToId = request.UpdatePostExternalDocumentRequestDTO.relatedToId;
                 //postExternal.WorkTypeId = request.UpdatePostExternalDocumentRequestDTO.workTypeId;
                 postExternal.Subject = request.UpdatePostExternalDocumentRequestDTO.subject;

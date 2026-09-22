@@ -3,9 +3,9 @@ using CompanyPost.Application.CQRS.Commands.PurchaseOrder;
 
 namespace CompanyPost.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class PurchaseOrderController : ControllerBase
     {
         private readonly IMediator _mediator;
