@@ -1,6 +1,4 @@
-﻿using CompanyPost.Infrastructure.Settings;
-
-namespace CompanyPost.Infrastructure.Services
+﻿namespace CompanyPost.Infrastructure.Services
 {
     internal sealed class UrlSevice:IUrlService
     {

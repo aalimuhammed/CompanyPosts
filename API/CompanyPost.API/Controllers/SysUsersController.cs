@@ -1,5 +1,4 @@
 ﻿using CompanyPost.Application.CQRS.Commands.SysUser;
-using CompanyPost.Application.DTO.Request;
 
 namespace CompanyPost.API.Controllers
 {
